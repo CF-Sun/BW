@@ -1,0 +1,199 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">系統管理</li>
+        <li class="breadcrumb-item">密碼管理</li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問密碼</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">顧問密碼</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+@*<div id="maindiv">
+    <div>
+        <h2>顧問密碼</h2>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+</div>*@
+
+<script>
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/Account/GetConAccount/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'ACCOUNT', title: '顧問帳號', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'PW',
+                    title: '密碼',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" id="showPW_' + index + '" onclick="viewPW(\'' + index + '\',\'hide\')"  style="display:none" >' + row.PW + '</a></li>'
+                        value += '<li><a class="btn btn-light" id="hidePW_' + index + '" onclick="viewPW(\'' + index + '\',\'show\')"  >檢視</a></li></ul>'
+                        //var value = '<button type = "button" id="showPW_' + index + '" onclick="viewPW(\'' + index + '\',\'hide\')"  class="btn btn-default btnDelay" style="display:none">' + row.Cli_PW + '</button >';
+                        //value += '<button type = "button" id="hidePW_' + index + '" onclick="viewPW(\'' + index + '\',\'show\')"  class="btn btn-default btnDelay">檢視</button >';
+                        return value
+                    },
+                    align: 'center',
+                    halign: 'center',
+                    visible: true,
+                    width: "40%"
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        //var value = '';
+                        //if (row.ErrTimes >= 3 && row.IsLock == "True")
+                        //    value += '<ul class="actions"><li><a class="btn btn-light" onclick="unLock(\'' + $.trim(row.ID) + '\')"  >重置密碼</a></li></ul>'
+                        //return value
+                        value = '<ul class="actions"><li><a class="btn btn-light" onclick="unLock(\'' + $.trim(row.ID) + '\')"  >重置密碼</a></li></ul>'
+                        return value
+
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function viewPW(index, showHide) {
+
+        if (showHide == 'show') {
+            $('#showPW_' + index).show();
+            $('#hidePW_' + index).hide();
+        } else if (showHide == 'hide') {
+            $('#showPW_' + index).hide();
+            $('#hidePW_' + index).show();
+        }
+    }
+    function unLock(ID) {
+        swal({
+            title: "是否確定重置？",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false
+        },
+            function () {
+                var obj = {};
+                obj.ID = ID;
+                obj.LoginACCOUNT = userAccount;
+                $('#maindiv').jqLoading();
+                var options = {};
+                options.url = "/Account/unLockConAccount";
+                options.type = "POST";
+                options.data = JSON.stringify(obj);
+                options.contentType = "application/json";
+                options.dataType = "html";
+                options.success = function (data) {
+                    if (data == 1) {
+                        loadData()
+                        //alert('重置成功!');
+                        swal("重置成功!", "", "success")
+                    }
+                    else {
+                        //alert('重置失敗!');
+                        sweetAlert("重置失敗!", "", "error");
+                    }
+                    $('#maindiv').jqLoading("destroy");
+                };
+                options.error = function () {
+                    //alert('重置失敗!');
+                    sweetAlert("重置失敗!", "", "error");
+                    $('#maindiv').jqLoading("destroy");
+                };
+                $.ajax(options);
+            });
+        //if (confirm('是否確定重置?')) {
+        //    var obj = {};
+        //    obj.ID = ID;
+        //    obj.LoginACCOUNT = userAccount;
+        //    $('#maindiv').jqLoading();
+        //    var options = {};
+        //    options.url = "/Account/unLockConAccount";
+        //    options.type = "POST";
+        //    options.data = JSON.stringify(obj);
+        //    options.contentType = "application/json";
+        //    options.dataType = "html";
+        //    options.success = function (data) {
+        //        if (data == 1) {
+        //            loadData()
+        //            //alert('重置成功!');
+        //            swal("重置成功!", "", "success")
+        //        }
+        //        else {
+        //            //alert('重置失敗!');
+        //            sweetAlert("重置失敗!", "", "error");
+        //        }
+        //        $('#maindiv').jqLoading("destroy");
+        //    };
+        //    options.error = function () {
+        //        //alert('重置失敗!');
+        //        sweetAlert("重置失敗!", "", "error");
+        //        $('#maindiv').jqLoading("destroy");
+        //    };
+        //    $.ajax(options);
+        //}        
+    }
+</script>

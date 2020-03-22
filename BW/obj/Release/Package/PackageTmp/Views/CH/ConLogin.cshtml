@@ -1,0 +1,382 @@
+﻿@{
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <!-- <li class="breadcrumb-item">
+            客服經理專區
+        </li> -->
+        <li class="breadcrumb-item active">
+            <a href="/CH/ConLogin">登入</a>
+        </li>
+    </ul>
+    <section id="login">
+        @*<h2 class="m-title title text-center">
+            <span>登入</span>
+        </h2>*@
+        <div class="title-set text-center">
+            <h4 class="title">登入會員</h4>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8">
+                <div class="context-bg">
+                    <form id="login-form" class="confirm" action="" method="POST" name="login-form">
+                        <div class="form-group au-form">
+                            <label for="account" class="control-label">帳號</label>
+                            <input id="account" type="text" name="account" placeholder="*請輸入帳號" required data-error="請輸入帳號" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="now-pwd" class="control-label">密碼</label>
+                            <input id="now-pwd" type="password" name="now-pwd" required data-error="請輸入密碼" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group au-form veri-code">
+                                    <input type="text" id="validate" placeholder="*驗證碼" required data-error="請填寫驗證碼" autocomplete="off">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="form-group au-form veri-code">
+                                    @*<span style="display: inline-block; width: 150px; height: 40px; background: #eee;"></span>*@
+                                    <img id="code" src="/Login/GetValidateCode/" />
+                                    <span class="iconify" data-icon="ion:refresh" data-inline="false" tilte="更新驗證碼" onclick="refreshCodeImg();"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="w100" id="lab" style="display:none; color:red"></p>
+                        <p><a class="more" onclick="forgetPW()">忘記密碼</a></p>
+                        <ul class="act-btns">
+                            <li>
+                                <input type="button" class="btn btn-sm btn-light w-100" value="退出登入畫面"
+                                       onclick="javascript:location.href='/CH/Index'">
+                            </li>
+                            <li>
+                                <input type="button" class="btn btn-sm btn-primary w-100" value="確認送出"
+                                       onclick="LoginBtn_click()" />
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    //刷新驗證碼
+    function refreshCodeImg() {
+        $("#code").attr("src", "/Login/GetValidateCode/" + "?t=" + new Date().getTime());//刷新驗證碼
+    }
+
+    //登入click
+    function LoginBtn_click() {
+        $("#lab").hide();
+        if (!CheckValue()) {
+            $("#lab").html('帳號或密碼不能為空');
+            $("#lab").show();
+            return;
+        }
+        //判斷是否為顧問報聘
+        if ($('#account').val() == 'ns1234') {
+            ConRegiLogin();
+        } else {
+
+            //判斷是客戶還是顧問/管理員登入
+            var account = $('#account').val();
+            if (account.substr(0, 1) == account.substr(1, 1) && account.substr(1, 1) != account.substr(2, 1)) { //客戶
+                CliLogin();
+            } else {//顧問或管理員
+                ConLogin();
+            }
+        }
+    }
+    //驗證是否輸入必要欄位
+    function CheckValue() {
+        if ($('#account').val() == '' || $('#now-pwd').val() == '') {
+            return false;
+        }
+        return true;
+    }
+
+    //顧問或管理者登入
+    function ConLogin() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/Login',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#validate').val(),
+                Account: $('#account').val(),
+                PW: $('#now-pwd').val()
+            },
+            cache: false,
+            error:function(jqXHR, textStatus, errorThrown) {
+                //alert('發生錯誤,請稍後重新登入')
+                sweetAlert("登入失敗!", "發生錯誤,請稍後重新登入", "warning");
+                window.location.href = "/CH/ConLogin";
+            },
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('驗證碼錯誤');
+                    $("#lab").show();
+                    refreshCodeImg();//刷新驗證碼
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    //0表示找無mail
+                    if (result == "3") {
+                        $("#lab").html($('#account').val() + '無設置Email');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    //帳號被鎖住
+                    if (result == "4") {
+                        $("#lab").html('密碼錯誤連續三次，帳號已鎖住');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    //帳號錯誤
+                    if (result == "5") {
+                        $("#lab").html('無此帳號');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    if (result.length > 0) {
+                        if (result[0].Enable == "False") {
+                            $("#lab").html('登入帳號 ' + $('#account').val() + '已停用');
+                            $("#lab").show();
+                            refreshCodeImg();//刷新驗證碼
+                            $('#maindiv').jqLoading("destroy");
+                            return;
+                        }
+                        if (result[0].IsCon == "True") {  //為顧問
+                            sessionStorage["LoginAccount"] = result[0].ACCOUNT;
+                            sessionStorage["Role"] = "Con";
+                            window.location.href = "/CHCon/ConVerifi";
+                        }
+                        else {   //為管理員
+                            window.location.href = "/BackEnd/MailVerifi?" + escape("Account=" + result[0].ACCOUNT + "&Role=" + result[0].ROLE);
+                        }
+
+                    } else {
+                        $("#lab").html('登入帳號 ' + $('#account').val() + '密碼錯誤');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                }
+            }
+        });
+    }
+    //客戶登入
+    function CliLogin() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/CliLogin',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#validate').val(),
+                Account: $('#account').val(),
+                PW: $('#now-pwd').val()
+            },
+            cache: false,
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert('發生錯誤,請稍後重新登入')
+                sweetAlert("登入失敗!", "發生錯誤,請稍後重新登入", "warning");
+                window.location.href = "/CH/ConLogin";
+            },
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('驗證碼錯誤');
+                    $("#lab").show();
+                    refreshCodeImg();//刷新驗證碼
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    //帳號被鎖住
+                    if (result == "4") {
+                        $("#lab").html('密碼錯誤連續三次，帳號已鎖住');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    //帳號錯誤
+                    if (result == "5") {
+                        $("#lab").html('無此帳號');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    if (result.length > 0) {
+                        sessionStorage["CliAccount"] = $.trim(result[0].Cli_ACCOUNT);
+                        sessionStorage["CliRole"] = "Cli";
+                        window.location.href = "/CHCli/CliVerifi";
+                    } else {
+                        $("#lab").html('登入帳號 ' + $('#account').val() + '密碼錯誤');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                }
+            }
+        });
+    }
+    //報聘登入
+    function ConRegiLogin() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/ConRegiLogin',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#validate').val(),
+                Account: $('#account').val(),
+                PW: $('#now-pwd').val()
+            },
+            cache: false,
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert('發生錯誤,請稍後重新登入')
+                sweetAlert("登入失敗!", "發生錯誤,請稍後重新登入", "warning");
+                window.location.href = "/CH/ConLogin";
+            },
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('驗證碼錯誤');
+                    $("#lab").show();
+                    refreshCodeImg();//刷新驗證碼
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    if (result== "1") {
+                        sessionStorage["LoginAccount"] = "ns1234";
+                        window.location.href = "/CH/ConRegi";
+                    } else {
+                        $("#lab").html('登入帳號 ' + $('#account').val() + '密碼錯誤');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                }
+            }
+        });
+    }
+
+    function forgetPW() {
+        if ($('#account').val() == "") {
+            //alert('請輸入登入帳號!')
+            sweetAlert("請輸入登入帳號!", "", "warning");
+            return;
+        }
+
+        //判斷是客戶還是顧問/管理員登入
+        var account = $('#account').val();
+        if (account.substr(0, 1) == account.substr(1, 1) && account.substr(1, 1) != account.substr(2, 1)) { //客戶
+            CliPW();
+        } else {//顧問或管理員
+            ConPW();
+        }
+    }
+
+    //顧問或管理員忘記密碼
+    function ConPW() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/forgetPW',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Account: $('#account').val()
+            },
+            cache: false,
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('無此帳號');
+                    $("#lab").show();
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    //0表示找無mail
+                    if (result == "3") {
+                        $("#lab").html('該管理員 ' + $('#account').val() + '無設置Email');
+                        $("#lab").show();
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    if (result == "1") {
+                        //alert('新密碼已發送至您的信箱,請以新密碼登入後修改')
+                        swal("新密碼已發送至您的信箱,請以新密碼登入後修改!", "", "success")
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    } else {
+                        //alert('系統發生錯誤')
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                }
+            }
+        });
+    }
+
+    //客戶忘記密碼
+    function CliPW() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/CliforgetPW',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Account: $('#account').val()
+            },
+            cache: false,
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('無此帳號');
+                    $("#lab").show();
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    //0表示找無mail
+                    if (result == "3") {
+                        $("#lab").html('該管理員 ' + $('#account').val() + '無設置Email');
+                        $("#lab").show();
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    if (result == "1") {
+                        //alert('新密碼已發送至您的信箱,請以新密碼登入後修改')
+                        swal("新密碼已發送至您的信箱,請以新密碼登入後修改!", "", "success")
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    } else {
+                        //alert('系統發生錯誤')
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                }
+            }
+        });
+    }
+</script>

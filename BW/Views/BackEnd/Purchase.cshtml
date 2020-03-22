@@ -1,0 +1,198 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶</li>
+        <li class="breadcrumb-item active">
+            <a href="#">申購一覽表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">申購一覽表</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        設定狀態
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="sele_Status" class="col-3 col-form-label">狀態</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Status" id="sele_Status" class="br-cus" required>
+                                    <option value="1">未通知</option>
+                                    <option value="2">已通知</option>
+                                    <option value="3">已入金</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmit" onclick="SubmitEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        //var obj =
+        //{
+        //    ROLE_ID: userRole
+        //}
+        //$.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+        //    if (data[0].Auth_19 != "True") { //如果沒檢視權限 則頁面全隱藏
+        //        $('#maindiv').hide();
+        //        sweetAlert("您沒有檢視權限", "", "warning");
+        //        return;
+        //    }
+        //});
+    }
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+
+    var PurchaseID = "";
+
+    function loadData() {
+        var apiURL = "/Purchase/GetPurchaseData/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                PurchaseID = $.trim(row.ID)
+                //按鈕控制
+                if (field == "edit") {
+                    $('#sele_Status').val(row.StatusCode);
+                    $('#myModal').modal('show');
+                };
+            },
+            columns: [
+                { field: 'Name', title: '姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Phone', title: '手機', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Deposit_Typ', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '投資金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Con_ID', title: '對口人員', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Apply_DATE', title: '申購時間', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Status', title: '狀態', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" >狀態修改</a></li></ul>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    //更改狀態
+    function SubmitEdit() {
+        var obj = {};
+        obj.ID = PurchaseID;
+        obj.Status = $('#sele_Status').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Purchase/UpdateStatus";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                loadData();
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

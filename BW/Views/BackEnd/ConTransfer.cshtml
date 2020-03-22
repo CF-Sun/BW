@@ -1,0 +1,490 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">變更直推顧問</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">變更直推顧問</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <section id="form">
+        <div id="divTransferRecord" style="display:none">
+            <h3>異動紀錄</h3>
+            <div class="overflow">
+                <table class="table table-bordered table-hover" id="theTableTransferRecord"></table>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="myModaleditParent" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        設定直推顧問
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txt_Parent" class="col-2 col-form-label">顧問</label>
+                            <div class="col-6">
+                                <input type="text" id="txt_Parent" name="txt_Parent" required
+                                       data-error="請填寫顧問編號" onblur="getConName(1)">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <label class="col-4 col-form-label" id="lblConName"></label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmit" onclick="SubmitEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModaleditDistribution" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        設定分享顧問
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txt_DistributionParent" class="col-3 col-form-label">分享顧問</label>
+                            <div class="col-5">
+                                <input type="text" id="txt_DistributionParent" name="txt_DistributionParent" required
+                                       data-error="請填寫分享顧問編號" onblur="getConName(2)">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <label class="col-4 col-form-label" id="lblDistributionConName"></label>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt_DistributionParent" class="col-3 col-form-label">分享％</label>
+                            <div class="col-5">
+                                <input type="text" id="txt_Percentage" name="txt_Percentage" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'') ">
+                            </div>
+                            <label class="col-1 col-form-label">％</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmit" onclick="SubmitDistribution()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+
+    var Con_ID = "";
+    var Parent_Con_ID = "";
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        loadTransferRecord();
+        $('#divTransferRecord').show();
+        $('#maindiv').jqLoading("destroy");
+    }
+
+    function loadData() {
+        var apiURL = "/ConInfo/GetConInfo/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                if (field == "edit") {
+                    Con_ID = $.trim(row.Con_ID)
+                    Parent_Con_ID = $.trim(row.Parent_Con_ID)
+                    //$('#txt_Parent').val($.trim(row.Parent_Con_ID))
+                    //$('#lblConName').html($.trim(row.Parent_ChiName))
+                    //$('#myModal').modal('show');
+                }
+            },
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Parent_Con_ID', title: '所屬顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Parent_ChiName', title: '所屬顧問中文名', align: 'center', halign: 'center',
+                    formatter: function (value, row, index) {
+                        if (row.Distri_Con_ID == '')
+                            value = row.Parent_ChiName
+                        else
+                            value = row.Parent_ChiName + '(分享)';
+                               
+                        return value
+                    },
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+
+                        if (row.Parent_Con_ID == '股東') {
+                            value = '';
+                        }
+                        else {
+                            value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                            value += '<div class="dropdown-menu">'
+                            value += '<a class="dropdown-item" onclick="editParent(\'' + $.trim(row.Parent_Con_ID) + '\',\'' + $.trim(row.Parent_ChiName) + '\')" >修改直推顧問</a>'
+                            value += '<a class="dropdown-item" onclick="editDistribution(\'' + $.trim(row.Distri_Con_ID) + '\',\'' + $.trim(row.DistriName) + '\',\'' + $.trim(row.Distri_Percentage) + '\')" >設定分享顧問</a>'
+                            value += '</div></div>'
+                        }
+
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: $('#txtCon_NO').val(), ConName: $('#txtCon_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function loadTransferRecord() {
+        var apiURL = "/TransferRecord/GetTransferRecord/";
+        $("#theTableTransferRecord").bootstrapTable('destroy');
+        $("#theTableTransferRecord").bootstrapTable({
+            columns: [
+                { field: 'ConIDOrCliID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName1', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'OriginParentConID', title: '原所屬顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName2', title: '原所屬顧問中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'NewParentConID', title: '新所屬顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName3', title: '新所屬顧問中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CREATE_DATE', title: '異動時間', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ID: $('#txtCon_NO').val(), Name: $('#txtCon_Name').val(), Type:'1' },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    //function getPartent(Con_ID, Parent_Con_ID) {
+    //    var obj =
+    //    {
+    //        ConID: $.trim(Con_ID)
+    //    }
+    //    $.getJSON("/ConInfo/GetParentCon", obj).done(function (data) {
+    //        $("#sele_Parent").empty();
+    //        $("#sele_Parent").append($("<option>").val(0).text('請選擇'))
+
+    //        $.each(data, function (i, item) { $("#sele_Parent").append($("<option>").val($.trim(item.Con_ID)).text($.trim(item.Name) + '(' + $.trim(item.Con_ID) + ')')) });
+    //        $("#sele_Parent").val($.trim(Parent_Con_ID));
+    //    })
+    //}
+
+    function editParent(Parent_Con_ID, Parent_ChiName) {
+        $('#txt_Parent').val($.trim(Parent_Con_ID))
+        $('#lblConName').html($.trim(Parent_ChiName))
+        $('#myModaleditParent').modal('show');
+    }
+    function editDistribution(Distri_Con_ID, DistriName, Distri_Percentage) {
+        $('#txt_DistributionParent').val($.trim(Distri_Con_ID))
+        $('#lblDistributionConName').html($.trim(DistriName))
+        $('#txt_Percentage').val(Distri_Percentage)
+        $('#myModaleditDistribution').modal('show');
+    }
+    //更新所屬顧問
+    function SubmitEdit() {
+        $('#lblConName').html('');
+        if ($("#txt_Parent").val() == '') {
+            //alert('請輸入正確顧問編號')
+            sweetAlert("請輸入正確顧問編號!", "", "warning");
+            return;
+        }
+        if ($.trim($('#txt_Parent').val()) == $.trim(Con_ID)) {
+            //alert("直推顧問不能為該顧問自己")
+            sweetAlert("直推顧問不能為該顧問自己!", "", "warning");
+            $('#txt_Parent').val('')
+            return false;
+        }
+        var obj =
+        {
+            ConID: $.trim($('#txt_Parent').val()),
+            OriConID: $.trim(Con_ID)
+        }
+        $.getJSON("/ConInfo/GetParentCon", obj).done(function (data) {
+            if (data.length > 0) {
+                $('#lblConName').html($.trim(data[0].Name));
+                submit();
+            }
+            else {
+                $('#lblConName').html('無此顧問');
+            }
+        })     
+    }
+    function submit() {
+        var obj = {};
+        obj.Con_ID = Con_ID;
+        obj.Parent_Con_ID = $("#txt_Parent").val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/ChangeParentCon";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                loadTransferRecord();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                $('#myModaleditParent').modal('hide');
+            } else if (data == 2){
+                //alert('該顧問是您輸入的直推顧問的直推顧問,修改失敗!');
+                sweetAlert("修改失敗!", "該顧問是您輸入的直推顧問的直推顧問", "error");
+            }
+            else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //更新分享顧問
+    function SubmitDistribution() {
+        if ($.trim($('#txt_DistributionParent').val()) == '') {
+            DistributionSubmit();
+        } else {
+            if ($('#txt_Percentage').val() == 0 || $('#txt_Percentage').val() == '') {
+                //alert('請輸入分享％')
+                sweetAlert("請輸入分享％!", "", "warning");
+                return;
+            }
+            $('#lblDistributionConName').html('');
+            if ($.trim($('#txt_DistributionParent').val()) == $.trim(Con_ID)) {
+                //alert("分享顧問不能為該顧問自己")
+                sweetAlert("分享顧問不能為該顧問自己!", "", "warning");
+                $('#txt_DistributionParent').val('')
+                return false;
+            }
+            var obj =
+            {
+                ConID: $.trim($('#txt_DistributionParent').val())
+            }
+            $.getJSON("/ConInfo/GetDistributionParentCon", obj).done(function (data) {
+                if (data.length > 0) {
+                    $('#lblDistributionConName').html($.trim(data[0].Name));
+                    DistributionSubmit();
+                } else {
+                    $('#lblDistributionConName').html('無此顧問');
+                }
+            })
+        }
+
+    }
+    function DistributionSubmit() {
+        var obj = {};
+        obj.Con_ID = Con_ID;
+        obj.Parent_Con_ID = Parent_Con_ID;
+        obj.Distri_Con_ID = $.trim($('#txt_DistributionParent').val());
+        obj.Distri_Percentage = $('#txt_Percentage').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/ChangeDistributionParentCon";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                loadTransferRecord();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                $('#myModaleditParent').modal('hide');
+            } else if (data == 2) {
+                //alert('該顧問是您輸入的直推顧問的直推顧問,修改失敗!');
+                sweetAlert("修改失敗!", "該顧問是您輸入的直推顧問的直推顧問", "error");
+            }
+            else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //取得顧問名
+    function getConName(type) {
+        if (type == 1) {
+            $('#lblConName').html('');
+            if ($.trim($('#txt_Parent').val()) == "")
+                return true;
+            if ($.trim($('#txt_Parent').val()) == $.trim(Con_ID)) {
+                //alert("直推顧問不能為該顧問自己")
+                sweetAlert("直推顧問不能為該顧問自己!", "", "warning");
+                $('#txt_Parent').val('')
+                return false;
+            }
+            var obj =
+            {
+                ConID: $.trim($('#txt_Parent').val()),
+                OriConID: $.trim(Con_ID)
+            }
+            $.getJSON("/ConInfo/GetParentCon", obj).done(function (data) {
+                if (data.length > 0)
+                    $('#lblConName').html($.trim(data[0].Name));
+                else
+                    $('#lblConName').html('無此顧問');
+                return true;
+            })
+        } else if (type == 2) {
+            $('#lblDistributionConName').html('');
+            if ($.trim($('#txt_DistributionParent').val()) == "")
+                return true;
+            if ($.trim($('#txt_DistributionParent').val()) == $.trim(Con_ID)) {
+                //alert("分享顧問不能為該顧問自己")
+                sweetAlert("分享顧問不能為該顧問自己!", "", "warning");
+                $('#txt_DistributionParent').val('')
+                return false;
+            }
+            var obj =
+            {
+                ConID: $.trim($('#txt_DistributionParent').val())
+            }
+            $.getJSON("/ConInfo/GetDistributionParentCon", obj).done(function (data) {
+                if (data.length > 0)
+                    $('#lblDistributionConName').html($.trim(data[0].Name));
+                else
+                    $('#lblDistributionConName').html('無此顧問');
+                return true;
+            })
+        }
+    }
+</script>

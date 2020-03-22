@@ -1,0 +1,37 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<script>
+    //var url = unescape(window.location.href); //獲得URL
+    //try {
+    //    var Account = url.split("?")[1].split('&')[0].split('=')[1];
+    //} catch (e) { Account = undefined; }
+    //try {
+    //    var Role = url.split("?")[1].split('&')[1].split('=')[1];
+    //} catch (e) { Role = undefined; }
+
+    //if (Account == null || Account == '' || Account == undefined) {
+    //    window.location.href = "/CH/ConLogin";
+    //}
+    //else {
+    //    delCookie("conRole");
+    //    delCookie("conAccount");
+    //    doCookieSetup("conRole", Role);
+    //    doCookieSetup("conAccount", Account);
+    //    window.location.href = "/CHCon/CliInfo";
+    //}
+
+    Account = sessionStorage["LoginAccount"];
+    Role = sessionStorage["Role"];
+    if (Account == null || Account == '' || Account == undefined) {
+        window.location.href = "/CH/ConLogin";
+    }
+    else {
+        delCookie("conRole");
+        delCookie("conAccount");
+        doCookieSetup("conRole", Role);
+        doCookieSetup("conAccount", Account);
+        window.location.href = "/CHCon/CliManage";
+    }
+
+</script>

@@ -1,0 +1,352 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶登記</li>
+        <li class="breadcrumb-item active">
+            <a href="#">入金登記</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">入金登記</h4>
+        </div>
+    </section>
+    <section id="form1">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtCliNo" class="col-2 col-form-label">客戶編號</label>
+                        <div class="col-8">
+                            <input type="text" id="txtCliNo" name="txtCliNo" required
+                                   data-error="請填寫客戶編號" onblur="getCliName()">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <label class="col-2 col-form-label" id="lblCliName"></label>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtDepositeDay" class="col-2 col-form-label">水單日期</label>
+                        <div class="col-8">
+                            <input type="text" id="txtDepositeDay" name="txtDepositeDay" required
+                                   data-error="請填寫水單日期" readonly style="background-color:lightgray">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtDepositeAmount" class="col-2 col-form-label">入金金額</label>
+                        <div class="col-8">
+                            @*<input type="text" id="txtDepositeAmount" name="txtDepositeAmount" required
+                                   data-error="請填寫入金金額" onkeyup="value=value.replace(/[^\d.]/g,'')">*@
+                            <input type="text" id="txtDepositeAmount" name="txtDepositeAmount" required
+                                   data-error="請填寫入金金額" onkeyup="value=accounting.formatNumber(value.replace(/[^\d.,]/g,''))">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_DepositeType" class="col-2 col-form-label">案別</label>
+                        <div class="col-8 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_DepositeType" id="sele_DepositeType" class="br-cus" required>
+                                <option value="0" disabled selected>請選擇</option>
+                                @*<option value="1">一案</option>
+                                <option value="2">二案</option>
+                                <option value="3">三案</option>*@
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="fileUpload" class="col-2 col-form-label">上傳水單</label>
+                        <div class="col-8">
+                            <div class="file-wrapper">
+                                <div class="custom-file">
+                                    <input type="file" name="upload" class="custom-file-input" id="fileUpload">
+                                    <label class="custom-file-label" for="fileUpload" id="fileUploadName">選擇檔案上傳</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitRegi()" value="登記入金">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    <section id="form2">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    var FileName;
+    //初始化設定---------------
+    $('#txtDepositeDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        getDepositeType();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    //setList();
+
+    ////設定狀態下拉選單-------------------
+    //function setList() {
+    //    var obj =
+    //    {
+    //        ConID: conAccount
+    //    }
+    //    $('#maindiv').jqLoading();
+    //    $.getJSON("/CliInfo/GetCliListByConID", obj).done(function (data) {
+    //        $("#sele_ConList").empty();
+    //        $("#sele_CliList").empty();
+
+    //        $("#sele_ConList").append($("<option>").val(conAccount).text(conAccount))
+    //        $.each(data, function (i, item) { $("#sele_CliList").append($("<option>").val($.trim(item.Cli_ID)).text($.trim(item.Cli_ID))) });
+
+    //        $('#maindiv').jqLoading("destroy");
+    //    })
+    //}
+    //設定案件下拉
+    function getDepositeType() {
+        $.getJSON("/DepositeType/GetEnableDepositeType").done(function (data) {
+
+            //$("#sele_From").empty();
+            //$("#sele_From").append($("<option>").val(0).text('請選擇'))
+            $.each(data, function (i, item) { $("#sele_DepositeType").append($("<option>").val($.trim(item.Type_NO)).text($.trim(item.Type_NAME))) });
+
+        })
+    }
+
+    //取得客戶名
+    function getCliName() {
+        $('#lblCliName').html('');
+        if ($.trim($('#txtCliNo').val()) == "")
+            return;
+
+        var obj =
+        {
+            CliID: $.trim($('#txtCliNo').val()),
+            LoginACCOUNT:conAccount
+        }
+        $.getJSON("/CliInfo/GetCliInfoByIDandConID", obj).done(function (data) {
+            if (data.length>0)
+                $('#lblCliName').html($.trim(data[0].Cli_ChiNAME_Last) + $.trim(data[0].Cli_ChiNAME_First));
+            else
+                $('#lblCliName').html('無此客戶');
+        })
+    }
+
+    function loadData() {
+        var apiURL = "/Deposite/GetDepositeDataByConId";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'Deposit_ID', title: '入金編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CliName', title: '客戶名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Arrival_DATE', title: '水單日期', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CREATE_DATE', title: '入金登記時間', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Status', title: '處理狀態', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+
+    //## 按下上傳按鈕觸發
+    $('#fileUpload').on('change', function (e) {
+        chkfile('fileUpload', 'fileUploadName')
+    }); 
+    function chkfile(s, f) {
+
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Announcement/chkFile",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            if (s == "fileUpload")
+                                FileName = data.filename
+                        } else {
+                            FileName = '';
+                            $('#' + s).val('')
+                            $('#' + f).html('選擇檔案上傳')
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        FileName = '';
+                        $('#' + s).val('')
+                        $('#' + f).html('選擇檔案上傳')
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    }
+
+    function SubmitRegi() {
+        if ($.trim($("#txtCliNo").val()) == "" || $('#lblCliName').html() =='無此客戶') {
+            //alert('請填寫有效的客戶編號')
+            sweetAlert("請填寫有效的客戶編號!", "", "warning");
+            return;
+        }
+        if ($("#txtDepositeDay").val() == "") {
+            //alert('請選擇選水單日期')
+            sweetAlert("請選擇選水單日期!", "", "warning");
+            return;
+        }
+        if ($("#txtDepositeAmount").val() == "") {
+            //alert('請填寫入金金額')
+            sweetAlert("請填寫入金金額!", "", "warning");
+            return;
+        }
+        if ($("#sele_DepositeType").val() == "0") {
+            //alert('請選擇選案別')
+            sweetAlert("請選擇選案別!", "", "warning");
+            return;
+        }
+        if (FileName == "") {
+            //alert('請上傳水單')
+            sweetAlert("請上傳水單!", "", "warning");
+            return;
+        }
+
+        var obj = {};
+        obj.CliNo = $.trim($("#txtCliNo").val());
+        obj.ConNo = conAccount;
+        obj.FileName = FileName;
+        obj.DepositeDay = $("#txtDepositeDay").val()
+        obj.DepositeAmount = $("#txtDepositeAmount").val()
+        obj.DepositeType = $("#sele_DepositeType").val()
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Deposite/DepositeRegi";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data != "0") {
+                if ($.trim(FileName) != "")
+                    fileupload('fileUpload', data)
+                //alert('登記成功!');
+                swal("登記成功!", "", "success")
+                window.location.href = "/CHCon/CliDepositeRegi";
+
+            } else {
+                //alert('登記失敗!');
+                sweetAlert("登記失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('登記失敗!');
+            sweetAlert("登記失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    function fileupload(s, ID) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Deposite/UploadFile?Deposit_ID=" + ID + "&OriFileName=&LoginACCOUNT=" + conAccount,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳失敗!", "上傳檔案" + f + "發生錯誤", "error");
+                    });
+            }
+        }
+    }
+</script>

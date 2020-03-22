@@ -1,0 +1,48 @@
+2020/01/04 00:09:50:093 SendMail/toSend=>System.Net.Mail.SmtpException: 傳送郵件失敗。 ---> System.Net.WebException: 無法連接至遠端伺服器 ---> System.Net.Sockets.SocketException: 連線嘗試失敗，因為連線對象有一段時間並未正確回應，或是連線建立失敗，因為連線的主機無法回應。 72.167.234.197:25
+   於 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   於 System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   於 System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   於 System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpClient.GetConnection()
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\SourceCode\BW\BW\Helpers\SendMail.cs: 行 56
+2020/01/04 22:52:36:949 SendMail/toSend=>System.Net.Mail.SmtpException: 傳送郵件失敗。 ---> System.Net.WebException: 無法連接至遠端伺服器 ---> System.Net.Sockets.SocketException: 連線嘗試失敗，因為連線對象有一段時間並未正確回應，或是連線建立失敗，因為連線的主機無法回應。 72.167.234.197:25
+   於 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   於 System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   於 System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   於 System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpClient.GetConnection()
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\SourceCode\BW\BW\Helpers\SendMail.cs: 行 56
+2020/01/04 22:58:48:766 SendMail/toSend=>System.Net.Mail.SmtpException: 傳送郵件失敗。 ---> System.Net.WebException: 無法連接至遠端伺服器 ---> System.Net.Sockets.SocketException: 連線嘗試失敗，因為連線對象有一段時間並未正確回應，或是連線建立失敗，因為連線的主機無法回應。 72.167.234.197:25
+   於 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   於 System.Net.ServicePoint.ConnectSocketInternal(Boolean connectFailure, Socket s4, Socket s6, Socket& socket, IPAddress& address, ConnectSocketState state, IAsyncResult asyncResult, Exception& exception)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.ServicePoint.GetConnection(PooledStream PooledStream, Object owner, Boolean async, IPAddress& address, Socket& abortSocket, Socket& abortSocket6)
+   於 System.Net.PooledStream.Activate(Object owningObject, Boolean async, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.PooledStream.Activate(Object owningObject, GeneralAsyncDelegate asyncCallback)
+   於 System.Net.ConnectionPool.GetConnection(Object owningObject, GeneralAsyncDelegate asyncCallback, Int32 creationTimeout)
+   於 System.Net.Mail.SmtpConnection.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpTransport.GetConnection(ServicePoint servicePoint)
+   於 System.Net.Mail.SmtpClient.GetConnection()
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   --- 內部例外狀況堆疊追蹤的結尾 ---
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\SourceCode\BW\BW\Helpers\SendMail.cs: 行 56

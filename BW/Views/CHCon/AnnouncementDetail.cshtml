@@ -1,0 +1,75 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">公告</li>
+        <li class="breadcrumb-item active">
+            <a href="#">公告詳情</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">公告詳情</h4>
+        </div>
+    </section>
+    <section id="annouce">
+        <div class="row justify-content-center">
+            <div class="col-md-9">
+                <span id="annouce_date">2018/10/10</span>
+                <h4 class="mt-1 mb-4" id="annouce_title"></h4>
+                <div id="annouce_content"></div>
+                <div id="annouce_file"></div>
+                <div class="text-center">
+                    <a href="#" onclick="history.back()" class="btn btn-light">返回公告列表</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    //初始化
+    var Announcement_NO = sessionStorage["Announcement_NO"];
+
+    if (Announcement_NO != "" && Announcement_NO != undefined) {
+        loadData(Announcement_NO);
+    }
+
+    function loadData(Announcement_NO) {
+        //清空資料
+        $('#annouce_date').html('');
+        $('#annouce_title').html('');
+        $('#annouce_content').html(''); 
+        $('#annouce_file').html('');
+
+        //查詢詳細顧問資料
+        var obj =
+        {
+            Announcement_NO: $.trim(Announcement_NO)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/Announcement/GetAnnouncementByID", obj).done(function (data) {
+            //填入資料
+            $('#annouce_date').html(data[0].CREATE_DATE);
+            $('#annouce_title').html(data[0].Announcement_Subject);
+            $('#annouce_content').html(data[0].Announcement_Content);
+
+            var htmlString = '';
+            if (data[0].FileName1 != null && $.trim(data[0].FileName1) != "")
+                htmlString += '<a style="color:cornflowerblue" href="/Announcement/Open?FileName=' + $.trim(data[0].FileName1) + '&Announcement_NO=' + Announcement_NO + '">' + $.trim(data[0].FileName1) + '</a></br>';
+            if (data[0].FileName2 != null && $.trim(data[0].FileName2) != "")
+                htmlString += '<a style="color:cornflowerblue" href="/Announcement/Open?FileName=' + $.trim(data[0].FileName2) + '&Announcement_NO=' + Announcement_NO + '">' + $.trim(data[0].FileName2) + '</a></br>';
+            if (data[0].FileName3 != null && $.trim(data[0].FileName3) != "")
+                htmlString += '<a style="color:cornflowerblue" href="/Announcement/Open?FileName=' + $.trim(data[0].FileName3) + '&Announcement_NO=' + Announcement_NO + '">' + $.trim(data[0].FileName3) + '</a></br>';
+
+            $('#annouce_file').html(htmlString);
+
+            $('#maindiv').jqLoading("destroy");
+
+            $('#annouce').show();
+        })
+    }
+</script>

@@ -1,0 +1,151 @@
+﻿<!-- Bootstrap -->
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!-- jQuery -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!-- jQuery Easing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+<!-- Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<!-- loaders -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css">
+<script src="~/Content/js/common.js"></script>
+
+
+<div id="divReport">
+    <div id="divReportSum">
+        <div id="ReportSum"></div>
+    </div>
+    <br />
+    <br />
+    <div id="Month1" style="display:none">
+        <label id="lblMon1" class="col-sm-3 control-label"></label>
+        <div id="divExtension1"></div>
+    </div>
+    <br />
+    <br />
+    <div id="Month2" style="display:none">
+        <label id="lblMon2" class="col-sm-3 control-label"></label>
+        <div id="divExtension2"></div>
+    </div>
+    <br />
+    <br />
+    <div id="Month3" style="display:none">
+        <label id="lblMon3" class="col-sm-3 control-label"></label>
+        <div id="divExtension3"></div>
+    </div>
+</div>
+<script>
+    var url = window.location.href; //獲得URL
+    try {
+        var ReportMasterID = url.split("?")[1].split('&')[0].split('=')[1];
+    } catch (e) { ReportMasterID = undefined; }
+    console.log(ReportMasterID)
+    if (ReportMasterID != undefined) {
+        ReportSum(ReportMasterID);
+        ExtensionReport(ReportMasterID);
+    }
+    function ReportSum(Report_ID) {
+        var obj =
+        {
+            Report_ID: Report_ID
+        }
+        $.getJSON("/PayedRecord/GetReportConList", obj).done(function (data) {
+            var TableReportString = '<table class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"><font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">顧問編號</font></b></td><td><b><font color="white">顧問名</font></b></td><td><b><font color="white">差階獎金</font></b></td><td><b><font color="white">輔導獎金</font></b></td><td><b><font color="white">體系獎金</font></b></td><td><b><font color="white">未撥獎金</font><td><b><font color="white">共享獎金</font>';
+
+            TableReportString += '<td><b><font size="4" color="white">合計</font></b></td></tr></font>';
+
+            $.each(data, function (i, item) {
+                TableReportString += '<tr><td>' + $.trim(item.ChiName) + '</td><td>' + $.trim(item.Con_ID) + '</td><td>' + toThousands(eval(item.Type1Bouns).toFixed(2)) + '</td><td>' + toThousands(eval(item.Type2Bouns).toFixed(2)) + '</td><td>' + toThousands(eval(item.Type3Bouns).toFixed(2)) + '</td><td>' + toThousands(eval(item.Type4Bouns).toFixed(2)) + '</td><td>' + toThousands(eval(item.Type5Bouns).toFixed(2)) + '</td><td>' + toThousands(eval(item.TotalBouns).toFixed(2)) + '</td></tr>';
+            });
+            TableReportString += '</table>';
+            $("#ReportSum").html(TableReportString);
+        });
+    }
+    function ExtensionReport(Report_ID) {
+        $("#ReportMasterID").val($.trim(Report_ID));
+        var obj =
+        {
+            Report_ID: $.trim(Report_ID)
+        }
+        $.getJSON("/PayedRecord/GetReportView", obj).done(function (data) {
+            $("#divExtensionReport").html('');
+
+            var objstring1 = "";
+            var objstring2 = "";
+            var objstring3 = "";
+            $("#Month1").hide();
+            $("#Month2").hide();
+            $("#Month3").hide();
+
+            //動態產生報表table
+            $.each(data, function (i, item) {
+                switch (item.MonNo) {
+                    case '1':
+                        objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '2':
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '3':
+                        objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                }
+            });
+            $("#divExtension1").html(objstring1);
+            $("#divExtension2").html(objstring2);
+            $("#divExtension3").html(objstring3);
+
+            if (objstring1 != "")
+                $("#Month1").show();
+            if (objstring2 != "")
+                $("#Month2").show();
+            if (objstring3 != "")
+                $("#Month3").show();
+
+            //依序抓取每個table的資料
+            $.each(data, function (i, item) {
+                TableReport($.trim(item.Report_Con_ID), item.MonthlyReport_ID);
+                TableDetailReport($.trim(item.Report_Con_ID), item.MonthlyReport_ID);
+            });
+        });
+    }
+    function TableReport(Con_ID, MonthlyReport_ID) {
+        var obj =
+        {
+            MonthlyReport_ID: MonthlyReport_ID,
+            Con_ID: Con_ID
+        }
+        $.getJSON("/PayedRecord/TableReport", obj).done(function (data) {
+            var TableReportString = '<font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">顧問編號</font></b></td><td><b><font color="white">顧問名</font></b></td><td><b><font color="white">存量金額</font></b></td><td><b><font color="white">獎金</font></b></td></tr></font>';
+            TableReportString += '<tr><td>' + data[0].Report_Con_ID + '</td><td>' + data[0].ConName + '</td><td>' + toThousands(eval(data[0].Total_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(data[0].Bonus).toFixed(2)) + '</td></tr>'
+            $("#Table_" + Con_ID + MonthlyReport_ID).html(TableReportString);
+        });
+    }
+    function TableDetailReport(Con_ID, MonthlyReport_ID) {
+        var obj =
+        {
+            MonthlyReport_ID: MonthlyReport_ID,
+            Con_ID: Con_ID
+        }
+        $.getJSON("/PayedRecord/TableDetailReport", obj).done(function (data) {
+            var TableDetailReport = '<font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">客戶編號</font></b></td><td><b><font color="white">客戶名</font></b></td><td><b><font color="white">入金</font></b></td><td><b><font color="white">出金</font></b></td><td><b><font color="white">金額</font></b></td><td><b><font color="white">佣金項目</font></b></td><td><b><font color="white">階級比率</font></b></td><td><b><font color="white">案別比率</font></b></td><td><b><font color="white">獎金</font></b></td></tr></font>';
+            var totalBonus = 0;
+            $.each(data, function (i, item) {
+                TableDetailReport += '<tr><td>' + item.Cli_ID + '</td><td>' + item.CliName + '</td><td>' + toThousands(eval(item.Deposit_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(item.Withdrawal_Amount).toFixed(2)) + '</td>'
+                TableDetailReport += '<td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + item.CODE_DESC + '</td><td>' + item.BonusType_Rate + '</td><td>' + item.DepositType_Rate + '</td>'
+                TableDetailReport += '<td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
+                totalBonus = totalBonus + eval(item.Bonus)
+            });
+            TableDetailReport += '<tr><td>合計</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>' + toThousands(eval(totalBonus).toFixed(2)) + '</td></tr>'
+
+            $("#TableDetail_" + Con_ID + MonthlyReport_ID).html(TableDetailReport);
+        });
+    }
+</script>

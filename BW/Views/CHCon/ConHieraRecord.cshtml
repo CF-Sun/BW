@@ -1,0 +1,90 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">基本資料</li>
+        <li class="breadcrumb-item active">
+            <a href="#">晉升紀錄</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">晉升紀錄</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/ConInfo/GetHieraRecordByID/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Con_Hiera',
+                    title: '職級',
+                    formatter: function (value, row, index) {
+                        return value + '%'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Record_DATE', title: '異動日期', align: 'center', halign: 'center', visible: true, sortable: true },
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+</script>

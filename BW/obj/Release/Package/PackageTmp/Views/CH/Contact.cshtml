@@ -1,0 +1,321 @@
+﻿@{
+    Layout = "~/Views/Shared/ContactLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="#">聯絡我們</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set text-center">
+            <h4 class="title">聯絡我們</h4>
+            <p>請填寫下方資料，我們將盡快提供回覆。</p>
+        </div>
+    </section>
+    <section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="contact-form" class="confirm" action="" method="POST">
+                    <div class="form-group au-form row">
+                        <label for="txtname" class="col-md-3 col-form-label">中文全名*</label>
+                        <div class="col-md-5">
+                            <input type="text" id="txtname" name="txtname" required data-error="請填寫中文全名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="Gender_Men" name="Gender" class="custom-control-input" value=0>
+                                <label class="custom-control-label" for="Gender_Men">
+                                    先生
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="Gender_Women" name="Gender" class="custom-control-input" value=1>
+                                <label class="custom-control-label" for="Gender_Women">
+                                    女士
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group au-form row">
+                        <label for="txtmail" class="col-md-3 col-form-label">Email*</label>
+                        <div class="col-md-9">
+                            <input type="email" id="txtmail" name="txtmail" required data-error="請填寫Email">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group au-form row">
+                        <label for="txtmobile" class="col-md-3 col-form-label">行動電話*</label>
+                        <div class="col-md-9">
+                            <input type="text" id="txtmobile" name="txtmobile" required data-error="請填寫行動電話">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class="form-group au-form row">
+                        <label for="sele_Identity" class="col-12 col-form-label">請問您的身分是？*</label>
+                        <div class="col-12 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Identity" id="sele_Identity" class="br-cus">
+                                <option value="0" selected disabled>請選擇您的身分</option>
+                                <option value="1">我已有客戶編號</option>
+                                <option value="2">我尚無客戶編號</option>
+                            </select>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_ContactType" class="col-12 col-form-label">諮詢類別*</label>
+                        <div class="col-12 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_ContactType" id="sele_ContactType" class="br-cus">
+                                <option value="0" selected disabled>請選擇問題類別</option>
+                                <option value="1">申購文件相關問題</option>
+                                <option value="2">申購流程相關問題</option>
+                                <option value="3">資金進出問題</option>
+                                <option value="4">其他問題</option>
+                            </select>
+                        </div>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                    <div class="form-group au-form">
+                        <label for="txtContent" class="">諮詢內容（限500字內）*</label>
+                        <textarea rows="6" id="txtContent" name="txtContent" required
+                                  data-error="請填寫諮詢內容" maxlength="500"></textarea>
+                        <div class="help-block with-errors mt-none"></div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="code" class="col-md-3 col-form-label">驗證碼*</label>
+                        <div class="col-md-4">
+                            <div class="form-group au-form veri-code">
+                                <input type="text" id="validate" placeholder="*驗證碼" required data-error="請填寫驗證碼" autocomplete="off">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group au-form veri-code">
+                                <img id="code" src="/Contact/GetValidateCode/" />
+                                <span class="iconify" data-icon="ion:refresh" data-inline="false" tilte="更新驗證碼" onclick="refreshCodeImg();"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="submitContact()" value="確認送出">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    @*<section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="purchase" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtname" class="col-2 col-form-label">姓名</label>
+                        <div class="col-10">
+                            <input type="text" id="txtname" name="txtname" required
+                                   data-error="請填寫姓名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form pl-2">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="Gender_Men" name="Gender" class="custom-control-input" value=0>
+                            <label class="custom-control-label" for="Gender_Men">
+                                先生
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="Gender_Women" name="Gender" class="custom-control-input" value=1>
+                            <label class="custom-control-label" for="Gender_Women">
+                                女士
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtmail" class="col-2 col-form-label">Email</label>
+                        <div class="col-10">
+                            <input type="email" id="txtmail" name="txtmail" required
+                                   data-error="請填寫Email">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtmobile" class="col-2 col-form-label">手機</label>
+                        <div class="col-10">
+                            <input type="text" id="txtmobile" name="txtmobile" required
+                                   data-error="請填寫手機">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Identity" class="col-2 col-form-label">身分</label>
+                        <div class="col-10 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Identity" id="sele_Identity" class="br-cus" required>
+                                <option value="0">請選擇您的身份</option>
+                                <option value="1">我已有客戶編號</option>
+                                <option value="2">我尚無客戶編號</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_ContactType" class="col-2 col-form-label">諮詢類別</label>
+                        <div class="col-10 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_ContactType" id="sele_ContactType" class="br-cus" required>
+                                <option value="0">請選擇問題類別</option>
+                                <option value="1">申購文件相關問題</option>
+                                <option value="2">申購流程相關問題</option>
+                                <option value="3">資金進出問題</option>
+                                <option value="4">其他問題</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtContent" class="col-2 col-form-label">諮詢內容(限500字內)</label>
+                        <div class="col-10">
+                            <textarea rows="6" id="txtContent" name="txtContent" required
+                                      data-error="請填寫諮詢內容" maxlength="500"></textarea>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group au-form veri-code">
+                                <input type="text" id="validate" placeholder="*驗證碼" required data-error="請填寫驗證碼" autocomplete="off">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="form-group au-form veri-code">
+                                <img id="code" src="/Contact/GetValidateCode/" />
+                                <span class="iconify" data-icon="ion:refresh" data-inline="false" tilte="更新驗證碼" onclick="refreshCodeImg();"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="submitContact()" value="確認送出">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>*@
+    @*<div class="modal fade" id="myModalForLogout" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <form id="" class="confirm" action="" method="POST" name="">
+                            <div class="form-group au-form row">
+                                <div class="col-12">
+                                    <label class="col-12 col-form-label">
+                                        您已成功送出，我們將盡快與您聯繫
+                                    </label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer justify-content-between">
+                        <input type="button" class="btn btn-sm btn-light" onclick="BackToIndex()" value="確認">
+                    </div>
+                </div>
+            </div>
+        </div>*@
+</div>
+<script>
+    //刷新驗證碼
+    function refreshCodeImg() {
+        $("#code").attr("src", "/Contact/GetValidateCode/" + "?t=" + new Date().getTime());//刷新驗證碼
+    }
+
+    function submitContact() {
+        if (!CheckValue()) {
+            //alert('尚有資料未填寫')
+            sweetAlert("尚有資料未填寫!", "", "warning");
+            return;
+        }
+        if ($('#validate').val() == '') {
+            //alert('請填寫驗證碼')
+            sweetAlert("請填寫驗證碼!", "", "warning");
+            return;
+        }
+        SendContact()
+    } 
+
+    function SendContact() {
+       // $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Contact/SendContact',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#validate').val(),
+                Name: $('#txtname').val(),
+                Email: $('#txtmail').val(),
+                Mobile: $('#txtmobile').val(),
+                Content: $('#txtContent').val(),
+                Gender: $('input[type=radio][name=Gender]:checked').val(),
+                Identity: $('#sele_Identity').val(),
+                ContactType: $('#sele_ContactType').val()
+            },
+            cache: false,
+            error: function (jqXHR, textStatus, errorThrown) {
+                //alert('發生錯誤,請稍後重新登入')
+                sweetAlert("登入失敗!", "發生錯誤,請稍後重新登入", "error");
+                window.location.href = "/CH/Contact";
+            },
+            success: function (result) {
+                //$('#maindiv').jqLoading("destroy");
+                if (!result) {
+                    //alert('驗證碼錯誤');
+                    sweetAlert("驗證碼錯誤!", "", "warning");
+                    refreshCodeImg();//刷新驗證碼
+                    return;
+                } else {
+                    if (result == "1") {
+                        //alert('系統發生錯誤')
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        refreshCodeImg();//刷新驗證碼
+                        return;
+                    } else {
+                        $('#myModalForLogout').modal('show');
+                        StartThisSessionTimer();
+                    }
+                }
+            }
+        });
+    }
+
+    function BackToIndex() {
+        window.location.href = "/CH/Index";
+    }
+
+    function CheckValue() {
+        if ($('#txtname').val() == '' || $('#txtmail').val() == '' || $('#txtmobile').val() == '' || $('#txtContent').val() == '') 
+            return false;
+        if ($('input[type=radio][name=Gender]:checked').val() == undefined)
+            return false;
+        if ($('#sele_Identity').val() == '0' || $('#sele_ContactType').val() == '0' )
+            return false;
+        return true;
+    }
+
+    var timeInSecondsAfterSessionOut = 20; // change this to change session time out (in seconds). 1200
+    var secondTick = 0;
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick;
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            BackToIndex();
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+</script>

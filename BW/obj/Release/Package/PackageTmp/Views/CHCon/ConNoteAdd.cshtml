@@ -1,0 +1,299 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="#">照會</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">寫一封照會</h4>
+        </div>
+    </section>
+    <section id="form1">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio1" name="Type" class="custom-control-input" value="Con" checked>
+                            <label class="custom-control-label" for="customRadio1">
+                                顧問相關問題
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio2" name="Type" class="custom-control-input" value="Cli">
+                            <label class="custom-control-label" for="customRadio2">
+                                客戶相關問題
+                            </label>
+                        </div>
+                    </div>
+                    @*<div class="form-group">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Type" id="mode1" value="Con" checked>
+                            <label class="form-check-label" for="mode1">顧問相關問題</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="Type" id="mode1" value="Cli">
+                            <label class="form-check-label" for="mode1">客戶相關問題</label>
+                        </div>
+                    </div>*@
+
+                    <div class="form-group au-form row" id="divConList">
+                        <label for="sele_Gender" class="col-3 col-form-label">請選擇顧問號</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_ConList" id="sele_ConList" class="br-cus"></select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row" id="divCliList" style="display:none">
+                        <label for="sele_Gender" class="col-3 col-form-label">請選擇客戶號</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_CliList" id="sele_CliList" class="br-cus"></select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtSubject" class="col-3 col-form-label">照會主旨</label>
+                        <div class="col-9">
+                            <input type="text" id="txtSubject" name="txtSubject" required
+                                   data-error="請填寫照會主旨">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtContent" class="col-3 col-form-label">照會內容</label>
+                        <div class="col-9">
+                            <textarea rows="6" id="txtContent" name="txtContent" required
+                                      data-error="請填寫照會內容"></textarea>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="fileUpload1" class="col-3 col-form-label">檔案1</label>
+                        <div class="col-9">
+                            <div class="file-wrapper">
+                                <div class="custom-file">
+                                    <input type="file" name="upload" class="custom-file-input" id="fileUpload1">
+                                    <label class="custom-file-label" for="fileUpload1" id="fileUploadName1">選擇檔案上傳</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="fileUpload2" class="col-3 col-form-label">檔案2</label>
+                        <div class="col-9">
+                            <div class="file-wrapper">
+                                <div class="custom-file">
+                                    <input type="file" name="upload" class="custom-file-input" id="fileUpload2">
+                                    <label class="custom-file-label" for="fileUpload2" id="fileUploadName2">選擇檔案上傳</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="fileUpload3" class="col-3 col-form-label">檔案3</label>
+                        <div class="col-9">
+                            <div class="file-wrapper">
+                                <div class="custom-file">
+                                    <input type="file" name="upload" class="custom-file-input" id="fileUpload3">
+                                    <label class="custom-file-label" for="fileUpload3" id="fileUploadName3">選擇檔案上傳</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="history.back()" value="取消返回">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="Submit()" value="送出照會">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    var FileName1 = "";
+    var FileName2 = "";
+    var FileName3 = "";
+    var IsCon = "True";
+    $('input[type=radio][name=Type]').change(function () {
+        if (this.value == 'Con') {
+            IsCon = "True";
+            $('#divConList').show('fast');
+            $('#divCliList').hide('fast');
+        }
+        else if (this.value == 'Cli') {
+            IsCon = "False";
+            $('#divConList').hide('fast');
+            $('#divCliList').show('fast');
+        }
+    });
+
+    setList();
+
+    //設定狀態下拉選單-------------------
+    function setList() {
+        var obj =
+        {
+            ConID: conAccount
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/CliInfo/GetCliListByConID", obj).done(function (data) {
+            $("#sele_ConList").empty();
+            $("#sele_CliList").empty();
+
+            $("#sele_ConList").append($("<option>").val(conAccount).text(conAccount))
+            $.each(data, function (i, item) { $("#sele_CliList").append($("<option>").val($.trim(item.Cli_ID)).text($.trim(item.Cli_ID) + $.trim(item.ChiName))) });
+
+            $('#maindiv').jqLoading("destroy");
+        })
+    }
+
+    //## 按下上傳按鈕觸發
+    $('#fileUpload1').on('change', function (e) {
+        chkfile('fileUpload1', 'fileUploadName1')
+    });
+    $('#fileUpload2').on('change', function (e) {
+        chkfile('fileUpload2', 'fileUploadName2')
+    });
+    $('#fileUpload3').on('change', function (e) {
+        chkfile('fileUpload3', 'fileUploadName3')
+    });
+
+    function chkfile(s, f) {
+
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Announcement/chkFile",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            if (s == "fileUpload1")
+                                FileName1 = data.filename
+                            if (s == "fileUpload2")
+                                FileName2 = data.filename
+                            if (s == "fileUpload3")
+                                FileName3 = data.filename
+                        } else {
+                            $('#' + s).val('')
+                            $('#' + f).html('選擇檔案上傳')
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        $('#' + s).val('')
+                        $('#' + f).html('選擇檔案上傳')
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    }
+    
+    function Submit() {
+        if ($("#txtSubject").val() == "") {
+            //alert('請填寫照會主旨')
+            sweetAlert("請填寫照會主旨!", "", "warning");
+            return;
+        }
+        if ($("#txtContent").val() == "") {
+            //alert('請填寫照會內容')
+            sweetAlert("請填寫照會內容!", "", "warning");
+            return;
+        }
+
+
+        var obj = {};
+        obj.Subject = $('#txtSubject').val();
+        obj.Content = $('#txtContent').val();
+        obj.FileName1 = FileName1;
+        obj.FileName2 = FileName2;
+        obj.FileName3 = FileName3;
+        obj.IsCon = IsCon;
+        obj.ConID = $('#sele_ConList').val();
+        obj.CliID = $('#sele_CliList').val();
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/NoteRecord/AddNewNote";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data != "0") {
+                if ($.trim(FileName1) != "")
+                    fileupload('fileUpload1', data)
+                if ($.trim(FileName2) != "")
+                    fileupload('fileUpload2', data)
+                if ($.trim(FileName3) != "")
+                    fileupload('fileUpload3', data)
+                //alert('送出成功!');
+                swal("送出成功!", "", "success")
+                window.location.href = "/CHCon/ConNoteRecord";
+
+            } else {
+                //alert('送出失敗!');
+                sweetAlert("送出失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('送出失敗!');
+            sweetAlert("送出失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    function fileupload(s, NoteNO) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/NoteRecord/UploadFile?Note_NO=" + NoteNO +"&Note_Seq=1",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳失敗!", "上傳檔案" + f + "發生錯誤", "error");
+                    });
+            }
+        }
+    }
+</script>

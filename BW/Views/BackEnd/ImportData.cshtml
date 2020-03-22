@@ -1,0 +1,51 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">選擇檔案：</label>
+                                <div class="col-sm-6">
+                                    <input id="fileUpload" type="file" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">上傳種類：</label>
+                                <div class="col-sm-9">
+                                    <select class="form-control" id="uploadType" name="uploadType">
+                                        <option value="0" selected>名單</option>
+                                        <option value="1">存款</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="clicktoUpload()">上傳</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

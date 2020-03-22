@@ -1,0 +1,313 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">客戶發息紀錄</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">客戶發息紀錄</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCli_NO" class="col-md-3 col-form-label">客戶編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCli_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Name" class="col-md-3 col-form-label">客戶姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCli_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                            <input type="button" id="btnModalForUpload" class="btn btn-sm btn-primary" onclick="openFileUpload('myModalForUpload')" style="display:none" value="發息紀錄上傳">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+            <a id="download_a"></a>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModalForUpload" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        檔案上傳
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="fileUpload" class="col-3 col-form-label">檔案</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload">
+                                        <label class="custom-file-label" for="fileUpload" id="fileUploadName">選擇檔案</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                    <div class="modal-footer justify-content-between">
+                        <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                        <input type="button" class="btn btn-sm btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()" value="上傳">
+                    </div>
+                </div>
+            </div>
+    </div>
+</div>
+@*<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div>
+            <h2>客戶發息紀錄</h2>
+        </div>
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">客戶編號：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCli_NO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">客戶姓名：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCli_Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="clicktoSearch()">查詢</button>
+                                        <button type="button" class="btn btn-success" onclick="openFileUpload('myModalForUpload')" id="btnModalForUpload" style="display:none">發息紀錄上傳</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+    <div id="myModalForUpload" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">發息上傳</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">選擇檔案</label>
+                            <div class="col-sm-6">
+                                <input id="fileUpload" type="file" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()">上傳</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    var IsAuth_3 = false;
+    if (userAccount == 'BW') {
+        IsAuth_3 = true;
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_6 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+            if (data[0].Auth_3 == "True")
+                IsAuth_3 = true;
+        });
+    }
+    if (IsAuth_3 == true) {
+        $('#btnModalForUpload').show();
+    }
+
+
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/PayedRecord/GetCliPayedRecord/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName', title: '客戶中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'EngNAME', title: '客戶英文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'InterestInterval',
+                    title: '利息區間',
+                    formatter: function (value, row, index) {
+
+                        value = row.InterestInterval_Start + "-" + row.InterestInterval_End
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Interest_Amount',
+                    title: '發息金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'InterestPayedDate', title: '發息時間', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: $('#txtCli_NO').val(), CliName: $('#txtCli_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            search: true,
+            virtualScroll: true,
+            height: 600,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function openFileUpload(x) {
+        $('#fileUpload').val('')
+        $('#fileUploadName').html('')
+        $('#' + x).modal('show');
+    }
+
+    //發息紀錄上傳--------------------
+    function SubmitUpload() {
+        var files = document.getElementById("fileUpload").files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/PayedRecord/UploadFile",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            $('#myModalForUpload').modal('hide');
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        } else {
+            //alert('請選擇檔案')
+            sweetAlert("請選擇檔案!", "", "warning");
+            return;
+        }
+    }
+    //--------------------------------
+</script>

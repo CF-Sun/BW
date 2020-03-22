@@ -1,0 +1,930 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="robots" content="noindex,nofollow" />
+    <meta name="googlebot" content="noindex,nofollow" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Chrome, Firefox OS and Opera -->
+    <meta name="theme-color" content="#2B415F">
+    <!-- Windows Phone -->
+    <meta name="msapplication-navbutton-color" content="#2B415F">
+    <!-- iOS Safari -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="#2B415F">
+    <title>新安財產基金 New Safety Property Fund SP</title>
+    <meta name="keywords" content="新安財產基金,New Safety Property Fund">
+    <meta name="description" content="New Safety Property Fund SP新安財產基金，提供安全投資管道，穩定獲利。專注於香港房地產借貸市場，透過有抵押品的低風險投資，為投資者創造穩定、安全的被動式收入。" />
+    <meta name="author" content="CF & M.Y" />
+    <meta name="copyright" content="Aquarius Protection Fund SPC-New Safety Property Fund SP ">
+    <meta property="og:title" content="新安財產基金 New Safety Property Fund SP" />
+    <meta property="og:url" content="index" />
+    <meta property="og:site_name" content="新安財產基金 New Safety Property Fund SP" />
+    <meta property="og:description" content="New Safety Property Fund SP新安財產基金，提供安全投資管道，穩定獲利。專注於香港房地產借貸市場，透過有抵押品的低風險投資，為投資者創造穩定、安全的被動式收入。" />
+    <meta property="og:keywords" content="新安財產基金,New Safety Property Fund">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <link rel="shortcut icon" href="~/favicon.ico">
+    <!-- Google Webfonts -->
+    <link href="https://fonts.googleapis.com/css?family=Muli:300,600,900|Noto+Sans+TC:300,500,700&display=swap" rel="stylesheet">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- loaders -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.min.css">
+    <!-- Theme Style -->
+    <link rel="stylesheet" href="~/Content/stylesheets/frontend.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- jQuery Easing -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- loaders -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/loaders.css/0.1.2/loaders.css.min.js"></script>
+    <!-- iconify -->
+    <script src="https://code.iconify.design/1/1.0.0-rc6/iconify.min.js"></script>
+    <!-- Wow.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wow/1.1.2/wow.min.js"></script>
+
+    <script src="~/Content/js/validator.min.js"></script>
+    <script src="~/Content/js/contact.js"></script>
+    <script src="~/Content/js/jquery.ellipsis-1.1.1.min.js"></script>
+    <!-- Main JS -->
+    <script src="~/Content/js/main.js"></script>
+    <script src="~/Content/js/frontend.js"></script>
+
+    <!--自加-->
+    <script src="~/Content/css/bootstrap-table/bootstrap-table.js"></script>
+    <script src="~/Content/css/bootstrap-table/locale/bootstrap-table-zh-TW.min.js"></script>
+    <link type="text/css" href="~/Content/css/bootstrap-table/bootstrap-table.css" rel="stylesheet">
+    <script src="~/Content/js/bootstrap-datepicker.js"></script>
+    <script src="~/Content/js/bootstrap-datepicker.zh-TW.js"></script>
+    <link rel="stylesheet" href="~/Content/css/bootstrap-datepicker3.min.css">
+    <script src="~/Content/js/lodingMask.js"></script>
+    <script src="~/Content/js/jquery.timers/jquery.timers.js"></script>
+    <script src="~/Content/js/common.js"></script>
+    <script src="~/Content/js/accounting.min.js"></script>
+
+    <!-- sweetalert -->
+    <script src="~/Scripts/sweetalert.min.js"></script>
+    <link href="~/Styles/sweetalert.css" rel="stylesheet" />
+
+</head>
+<body>
+    <div id="loading">
+        <div class="loading">
+            <img src="~/Content/files/Image/logo.png" alt="">
+            <div class="loader-inner ball-pulse"></div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForLogout" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <div class="col-12">
+                                <label class="col-10 col-form-label">
+                                    閒置過久將於<label id="lblsec" style="color:red"></label>秒後自動登出
+                                </label>
+                                <label class="col-10 col-form-label">
+                                    請點擊確認繼續使用
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" class="btn btn-sm btn-light" data-dismiss="modal" onclick="CancelLogout()" value="確認">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="Logout()" value="登出">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForEditPW" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        修改密碼
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtOldPW" class="col-3 col-form-label">舊密碼</label>
+                            <div class="col-9">
+                                <input type="text" id="txtOldPW" name="txtOldPW"
+                                       required data-error="請輸入舊密碼">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtNewPW" class="col-3 col-form-label">新密碼</label>
+                            <div class="col-9">
+                                <input type="text" id="txtNewPW" name="txtNewPW"
+                                       required data-error="請輸入新密碼">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtNewPW2" class="col-3 col-form-label">確認新密碼</label>
+                            <div class="col-9">
+                                <input type="text" id="txtNewPW2" name="txtNewPW2"
+                                       required data-error="請再輸入一次新密碼">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForEditPW()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="page">
+        <header id="header" role="banner">
+            <nav class="navbar navbar-expand-md align-items-center justify-content-between">
+                <div class="container">
+                    <div class="logo">
+                        <a href="/CH/index">
+                            <img class="" src="~/Content/files/Image/logo.png" alt="">
+                        </a>
+                    </div>
+                    <!-- 右上側工具列 -->
+                    <div class="navbar-collapse offcanvas-collapse">
+
+                        <ul class="navbar-nav align-items-center menus ml-auto">
+                            <li class="sub-menu-parent">
+                                <a href="#" class="nav-link">
+                                    客戶總覽
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="/CHCon/CliManage">客戶列表</a>
+                                    </li>
+                                    <li>
+                                        <a href="/CHCon/CliDepositeStatus">出入金紀錄</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="#" class="nav-link">
+                                    客戶登記
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="/CHCon/CliRegi">報客戶</a>
+                                    </li>
+                                    <li>
+                                        <a href="/CHCon/CliDepositeRegi">入金登記</a>
+                                    </li>
+                                    <li>
+                                        <a href="/CHCon/CliWithdrawalRegi">出金登記</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="/CHCon/ConPayedReport" class="nav-link">
+                                    佣金報表
+                                </a>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="#" class="nav-link">
+                                    <span>業績查詢</span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="/CHCon/PerformIndividual">個人業績</a>
+                                    </li>
+                                    <li>
+                                        <a href="/CHCon/PerformOrgan">組織業績</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="/CHCon/ConOrgTree" class="nav-link">
+                                    組織樹
+                                </a>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="/CHCon/ConNoteRecord" class="nav-link">
+                                    照會
+                                </a>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="/CHCon/Announcement" class="nav-link">
+                                    公告
+                                </a>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="#" class="nav-link">
+                                    <span>基本資料</span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="/CHCon/ConInfo">檢視編輯</a>
+                                    </li>
+                                    <li>
+                                        <a href="/CHCon/ConHieraRecord">晉升紀錄</a>
+                                    </li>
+                                    <li>
+                                        <a onclick="EditPW()">密碼修改</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="sub-menu-parent">
+                                <a href="#" class="nav-link">
+                                    <span class="txt">會員登入</span>
+                                    <span class="iconify" data-icon="ion:person-circle-outline" data-inline="false"></span>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="#" onclick="Logout()">登出</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="menu">
+                        <div class="burger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </header>
+        <div id="main" class="frontend">
+            <div id="admin">
+                @*<a id="accountName"></a>|*@
+                <span id="accountName"></span>
+            </div>
+            @RenderBody()
+        </div>
+        <!-- end of main -->
+        <footer id="footer">
+            <section id="info">
+                <div class="container-fluid">
+                    <div class="row justify-content-between align-items-center">
+                        <div class="col-md-7">
+                            <p>
+                                <small>
+                                    Aquarius Protection Fund SPC-New Safety Property Fund SP provides general advice only that does not
+                                    take into account financial situation, needs or individual investment objectives and it is
+                                    recommended that you seek independent advice as required. The information contained here is general
+                                    in nature, provided without reference to your past, present or future financial situation. These
+                                    products may not be suitable for all investors. Aquarius Protection Fund SPC-New Safety Property
+                                    Fund SP is not responsible for the profit or loss of the fund, nor does it guarantee the minimum
+                                    income. This information is general in nature and does not constitute advice or a recommendation to
+                                    act upon the information or an offer.
+                                </small>
+                            </p>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="logo">
+                                <a href="/CH/index">
+                                    <img src="~/Content/files/Image/logo-f.png" alt="">
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <div class="icons">
+                <div class="container-fluid">
+                    <span class="copyright">
+                        &copy; 2020 Aquarius Protection Fund SPC-New Safety Property Fund SP <span>All rights reserved</span>
+                    </span>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <ul class="side-btns">
+        <li class="gototop js-top">
+            <a href="#" class="js-gotop" title="回上層">
+                <span class="iconify" data-icon="fa-solid:angle-up" data-inline="false"></span>
+                <span>TOP</span>
+            </a>
+        </li>
+    </ul>
+    <div class="overlay"></div>
+    @RenderSection("Scripts", required: false)
+
+    <div class="modal fade" id="myModalForUpload" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        檔案上傳
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="fileUpload" class="col-3 col-form-label">檔案</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file" id="divFile1" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload1" onchange="chkfile('fileUpload1', 'fileUploadName1')">
+                                        <label class="custom-file-label" for="fileUpload1" id="fileUploadName1">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile2" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload2" onchange="chkfile('fileUpload2', 'fileUploadName2')">
+                                        <label class="custom-file-label" for="fileUpload2" id="fileUploadName2">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile3" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload3" onchange="chkfile('fileUpload3', 'fileUploadName3')">
+                                        <label class="custom-file-label" for="fileUpload3" id="fileUploadName3">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile4" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload4" onchange="chkfile('fileUpload4', 'fileUploadName4')">
+                                        <label class="custom-file-label" for="fileUpload4" id="fileUploadName4">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile5" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload5" onchange="chkfile('fileUpload5', 'fileUploadName5')">
+                                        <label class="custom-file-label" for="fileUpload5" id="fileUploadName5">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile6" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload6" onchange="chkfile('fileUpload6', 'fileUploadName6')">
+                                        <label class="custom-file-label" for="fileUpload6" id="fileUploadName6">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile7" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload7" onchange="chkfile('fileUpload7', 'fileUploadName7')">
+                                        <label class="custom-file-label" for="fileUpload7" id="fileUploadName7">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile8" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload8" onchange="chkfile('fileUpload8', 'fileUploadName8')">
+                                        <label class="custom-file-label" for="fileUpload8" id="fileUploadName8">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile9" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload9" onchange="chkfile('fileUpload9', 'fileUploadName9')">
+                                        <label class="custom-file-label" for="fileUpload9" id="fileUploadName9">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile10" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload10" onchange="chkfile('fileUpload10', 'fileUploadName10')">
+                                        <label class="custom-file-label" for="fileUpload10" id="fileUploadName10">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile11" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload11" onchange="chkfile('fileUpload11', 'fileUploadName11')">
+                                        <label class="custom-file-label" for="fileUpload11" id="fileUploadName11">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile12" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload12" onchange="chkfile('fileUpload12', 'fileUploadName12')">
+                                        <label class="custom-file-label" for="fileUpload12" id="fileUploadName12">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile13" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload13" onchange="chkfile('fileUpload13', 'fileUploadName13')">
+                                        <label class="custom-file-label" for="fileUpload13" id="fileUploadName13">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile14" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload14" onchange="chkfile('fileUpload14', 'fileUploadName14')">
+                                        <label class="custom-file-label" for="fileUpload14" id="fileUploadName14">選擇檔案</label>
+                                    </div>
+                                    <div class="custom-file" id="divFile15" style="display:none">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload15" onchange="chkfile('fileUpload15', 'fileUploadName15')">
+                                        <label class="custom-file-label" for="fileUpload15" id="fileUploadName15">選擇檔案</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()" value="上傳">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalForEdit" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        基本資料修改
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="color:red">*無法自行修改的欄位，請檢附相關證明文件，寫一封照會請公司修改</p>
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtCli_ChiName_Last" class="col-3 col-form-label">中文姓</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_ChiName_Last" name="txtCli_ChiName_Last" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_ChiName_First" class="col-3 col-form-label">中文名</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_ChiName_First" name="txtCli_ChiName_First" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_EngName_Last" class="col-3 col-form-label">英文姓</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_EngName_Last" name="txtCli_EngName_Last" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_EngName_First" class="col-3 col-form-label">英文名</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_EngName_First" name="txtCli_EngName_First" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_Gender" class="col-3 col-form-label">性別</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Gender" id="sele_Gender" class="br-cus" disabled style="background-color:lightgray">
+                                    <option value="0">請選擇</option>
+                                    <option value="M">男</option>
+                                    <option value="F">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_ID_Num" class="col-3 col-form-label">身份ID</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_ID_Num" name="txtCli_ID_Num" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_PassPort" class="col-3 col-form-label">護照號</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_PassPort" name="txtCli_PassPort" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_BirthDay" class="col-3 col-form-label">出生日期</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_BirthDay" name="txtCli_BirthDay" readonly
+                                       data-error="請選擇出生日期">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_Census_Country" class="col-3 col-form-label">國籍</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" disabled style="background-color:lightgray">
+                                    <option value="0" disabled selected>請選擇</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Phone_site" class="col-3 col-form-label">行動電話</label>
+                            <div class="col-4 underline">
+                                <input type="text" id="txtCli_Phone_site" name="txtCli_Phone_site" readonly style="background-color:lightgray">
+                            </div>
+                            <div class="col-5">
+                                <input type="text" id="txtCli_Phone" name="txtCli_Phone" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Email" class="col-3 col-form-label">Email</label>
+                            <div class="col-9">
+                                <input type="email" id="txtCli_Email" name="txtCli_Email" readonly style="background-color:lightgray">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Live_Addr" class="col-3 col-form-label">居住地址</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_Live_Addr" name="txtCli_Live_Addr">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Eng_Addr" class="col-3 col-form-label">英文居住地址</label>
+                            <div class="col-9">
+                                <textarea rows="6" id="txtCli_Eng_Addr" name="txtCli_Eng_Addr"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_PostalCode" class="col-3 col-form-label">郵政編號</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCli_PostalCode" name="txtCli_PostalCode">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSubmitEdit" class="btn btn-sm btn-primary" onclick="SubmitEdit()" value="確認修改">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForCredentials" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        證件狀態
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableCredentials"></table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="submit" class="btn btn-sm btn-primary" data-dismiss="modal" value="確認">
+                </div>
+                @*<a id="download_a"></a>*@
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalForReport" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        佣金計算報表
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="ExportPDF" class="btn btn-sm btn-primary" onclick="document.getElementById('buttonConvertUrl').click()" value="匯出報表">
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div id="divReportSum" class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableforReportSum"></table>
+                        </div>
+                        <div id="divReport" class="overflow">
+                            <div id="Month1" style="display:none">
+                                <label id="lblMon1" class="col-3 col-form-label"></label>
+                                <div id="divExtension1"></div>
+                            </div>
+                            <br />
+                            <br />
+                            <div id="Month2" style="display:none">
+                                <label id="lblMon2" class="col-3 col-form-label"></label>
+                                <div id="divExtension2"></div>
+                            </div>
+                            <br />
+                            <br />
+                            <div id="Month3" style="display:none">
+                                <label id="lblMon3" class="col-3 col-form-label"></label>
+                                <div id="divExtension3"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div style="display:none">
+                    <form action="/Export/BonusReport2Pdf" method="post" target="HideProgressBar();">
+                        <input type="hidden" id="ReportMasterID" name="ReportMasterID" />
+                        <input type="hidden" id="Report_Con_ID" name="Report_Con_ID" />
+                        <input type="hidden" id="ReportType" name="ReportType" value="Individual" />
+                        <input type="submit" name="buttonConvertUrl" id="buttonConvertUrl" value="Convert URL to PDF">
+                    </form>
+                    <iframe id="myIframe" name="myIframe"></iframe>
+                </div>
+                <a id="download_a"></a>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        照會內容
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div>
+                            <div id="divfile"></div>
+                        </div>
+
+                        <div id="replyContent">
+                            <hr>
+                            <h6>回覆內容</h6>
+                            <div class="form-group au-form">
+                                <textarea rows="6" placeholder="回覆內容" id="txtReply" name="reply" required
+                                          data-error="請填寫回覆內容"></textarea>
+                                <div class="help-block with-errors mt-none"></div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="NotefileUpload1" class="col-3 col-form-label">檔案1</label>
+                                <div class="col-9">
+                                    <div class="file-wrapper">
+                                        <div class="custom-file">
+                                            <input type="file" name="upload" class="custom-file-input" id="NotefileUpload1">
+                                            <label class="custom-file-label" for="NotefileUpload1" id="NotefileUploadName1">選擇檔案上傳</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="NotefileUpload2" class="col-3 col-form-label">檔案2</label>
+                                <div class="col-9">
+                                    <div class="file-wrapper">
+                                        <div class="custom-file">
+                                            <input type="file" name="upload" class="custom-file-input" id="NotefileUpload2">
+                                            <label class="custom-file-label" for="NotefileUpload2" id="NotefileUploadName2">選擇檔案上傳</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="NotefileUpload3" class="col-3 col-form-label">檔案3</label>
+                                <div class="col-9">
+                                    <div class="file-wrapper">
+                                        <div class="custom-file">
+                                            <input type="file" name="upload" class="custom-file-input" id="NotefileUpload3">
+                                            <label class="custom-file-label" for="NotefileUpload3" id="NotefileUploadName3">選擇檔案上傳</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnUploadFile" class="btn btn-sm btn-primary" onclick="NoteRecordSubmit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="myModalForConCredentials" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        證件資料
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableConCredentials"></table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="submit" class="btn btn-sm btn-primary" data-dismiss="modal" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<script>
+    var isLogout = false;
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    ////設定閒置後自動登出-----------------------------
+    $(function () {
+        $("body").on('click keypress', function () {
+            ResetThisSession();
+        });
+    });
+    var timeInSecondsAfterSessionOut = 1200; // change this to change session time out (in seconds). 1200
+    var secondTick = 0;
+    function ResetThisSession() {
+        if (isLogout == false) {
+            secondTick = 0;
+            secondTick2 = 0;
+            doCookieSetup("conRole", conRole);
+            doCookieSetup("conAccount", conAccount);
+        }
+    }
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick;
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+
+            $('#myModalForLogout').modal('show');
+            clearTimeout(tick);
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+
+    var timeInSecondsAfterSessionOut2 = 1381; // change this to change session time out (in seconds). 1380
+    var secondTick2 = 0;
+    function ResetThisSession2() {
+        secondTick2 = 0;
+    }
+    function StartThisSessionTimer2() {
+        secondTick2++;
+        var timeLeft2 = ((timeInSecondsAfterSessionOut2 - secondTick2) / 60).toFixed(0); // in minutes
+        timeLeft2 = timeInSecondsAfterSessionOut2 - secondTick2;
+
+        if (secondTick2 > timeInSecondsAfterSessionOut2) {
+            Logout();
+        }
+        if (timeLeft2 >= 0)
+            $('#lblsec').html(timeLeft2)
+        tick2 = setTimeout("StartThisSessionTimer2()", 1000);
+    }
+
+    StartThisSessionTimer();
+    StartThisSessionTimer2()
+    //-----------------------------------------
+
+    $(document).ready(function () {
+        //檢查cookie 不存在則轉到登入頁
+        if (conAccount == null || conAccount == '' || conAccount == undefined) {
+            Logout()
+        }
+        else {
+            $('#accountName').html(conAccount + '您好')
+            //var obj =
+            //{
+            //    ROLE_ID: conRole
+            //}
+            //$.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            //    if (data[0].Auth_1 == "True")
+            //        $('#li_1').show();
+            //    if (data[0].Auth_4 == "True")
+            //        $('#li_2').show();
+            //    if (data[0].Auth_6 == "True")
+            //        $('#li_3').show();
+            //    if (data[0].Auth_7 == "True") {
+            //        $('#li_4').show(); $('#li_7').show();
+            //    }
+            //    if (data[0].Auth_8 == "True") {
+            //        $('#li_5').show(); $('#li_6').show();
+            //    }
+            //    if (data[0].Auth_10 == "True")
+            //        $('#li_8').show();
+            //    if (data[0].Auth_13 == "True") {
+            //        $('#li_9').show(); $('#li_10').show();
+            //    }
+            //    if (data[0].Auth_14 == "True")
+            //        $('#li_11').show();
+            //    if (data[0].Auth_16 == "True")
+            //        $('#li_12').show();
+            //    if (data[0].Auth_17 == "True") {
+            //        $('#li_13').show(); $('#li_14').show();
+            //    }
+            //    if (data[0].Auth_18 == "True")
+            //        $('#li_15').show();
+            //    if (data[0].Auth_19 == "True") {
+            //            /*$('#div_16').show();*/ $('#li_16').show();
+            //    }
+            //});
+        }
+    });
+    function CancelLogout() {
+        $('#myModalForLogout').modal('hide');
+        doCookieSetup("conRole", conRole);
+        doCookieSetup("conAccount", conAccount);
+
+        ResetThisSession();
+        ResetThisSession2();
+        clearTimeout(tick);
+        clearTimeout(tick2);
+        StartThisSessionTimer();
+        StartThisSessionTimer2()
+    }
+    function Logout() {
+        isLogout = true;
+        delCookie("conRole");
+        delCookie("conAccount");
+        clearTimeout(tick);
+        clearTimeout(tick2);
+
+        window.location.href = "/CH/ConLogin";
+    }
+    //function EditEmail() {
+    //    $('#myModalForEditEmail').modal('show'); 
+    //}
+    //function SubmitForEditEmail() {
+    //    if ($('#txtAdmin_Email').val() == "") {
+    //        alert('請輸入Email');
+    //        return;
+    //    }
+    //    var obj = {};
+    //    obj.Account = userAccount;
+    //    obj.Email = $('#txtAdmin_Email').val();
+    //    $('#maindiv').jqLoading();
+    //    var options = {};
+    //    options.url = "/Account/AccountEditEmail";
+    //    options.type = "POST";
+    //    options.data = JSON.stringify(obj);
+    //    options.contentType = "application/json";
+    //    options.dataType = "html";
+    //    options.success = function (data) {
+    //        if (data == 1) {
+    //            alert('修改成功!');
+    //        } else {
+    //            alert('修改失敗!');
+    //        }
+    //        $('#maindiv').jqLoading("destroy");
+    //    };
+    //    options.error = function () {
+    //        alert('修改失敗!');
+    //        $('#maindiv').jqLoading("destroy");
+    //    };
+    //    $.ajax(options);
+    //}
+    function EditPW() {
+        $('#txtOldPW').val('')
+        $('#txtNewPW').val('')
+        $('#txtNewPW2').val('')
+        $('#myModalForEditPW').modal('show');
+    }
+    function SubmitForEditPW() {
+        if ($('#txtOldPW').val() == "") {
+            //alert('請輸入舊密碼');
+            sweetAlert("請輸入舊密碼!", "", "warning");
+            return;
+        }
+        if ($('#txtNewPW').val() == "") {
+            //alert('請輸入新密碼');
+            sweetAlert("請輸入新密碼!", "", "warning");
+            return;
+        }
+        if ($('#txtNewPW').val() != $('#txtNewPW2').val()) {
+            //alert('再次確認的新密碼不一致');
+            sweetAlert("再次確認的新密碼不一致!", "", "warning");
+            return;
+        }
+        var obj = {};
+        obj.Account = conAccount;
+        obj.OldPW = $('#txtOldPW').val();
+        obj.NewPW = $('#txtNewPW').val();
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/AccountEditPW";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            } else if (data == 2) {
+                //alert('修改失敗!舊密碼輸入錯誤');
+                sweetAlert("修改失敗!", "舊密碼輸入錯誤", "error");
+            }
+            else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

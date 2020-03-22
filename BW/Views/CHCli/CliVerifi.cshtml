@@ -1,0 +1,19 @@
+﻿@{
+    Layout = "~/Views/Shared/CliLayout.cshtml";
+}
+<script>
+
+    Account = sessionStorage["CliAccount"];
+    Role = sessionStorage["CliRole"];
+    if (Account == null || Account == '' || Account == undefined) {
+        window.location.href = "/CH/ConLogin";
+    }
+    else {
+        delCookie("cliRole");
+        delCookie("cliAccount");
+        doCookieSetup("cliRole", Role);
+        doCookieSetup("cliAccount", Account);
+        window.location.href = "/CHCli/CliAccount";
+    }
+
+</script>

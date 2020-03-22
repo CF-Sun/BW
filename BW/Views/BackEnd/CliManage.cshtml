@@ -1,0 +1,297 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問客戶管理</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">顧問客戶管理</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+@*<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div>
+            <h2>顧問客戶管理</h2>
+        </div>
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問編號：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_NO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問姓名：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="clicktoSearch()">查詢</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+        
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_13 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+    //查詢
+    function clicktoSearch() {
+        if ($('#txtCon_NO').val() == '' && $('#txtCon_Name').val() == '') {
+            //alert("請輸入顧問編號或顧問姓名");
+            sweetAlert("請輸入顧問編號或顧問姓名!", "", "warning");
+            return;
+        }
+        $('#maindiv').jqLoading();
+
+        loadData();
+
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/CliInfo/GetCliList/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Deposit_ID = $.trim(row.Deposit_ID)
+                DepositListFileName = $.trim(row.DepositListFileName)
+            },
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')" >' + $.trim(row.Cli_ID) + '</a></li></ul>'
+
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Cli_ID',
+                    title: '英文名',
+                    formatter: function (value, row, index) {
+                        var value = $.trim(row.Cli_EngNAME_Last) + $.trim(row.Cli_EngNAME_First);
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Con_ID', title: '所屬顧問', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConChiName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Cli_Gender',
+                    title: '性別',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 'F':
+                                value = '女';
+                                break;
+                            case 'M':
+                                value = '男';
+                                break;
+                            default:
+                                value = '';
+                                break;
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Phone',
+                    title: '行動電話',
+                    formatter: function (value, row, index) {
+                        if ($.trim(row.Cli_Phone_site) != "")
+                            return '(' + $.trim(row.Cli_Phone_site) + ')' + $.trim(row.Cli_Phone)
+                        else
+                            return '';
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Cli_Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsBuyCerti',
+                    title: '憑證發送狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            return '已發送'
+                        else
+                            return '未發送'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'NetDeposit',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+                //{
+                //    field: 'Type1',
+                //    title: '一案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //},
+                //{
+                //    field: 'Type2',
+                //    title: '二案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //},
+                //{
+                //    field: 'Type3',
+                //    title: '三案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //}
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: $('#txtCon_NO').val(), ConName: $('#txtCon_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 500,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Cli_ID) {
+        sessionStorage["Cli_ID"] = Cli_ID;
+        window.location.href = "/BackEnd/CliInfo";
+    }
+</script>

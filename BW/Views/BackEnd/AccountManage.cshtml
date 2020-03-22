@@ -1,0 +1,289 @@
+﻿@{
+     Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">系統管理</li>
+        <li class="breadcrumb-item active">
+            <a href="#">帳號權限管理</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">帳號權限管理</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtAccount" class="col-md-3 col-form-label">帳號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtAccount">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModalForEdit" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        角色設定
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="sele_Role" class="col-3 col-form-label">角色</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Role" id="sele_Role" class="br-cus" required>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else {
+        $('#maindiv').hide();
+    }
+
+    //初始化----
+    var _ID;
+    //設定角色下拉
+    var obj =
+    {
+        Role_Name: ''
+    }
+    $('#maindiv').jqLoading();
+    $.getJSON("/Account/GetAccountRole", obj).done(function (data) {
+        $("#sele_Role").empty();
+        $.each(data, function (i, item) { $("#sele_Role").append($("<option>").val(item.ROLE_ID).text(item.ROLE_Name)) });
+        $('#maindiv').jqLoading("destroy");
+    })
+
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/Account/GetAccount/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'ACCOUNT', title: '帳號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ROLE_Name', title: '角色', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Enable',
+                    title: '狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            return '啟用'
+                        else
+                            return '停用'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        value += '<a class="dropdown-item" onclick="Edit(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.ROLE) + '\')" >角色設定</a>'
+                        if (row.Enable == "True")
+                            value += '<a class="dropdown-item" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')" >停用</a>'
+                        else
+                            value += '<a class="dropdown-item" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')" >啟用</a>'
+                        value += '</div></div>'
+
+                        return value
+
+
+                        //var value = '<ul class="actions"><li><a class="btn btn-light" onclick="Edit(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.ROLE) + '\')" >角色設定</a></li>'
+                        //if (row.Enable == "True")
+                        //    value += '<li><a class="btn btn-light" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')" >停用</a></li>'
+                        //else
+                        //    value += '<li><a class="btn btn-light" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')" >啟用</a></li>'
+                        //value += '</ul>'
+                        //return value
+
+                        //var value = '<button type = "button" onclick="Edit(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.ROLE) + '\')"  class="btn btn-default btnDelay">角色設定</button >';
+                        //if (row.Enable == "True")
+                        //    value += '<button type = "button" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')"  class="btn btn-default btnDelay">停用</button >';
+                        //else
+                        //    value += '<button type = "button" onclick="enable(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.Enable) + '\')"  class="btn btn-default btnDelay">啟用</button >';
+                        //return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Account: $('#txtAccount').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+
+    //click eveny
+    function Edit(ID, ROLE) {
+        _ID = ID
+        $('#sele_Role').val(ROLE)
+        $('#myModalForEdit').modal('show');
+    }
+    function SubmitForEdit() {
+        if ($('#sele_Role').val() == null) {
+            //alert('請選擇角色')
+            sweetAlert("請選擇角色", "", "warning");
+            return;
+        }
+        var obj = {};
+        obj.ID = _ID;
+        obj.Role = $('#sele_Role').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/EditAccountRole";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                swal("編輯成功!", "", "success")
+                //alert('編輯成功!');
+            } 
+            else {
+                sweetAlert("編輯失敗!", "", "error");
+                //alert('編輯失敗!');
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('編輯失敗!');
+            sweetAlert("編輯失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function enable(ID, Enable) {
+        var obj = {};
+        obj.ID = ID;
+        obj.Enable = Enable == '' ? false : Enable;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/enableAccount";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                if (Enable == "True")
+                    swal("停用成功!", "", "error")
+                    //alert('停用成功!');
+                else
+                    //alert('啟用成功!');
+                    swal("啟用成功!", "", "error")
+            }
+            else {
+                if (Enable == "True")
+                    //alert('停用失敗!');
+                    sweetAlert("停用失敗!", "", "error");
+                else
+                    //alert('啟用失敗!');
+                    sweetAlert("啟用失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            if (Enable == "True")
+                //alert('停用失敗!');
+                sweetAlert("停用失敗!", "", "error");
+            else
+                //alert('啟用失敗!');
+                sweetAlert("啟用失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+</script>

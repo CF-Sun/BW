@@ -1,0 +1,204 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶總覽</li>
+        <li class="breadcrumb-item active">
+            <a href="#">客戶列表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">客戶明細</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+
+
+    function loadData() {
+        var apiURL = "/CliInfo/GetCliList/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Deposit_ID = $.trim(row.Deposit_ID)
+                DepositListFileName = $.trim(row.DepositListFileName)
+            },
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')" >' + $.trim(row.Cli_ID) + '</a></li></ul>'
+
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Cli_ID',
+                    title: '英文名',
+                    formatter: function (value, row, index) {
+                        var value = $.trim(row.Cli_EngNAME_Last) + $.trim(row.Cli_EngNAME_First);
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Con_ID', title: '所屬顧問', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConChiName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Cli_Gender',
+                    title: '性別',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 'F':
+                                value = '女';
+                                break;
+                            case 'M':
+                                value = '男';
+                                break;
+                            default:
+                                value = '';
+                                break;
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Phone',
+                    title: '行動電話',
+                    formatter: function (value, row, index) {
+                        if ($.trim(row.Cli_Phone_site) != "")
+                            return '(' + $.trim(row.Cli_Phone_site) + ')' + $.trim(row.Cli_Phone)
+                        else
+                            return '';
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Cli_Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                //{
+                //    field: 'IsBuyCerti',
+                //    title: '憑證發送狀態',
+                //    formatter: function (value, row, index) {
+                //        if (value == "True")
+                //            return '已發送'
+                //        else
+                //            return '未發送'
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //},
+                {
+                    field: 'NetDeposit',
+                    title: '一案淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+                //{
+                //    field: 'Type1',
+                //    title: '一案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //},
+                //{
+                //    field: 'Type2',
+                //    title: '二案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //},
+                //{
+                //    field: 'Type3',
+                //    title: '三案淨入金',
+                //    formatter: function (value, row, index) {
+                //        return toThousands(eval(value).toFixed(2));
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //}
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount, ConName: '' },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 500,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Cli_ID) {
+        sessionStorage["Cli_ID"] = Cli_ID;
+        window.location.href = "/CHCon/CliInfo";
+    }
+</script>

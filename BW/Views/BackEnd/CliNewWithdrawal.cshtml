@@ -1,0 +1,500 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶</li>
+        <li class="breadcrumb-item active">
+            <a href="#">新出金申請</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">新出金申請</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+            <a id="download_a"></a>
+        </div>
+    </section>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        設定處理狀態
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="sele_Status" class="col-3 col-form-label">狀態</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Status" id="sele_Status" class="br-cus" required>
+                                    <option value="0">新登記</option>
+                                    <option value="1">未匯出</option>
+                                    <option value="2">已匯出</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmit" onclick="SubmitEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForUpload" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        檔案上傳
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="fileUpload" class="col-3 col-form-label">檔案</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload">
+                                        <label class="custom-file-label" for="fileUpload" id="fileUploadName">選擇檔案</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()" value="上傳">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForAmountEdit" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        修改金額
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtNewAmount" class="col-3 col-form-label">金額</label>
+                            <div class="col-9">
+                                <input type="text" id="txtNewAmount" name="txtNewAmount" required
+                                       data-error="請輸入金額" onkeyup="value=accounting.formatNumber(value.replace(/[^\d.,]/g,''))">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmitUpload" onclick="SubmitAmountEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="maindiv">
+    <div>
+        <h2>新出金申請</h2>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+    <div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">設定處理狀態</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select id="sele_Status" class="form-control">
+                                    <option value="0">新登記</option>
+                                    <option value="1">未匯出</option>
+                                    <option value="2">已匯出</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmit" onclick="Submit()">確認</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a id="download_a"></a>
+    <div id="myModalForUpload" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">檔案上傳</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">選擇檔案</label>
+                            <div class="col-sm-6">
+                                <input id="fileUpload" type="file" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()">上傳</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForAmountEdit" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">修改金額</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-4 control-label">請輸入金額</label>
+                            <div class="col-sm-8">
+                                <input type="number" class="form-control" id="txtNewAmount">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitUpload" onclick="SubmitAmountEdit()">確認</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    var IsAuth_9 = false;
+    if (userAccount == 'BW') {
+        IsAuth_9 = true;
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_8 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+            if (data[0].Auth_9 == "True")
+                IsAuth_9 = true;
+        });
+    }
+
+
+    var Withdrawal_ID;
+    var WithdrawalListFileName;
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/Withdrawal/GetCliNewWithdrawal/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Withdrawal_ID = $.trim(row.Withdrawal_ID)
+                WithdrawalListFileName = $.trim(row.WithdrawalListFileName)
+            },
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CliName', title: '客戶名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CREATE_DATE', title: '申請日期', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ExpectMonth', title: '預計出金年月', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Remark', title: '出金附言', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Status', title: '狀態', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        if (IsAuth_9 == true) {
+                            value += '<a class="dropdown-item" onclick="setting(\'' + row.StatusCode + '\')" >設定處理狀態</a>'
+                            value += '<a class="dropdown-item" onclick="upload()" >上傳匯出紀錄</a>'
+                        }
+                        if (row.Isfile == "True")
+                            value += '<a class="dropdown-item" onclick="downloadss(\'' + $.trim(row.Withdrawal_ID) + '\',\'' + $.trim(row.WithdrawalListFileName) + '\')" >檢視匯出記錄檔</a>'
+
+                        value += '<a class="dropdown-item"  onclick="AmountEdit()" >修改金額</a>'
+                        value += '</div></div>'
+
+                        return value
+
+
+                        //value = '';
+
+                        //if (IsAuth_9 == true) {
+                        //    value = '<button type = "button" onclick="setting(\'' + row.StatusCode + '\')" class="btn btn-default btnDelay">設定處理狀態</button >';
+                        //    value += '<button type = "button" onclick="upload()"  class="btn btn-default btnDelay">上傳匯出紀錄</button >';
+                        //}
+
+                        //if (row.Isfile == "True")
+                        //    value += '<button type = "button" onclick="downloadss(\'' + $.trim(row.Withdrawal_ID) + '\',\'' + $.trim(row.WithdrawalListFileName) + '\')"  class="btn btn-default btnDelay">檢視匯出記錄檔</button >';
+
+                        //value += '<button type = "button" onclick="AmountEdit()"  class="btn btn-default btnDelay">修改金額</button >';
+
+                        //return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Cli_ID) {
+        sessionStorage["Cli_ID"] = Cli_ID;
+        window.location.href = "/BackEnd/CliInfo";
+    }
+    //設定狀態
+    function setting(Status) {
+        $('#sele_Status').val(Status)
+        $('#myModal').modal('show');
+    }
+    function SubmitEdit() {
+        var obj = {};
+        obj.Withdrawal_ID = Withdrawal_ID;
+        obj.Status = $('#sele_Status').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Withdrawal/UpdateStatus";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    //檢視水單檔案
+    function downloadss(Withdrawal_ID, fileName) {
+        if (fileName == "") {
+            //alert('無檔案!')
+            sweetAlert("無檔案!", "", "warning");
+            return;
+        }
+        $("#download_a").attr("href", "/Withdrawal/Open?Withdrawal_ID=" + Withdrawal_ID + "&FileName=" + fileName);
+        document.getElementById("download_a").click()
+    }
+
+    //上傳檔案
+    function upload() {
+        $("#fileUpload").val('');
+        $('#fileUploadName').html('')
+        $('#myModalForUpload').modal('show');
+    }
+    function SubmitUpload() {
+        var files = document.getElementById("fileUpload").files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Withdrawal/UploadFile?Withdrawal_ID=" + Withdrawal_ID + "&OriFileName=" + WithdrawalListFileName + "&LoginACCOUNT=" + userAccount,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            loadData();
+                            $('#myModalForUpload').modal('hide');
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        } else {
+            //alert('請選擇檔案')
+            sweetAlert("請選擇檔案!", "", "warning");
+            return;
+        }
+    }
+    //修改金額
+    function AmountEdit() {
+        $('#txtNewAmount').val('')
+        $('#myModalForAmountEdit').modal('show');
+    }
+    function SubmitAmountEdit() {
+        var newAmount = $('#txtNewAmount').val();
+        if (newAmount == '') {
+            //alert('請輸入金額')
+            sweetAlert("請輸入金額!", "", "warning");
+            return;
+        }
+
+        var obj = {};
+        obj.ID = Withdrawal_ID;
+        obj.Kind = '出金';
+        obj.newAmount = newAmount;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Deposite/UpdateDepoWithAmount";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                $('#myModalForAmountEdit').modal('hide');
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

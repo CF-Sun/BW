@@ -1,0 +1,136 @@
+﻿@{
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <!-- <li class="breadcrumb-item">
+            客服經理專區
+        </li> -->
+        <li class="breadcrumb-item active">
+            <a href="/BackEnd/MailVerifi">Email驗證</a>
+        </li>
+    </ul>
+    <section id="login">
+        <h2 class="m-title title text-center">
+            <span>Email驗證</span>
+        </h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8">
+                <div class="context-bg">
+                    <form id="login-form" class="confirm" action="" method="POST" name="login-form">
+                        <div class="form-group au-form">
+                            <label for="emailCode" class="control-label">Email驗證碼</label>
+                            <input id="emailCode" type="text" name="emailCode" placeholder="*請輸入Email驗證碼" required data-error="請輸入驗證碼" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <p class="w100" id="lab" style="display:none; color:red"></p>
+                        @*<p><a href="#" class="more" data-toggle="modal" data-target="#forgot">忘記密碼</a></p>*@
+                        <ul class="act-btns">
+                            <li>
+                                <input type="button" class="btn btn-sm btn-light w-100" value="重新發送"
+                                       onclick="ReSendBtn_click()" />
+                            </li>
+                            <li>
+                                <input type="button" class="btn btn-sm btn-primary w-100" value="確認送出"
+                                       onclick="LoginBtn_click()" />
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    var url = unescape(window.location.href); //獲得URL
+    try {
+        var Account = url.split("?")[1].split('&')[0].split('=')[1];
+    } catch (e) { Account = undefined; }
+    try {
+        var Role = url.split("?")[1].split('&')[1].split('=')[1];
+    } catch (e) { Role = undefined; }
+
+    if (Account == null || Account == '' || Account == undefined)
+        window.location.href = "/CH/ConLogin";
+
+    function LoginBtn_click() {
+        $("#lab").hide();
+        if ($('#emailCode').val() == '') {
+            $("#lab").html('驗證碼不能為空');
+            $("#lab").show();
+            return;
+        }
+        Login();
+    }
+    function Login() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/mailVerifi',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#emailCode').val(),
+                Account: Account
+            },
+            cache: false,
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('系統發生錯誤');
+                    $("#lab").show();
+                    $('#maindiv').jqLoading("destroy");
+                    return;
+                } else {
+                    if (result == "3") {
+                        $("#lab").html('驗證碼錯誤');
+                        $("#lab").show();
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    if (result == "2") {
+                        $("#lab").html('驗證碼過期請重新發送驗證');
+                        $("#lab").show();
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
+                    delCookie("userRole");
+                    delCookie("userAccount");
+                    doCookieSetup("userRole", Role);
+                    doCookieSetup("userAccount", Account);
+                    window.location.href = "/BackEnd/ConInfo";
+                }
+            }
+        });
+    }
+
+    //重新發送驗證碼
+    function ReSendBtn_click() {
+        var obj = {};
+        obj.Account = Account;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Login/ReSendMailCode";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('發送成功!');
+                swal("發送成功!", "", "success")
+            } else {
+                //alert('發送失敗!');
+                sweetAlert("發送失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('發送失敗!');
+            sweetAlert("發送失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

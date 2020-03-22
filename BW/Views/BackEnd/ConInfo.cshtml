@@ -1,0 +1,1488 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問基本資料</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">顧問基本資料</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <div class="modal fade" id="myModalForEdit" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        檢視編輯
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_ChiName_Last" class="col-3 col-form-label">中文姓</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_ChiName_Last" name="txtCon_ChiName_Last" required
+                                       data-error="請填寫中文姓">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_ChiName_First" class="col-3 col-form-label">中文名</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_ChiName_First" name="txtCon_ChiName_First" required
+                                       data-error="請填寫中文名">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_EngName_Last" class="col-3 col-form-label">英文姓</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_EngName_Last" name="txtCon_EngName_Last" required
+                                       data-error="請填寫英文姓">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_EngName_First" class="col-3 col-form-label">英文名</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_EngName_First" name="txtCon_EngName_First" required
+                                       data-error="請填寫英文名">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_Gender" class="col-3 col-form-label">性別</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Gender" id="sele_Gender" class="br-cus" required>
+                                    <option value="0">請選擇</option>
+                                    <option value="M">男</option>
+                                    <option value="F">女</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_ID_Num" class="col-3 col-form-label">身份ID</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_ID_Num" name="txtCon_ID_Num" required
+                                       data-error="請填寫身份ID">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Passport" class="col-3 col-form-label">護照號碼</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_Passport" name="txtCon_Passport" required
+                                       data-error="請填寫護照號碼">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_BirthDay" class="col-3 col-form-label">出生日期</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_BirthDay" name="txtCon_BirthDay" required
+                                       data-error="請選擇出生日期">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_Census_Country" class="col-3 col-form-label">地區</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" required>
+                                    <option value="0" disabled selected>請選擇</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Phone_site" class="col-3 col-form-label">行動電話</label>
+                            <div class="col-4 underline">
+                                <input type="text" id="txtCon_Phone_site" name="txtCon_Phone_site" readonly style="background-color:lightgray">
+                            </div>
+                            <div class="col-5">
+                                <input type="text" id="txtCon_Phone" name="txtCon_Phone" required
+                                       data-error="請填寫行動電話">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Email" class="col-3 col-form-label">Email</label>
+                            <div class="col-9">
+                                <input type="email" id="txtCon_Email" name="txtCon_Email"
+                                       required data-error="請填寫Email">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr>
+                        <h6>居住地址</h6>
+                        <div class="form-group au-form row">
+                            <label for="sele_Live_Country" class="col-3 col-form-label">居住國家</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Live_Country" id="sele_Live_Country" class="br-cus" required>
+                                    <option value="0" selected disabled>請選擇居住國家</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Live_Province" class="col-3 col-form-label">居住省份</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_Live_Province" name="txtCon_Live_Province" />
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Live_City" class="col-3 col-form-label">居住城市</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_Live_City" name="txtCon_Live_City" required
+                                       data-error="請填寫居住城市">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Live_Addr" class="col-3 col-form-label">居住地</label>
+                            <div class="col-9">
+                                <textarea rows="6" id="txtCon_Live_Addr" name="txtCon_Live_Addr" required
+                                          data-error="請填寫居住地"></textarea>
+                                <div class="help-block with-errors mt-none"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Eng_Addr" class="col-3 col-form-label">英文完整地址</label>
+                            <div class="col-9">
+                                <textarea rows="6" id="txtCon_Eng_Addr" name="txtCon_Eng_Addr" required
+                                          data-error="請填寫英文完整地址"></textarea>
+                                <div class="help-block with-errors mt-none"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_PostalCode" class="col-3 col-form-label">郵政編號</label>
+                            <div class="col-9">
+                                <input type="text" id="txtCon_PostalCode" name="txtCon_PostalCode">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSubmitEdit" class="btn btn-sm btn-primary" onclick="SubmitEdit()" value="確認修改">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForCredentials" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        證件資料
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableCredentials"></table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="submit" class="btn btn-sm btn-primary" data-dismiss="modal" value="確認">
+                </div>
+                <a id="download_a"></a>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForHieraRecord" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        晉升紀錄
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableHieraRecord"></table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="submit" class="btn btn-sm btn-primary" data-dismiss="modal" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForUpload" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        檔案上傳
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="fileUpload" class="col-3 col-form-label">檔案</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload">
+                                        <label class="custom-file-label" for="fileUpload" id="fileUploadName">選擇檔案</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()" value="上傳">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForHieraSetting" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">職級設定</h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="">
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="IsAuto" id="mode1" value="Auto">
+                                <label class="form-check-label" for="mode1">自動</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="IsAuto" id="mode2" value="Manual" checked>
+                                <label class="form-check-label" for="mode2">手動</label>
+                            </div>
+                        </div>
+                        <div id="divManualSetting" style="display:none">
+                            <div class="form-group au-form row sp">
+                                <label for="sele_Con_Hiera" class="col-3 col-form-label">職級</label>
+                                <div class="col-9 select-wrapper">
+                                    <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                    <select name="sele_Con_Hiera" id="sele_Con_Hiera" class="br-cus">
+                                        <option value="0.00" selected>0%</option>
+                                        <option value="0.05">0.05%</option>
+                                        <option value="0.10">0.10%</option>
+                                        <option value="0.15">0.15%</option>
+                                        <option value="0.20">0.20%</option>
+                                        <option value="0.25">0.25%</option>
+                                        <option value="0.30">0.30%</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row sp">
+                                <label for="txtEffectiveStartDate" class="col-3 col-form-label">開始日</label>
+                                <div class="col-9">
+                                    <input type="text" id="txtEffectiveStartDate" name="txtEffectiveStartDate">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row sp">
+                                <label for="txtEffectiveEndDate" class="col-3 col-form-label">結束日</label>
+                                <div class="col-9">
+                                    <input type="text" id="txtEffectiveEndDate" name="txtEffectiveEndDate">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_Con_SysHiera" class="col-3 col-form-label">體系獎金</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Con_SysHiera" id="sele_Con_SysHiera" class="br-cus">
+                                    <option value="0.00" selected>0%</option>
+                                    <option value="0.05">0.05%</option>
+                                    <option value="0.08">0.08%</option>
+                                    <option value="0.10">0.10%</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSubmitEdit" class="btn btn-sm btn-primary" onclick="SubmitHieraSetting()" value="確認修改">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div>
+            <h2>顧問基本資料</h2>
+        </div>
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問編號：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_NO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問姓名：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="clicktoSearch()">查詢</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+    <div id="myModalForEdit" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">檢視編輯</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">中文姓</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_ChiName_Last">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">中文名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_ChiName_First">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">英文姓</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_EngName_Last">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">英文名</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_EngName_First">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">性別</label>
+                            <div class="col-sm-6">
+                                <select id="sele_Gender" class="form-control">
+                                    <option value="0">請選擇</option>
+                                    <option value="M">男</option>
+                                    <option value="F">女</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">身份ID</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_ID_Num">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">出生日期</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_BirthDay" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">地區</label>
+                            <div class="col-sm-6">
+                                <select id="sele_Census_Country" class="form-control">
+                                    <option value="0" disabled selected>請選擇</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">行動電話</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_Phone_site" readonly>
+                                -
+                                <input type="text" class="form-control" id="txtCon_Phone">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-6">
+                                <input type="email" class="form-control" id="txtCon_Email">
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                    <h3 class="modal-title">居住地址</h3>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">居住國家</label>
+                            <div class="col-sm-6">
+                                <select id="sele_Live_Country" class="form-control">
+                                    <option value="0" disabled selected>請選擇</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">居住省分</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_Live_Province">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">居住城市</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_Live_City">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">居住地址</label>
+                            <div class="col-sm-6">
+                                <textarea id="txtCon_Live_Addr" rows="6" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">英文完整地址</label>
+                            <div class="col-sm-6">
+                                <textarea id="txtCon_Eng_Addr" rows="6" class="form-control"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">郵政編號</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" id="txtCon_PostalCode">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitEdit" onclick="SubmitEdit()">確認修改</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForCredentials" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">證件資料</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="theTableCredentials" class="table table-bordered" data-editable="true"></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">確認</button>
+                </div>
+                <a id="download_a"></a>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForHieraRecord" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:60%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">晉升紀錄</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table id="theTableHieraRecord" class="table table-bordered" data-editable="true"></table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">確認</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForHieraSetting" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:40%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">職級設定</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <input type="radio" name="IsAuto" value="Auto"> 自動
+                                <input type="radio" name="IsAuto" value="Manual"> 手動
+                            </div>
+                        </div>
+                    </div>
+                    <div id="divManualSetting" style="display:none">
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">職級</label>
+                                <div class="col-sm-6">
+                                    <select id="sele_Con_Hiera" class="form-control">
+                                        <option value="0.00" selected>0%</option>
+                                        <option value="0.05">0.05%</option>
+                                        <option value="0.10">0.10%</option>
+                                        <option value="0.15">0.15%</option>
+                                        <option value="0.20">0.20%</option>
+                                        <option value="0.25">0.25%</option>
+                                        <option value="0.30">0.30%</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">開始日</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="txtEffectiveStartDate" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">結束日</label>
+                                <div class="col-sm-6">
+                                    <input type="text" class="form-control" id="txtEffectiveEndDate" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">體系獎金</label>
+                            <div class="col-sm-6">
+                                <select id="sele_Con_SysHiera" class="form-control">
+                                    <option value="0.00" selected>0%</option>
+                                    <option value="0.05">0.05%</option>
+                                    <option value="0.08">0.08%</option>
+                                    <option value="0.10">0.10%</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitEdit" onclick="SubmitHieraSetting()">確認修改</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForUpload" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">檔案上傳</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">選擇檔案</label>
+                            <div class="col-sm-6">
+                                <input id="fileUpload" type="file" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSubmitUpload" onclick="SubmitUpload()">上傳</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    var IsAuth_11 = false;
+    var IsAuth_12 = false;
+    if (userAccount == 'BW') {
+        IsAuth_11 = true;
+        IsAuth_12 = true;
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_10 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+            if (data[0].Auth_11 == "True")
+                IsAuth_11 = true;
+            if (data[0].Auth_12 == "True")
+                IsAuth_12 = true;
+        });
+    }
+
+
+    var Con_ID;
+    var CredentialID;
+    var CredentialOriName;
+    //初始化設定---------------
+    Con_ID = sessionStorage["Con_ID"];
+    if (Con_ID != "" && Con_ID != undefined) {
+        $('#txtCon_NO').val(Con_ID)
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+        sessionStorage.removeItem('Con_ID')
+    }
+
+    //查詢是否已計算當月報表
+    $.getJSON("/Bonus/GetIsCalculate").done(function (data) {
+        if (data == 0) {
+            swal({
+                title: "尚未計算上月報表,是否開始計算？",
+                text: "",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "是",
+                cancelButtonText: "否",
+                closeOnConfirm: false
+            },
+                function () {
+                    CalculateBonus();
+                });
+            //if (confirm("尚未計算上月報表,是否開始計算?")) {
+            //    CalculateBonus();
+            //}
+        }
+    })
+
+    $("#sele_Census_Country").change(function () {
+        var t = $("option:selected", this).val();
+        switch (t) {
+            case 'TW':
+                $("#txtCon_Phone_site").val('886');
+                break;
+            case 'HK':
+                $("#txtCon_Phone_site").val('852');
+                break;
+            case 'MO':
+                $("#txtCon_Phone_site").val('853');
+                break;
+            case 'CHN':
+                $("#txtCon_Phone_site").val('86');
+                break;
+            case 'JP':
+                $("#txtCon_Phone_site").val('81');
+                break;
+        }
+    });
+    $('#txtCon_BirthDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEffectiveStartDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEffectiveEndDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('input[type=radio][name=IsAuto]').change(function () {
+        if (this.value == 'Auto') {
+            $('#divManualSetting').hide('fast');
+        }
+        else if (this.value == 'Manual') {
+            $('#divManualSetting').show('fast');
+        }
+    });
+    //日期格式化
+    $.date = function (dateObject) {
+        var d = new Date(dateObject);
+        var day = d.getDate();
+        var month = d.getMonth() + 1;
+        var year = d.getFullYear();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        if (month < 10) {
+            month = "0" + month;
+        }
+        var date = year + "/" + month + "/" + day;
+
+        return date;
+    };
+    //--------------------------
+
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/ConInfo/GetConInfo/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Con_ID = $.trim(row.Con_ID)
+            },
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Con_Gender',
+                    title: '性別',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 'F':
+                                value = '女';
+                                break;
+                            case 'M':
+                                value = '男';
+                                break;
+                            default:
+                                value = '';
+                                break;
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Phone',
+                    title: '連絡電話',
+                    formatter: function (value, row, index) {
+                        if ($.trim(row.Con_Phone_site) != "")
+                            return '(' + $.trim(row.Con_Phone_site) + ')' + $.trim(row.Con_Phone)
+                        else
+                            return '';
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Con_Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_Hiera', title: '職級%', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_SysHiera', title: '體系%', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        if (IsAuth_11 == true)
+                            value += '<a class="dropdown-item" onclick="Edit(\'' + $.trim(row.Con_ID) + '\')" >檢視編輯</a>'
+
+                        value += '<a class="dropdown-item" onclick="Credentials(\'' + $.trim(row.Con_ID) + '\')" >證件資料</a>'
+                        value += '<a class="dropdown-item" onclick="HieraRecord(\'' + $.trim(row.Con_ID) + '\')" >晉升紀錄</a>'
+
+                        if (IsAuth_12 == true)
+                            value += '<a class="dropdown-item" onclick="HieraSetting(\'' + $.trim(row.Con_ID) + '\')" >職級設定</a>'
+                        value += '</div></div>'
+
+                        return value
+
+
+                        //var value = '<ul class="actions">';
+
+                        //if (IsAuth_11 == true)
+                        //    value += '<li><a class="btn btn-light" onclick="Edit(\'' + $.trim(row.Con_ID) + '\')" >檢視編輯</a></li>'
+
+                        //value += '<li><a class="btn btn-light" onclick="Credentials(\'' + $.trim(row.Con_ID) + '\')" >證件資料</a></li>'
+                        //value += '<li><a class="btn btn-light" onclick="HieraRecord(\'' + $.trim(row.Con_ID) + '\')" >晉升紀錄</a></li>'
+
+                        //if (IsAuth_12 == true)
+                        //    value += '<li><a class="btn btn-light" onclick="HieraSetting(\'' + $.trim(row.Con_ID) + '\')" >職級設定</a></li>';
+
+                        //value += '</ul>'
+                        //return value
+
+                        //if (IsAuth_11 == true) {
+                        //    value = '<button type = "button" onclick="Edit(\'' + $.trim(row.Con_ID) + '\')"  class="btn btn-default btnDelay">檢視編輯</button >';
+                        //}
+                        //value += '<button type = "button" onclick="Credentials(\'' + $.trim(row.Con_ID) + '\')"  class="btn btn-default btnDelay">證件資料</button >';
+                        //value += '<button type = "button" onclick="HieraRecord(\'' + $.trim(row.Con_ID) + '\')"  class="btn btn-default btnDelay">晉升紀錄</button >';
+                        //if (IsAuth_12 == true) {
+                        //    value += '<button type = "button" onclick="HieraSetting(\'' + $.trim(row.Con_ID) + '\')"  class="btn btn-default btnDelay">職級設定</button >';
+                        //}
+                        //return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: $('#txtCon_NO').val(), ConName: $('#txtCon_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    //button event
+    //檢視編輯-------
+    function Edit(ConID) {
+        //清空資料
+        $('#txtCon_ChiName_Last').val(''); $('#txtCon_ChiName_First').val(''); $('#txtCon_EngName_Last').val(''); $('#txtCon_EngName_First').val('');
+        $('#sele_Gender').val('0'); $('#txtCon_ID_Num').val(''); $('#txtCon_Passport').val(''); $('#txtCon_BirthDay').val(''); $('#sele_Census_Country').val('0');
+        $('#txtCon_Phone_site').val(''); $('#txtCon_Phone').val(''); $('#txtCon_Email').val(''); $('#sele_Live_Country').val('0');
+        $('#txtCon_Live_Province').val(''); $('#txtCon_Live_City').val(''); $('#txtCon_Live_Addr').val(''); $('#txtCon_Eng_Addr').val('');
+        $('#txtCon_PostalCode').val('');
+
+        //查詢詳細顧問資料
+        var obj =
+        {
+            ConID: $.trim(ConID)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/ConInfo/GetConInfoByID", obj).done(function (data) {
+            //填入資料
+            $('#txtCon_ChiName_Last').val($.trim(data[0].Con_ChiNAME_Last)); $('#txtCon_ChiName_First').val($.trim(data[0].Con_ChiNAME_First));
+            $('#txtCon_EngName_Last').val($.trim(data[0].Con_EngNAME_Last)); $('#txtCon_EngName_First').val($.trim(data[0].Con_EngNAME_First));
+            $('#sele_Gender').val(data[0].Con_Gender); $('#txtCon_ID_Num').val($.trim(data[0].Con_ID_Num)); $('#txtCon_Passport').val($.trim(data[0].Con_Passport));
+            $('#txtCon_BirthDay').datepicker("setDate", data[0].Con_BirthDay_new);
+            $('#sele_Census_Country').val(data[0].Con_Census_Country); $('#txtCon_Phone_site').val($.trim(data[0].Con_Phone_site));
+            $('#txtCon_Phone').val($.trim(data[0].Con_Phone)); $('#txtCon_Email').val($.trim(data[0].Con_Email)); $('#sele_Live_Country').val(data[0].Con_Live_Country);
+            $('#txtCon_Live_Province').val($.trim(data[0].Con_Live_Province)); $('#txtCon_Live_City').val($.trim(data[0].Con_Live_City));
+            $('#txtCon_Live_Addr').val($.trim(data[0].Con_Live_Address)); $('#txtCon_Eng_Addr').val($.trim(data[0].Con_Eng_Address)); $('#txtCon_PostalCode').val($.trim(data[0].Con_PostalCode));
+
+            $('#maindiv').jqLoading("destroy");
+            $('#myModalForEdit').modal('show');
+        })
+    }
+    function SubmitEdit() {
+        var obj = {};
+        obj.Con_ID = Con_ID
+        obj.Con_ChiNAME_Last = $('#txtCon_ChiName_Last').val();
+        obj.Con_ChiNAME_First = $('#txtCon_ChiName_First').val();
+        obj.Con_EngNAME_Last = $('#txtCon_EngName_Last').val();
+        obj.Con_EngNAME_First = $('#txtCon_EngName_First').val();
+        obj.Con_Gender = $('#sele_Gender').val();
+        obj.Con_ID_Num = $('#txtCon_ID_Num').val();
+        obj.Con_Passport = $('#txtCon_Passport').val();
+        obj.Con_BirthDay = $('#txtCon_BirthDay').val();
+        obj.Con_Census_Country = $('#sele_Census_Country').val();
+        obj.Con_Phone_site = $('#txtCon_Phone_site').val();
+        obj.Con_Phone = $('#txtCon_Phone').val();
+        obj.Con_Email = $('#txtCon_Email').val();
+        obj.Con_Live_Country = $('#sele_Live_Country').val();
+        obj.Con_Live_Province = $('#txtCon_Live_Province').val();
+        obj.Con_Live_City = $('#txtCon_Live_City').val();
+        obj.Con_Live_Address = $('#txtCon_Live_Addr').val();
+        obj.Con_Eng_Address = $('#txtCon_Eng_Addr').val();
+        obj.Con_PostalCode = $('#txtCon_PostalCode').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/SaveConInfo";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //----------------------------------
+    //證件資料-----------------------
+    function Credentials(ConID) {
+        var apiURL = "/ConInfo/GetCredentialsByID/";
+        $("#theTableCredentials").bootstrapTable('destroy');
+        $("#theTableCredentials").bootstrapTable({
+            columns: [
+                {
+                    field: 'name',
+                    title: '證件',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 'IDCardPos':
+                                value = '護照正面';
+                                break;
+                            case 'IDCardBack':
+                                value = '護照反面';
+                                break;
+                            case 'ResidenceProof':
+                                value = '居住證明';
+                                break;
+                            case 'Consent':
+                                value = '制度職級表';
+                                break;
+                            default:
+                                value = '';
+                                break;
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        value += '<a class="dropdown-item" onclick="downloadss(\'' + $.trim(row.fileName) + '\')" >檢視檔案</a>'
+                        value += '<a class="dropdown-item" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\')" >狀態修改</a>'
+                        value += '<a class="dropdown-item" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\')" >上傳檔案</a>'
+                        value += '</div></div>'
+
+                        return value
+
+
+                        //value = '<ul class="actions"><li><a class="btn btn-light"  onclick="downloadss(\'' + $.trim(row.fileName) + '\')" >檢視檔案</a></li>'
+                        //value += '<li><a class="btn btn-light" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\')" >狀態修改</a></li>'
+                        //value += '<li><a class="btn btn-light" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\')" >上傳檔案</a></li></ul>'
+                        //return value
+
+                        //var value = '<button type = "button" onclick="download(\'' + $.trim(row.fileName) + '\')"  class="btn btn-default btnDelay">檢視檔案</button >';
+                        //value += '<button type = "button" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\')"  class="btn btn-default btnDelay">狀態修改</button >';
+                        //value += '<button type = "button" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\')"  class="btn btn-default btnDelay">上傳檔案</button >';
+                        //return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: IsAuth_11
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: ConID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                $('#myModalForCredentials').modal('show');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function downloadss(fileName) {
+        if (fileName == "") {
+            //alert('該證件無檔案!')
+            sweetAlert("該證件無檔案!", "", "warning");
+            return;
+        }
+        $("#download_a").attr("href", "/ConInfo/Open?FileName=" + fileName + "&Con_ID=" + Con_ID);
+        document.getElementById("download_a").click()
+    }
+    function updateStatus(ID, IsHave) {
+        var obj = {};
+        obj.Con_ID = Con_ID;
+        obj.ID = ID;
+        obj.IsHave = IsHave;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/UpdateCredentialStatus";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                Credentials(Con_ID)
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    function upload(ID, fileName) {
+        CredentialID = ID
+        CredentialOriName = fileName
+        $('#fileUpload').val('')
+        $('#fileUploadName').html('')
+        $('#myModalForUpload').modal('show');
+    }
+    function SubmitUpload() {
+        var files = document.getElementById("fileUpload").files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/ConInfo/UploadFile?Con_ID=" + Con_ID + "&CredentialID=" + CredentialID + "&OriFileName=" + CredentialOriName + "&LoginACCOUNT=" + userAccount,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            Credentials(Con_ID)
+                            $('#myModalForUpload').modal('hide');
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        } else {
+            //alert('請選擇檔案')
+            sweetAlert("請選擇檔案!", "", "warning");
+            return;
+        }
+    }
+    //------------------------
+    //晉升紀錄-------------------
+    function HieraRecord(ConID) {
+        var apiURL = "/ConInfo/GetHieraRecordByID/";
+        $("#theTableHieraRecord").bootstrapTable('destroy');
+        $("#theTableHieraRecord").bootstrapTable({
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Con_Hiera',
+                    title: '職級',
+                    formatter: function (value, row, index) {
+                        return value + '%'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Record_DATE', title: '異動日期', align: 'center', halign: 'center', visible: true, sortable: true },
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: ConID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                $('#myModalForHieraRecord').modal('show');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    //-------------------------------
+    //職級設定-------------------------
+    function HieraSetting(ConID) {
+        //清空資料
+        $('#sele_Con_Hiera').val('0'); $('#txtEffectiveStartDate').val(''); $('#txtEffectiveEndDate').val(''); $('#sele_Con_SysHiera').val('0');
+
+        //查詢職級設定
+        var obj =
+        {
+            ConID: $.trim(ConID)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/ConInfo/GetConHieraSettingByID", obj).done(function (data) {
+            //填入資料
+            if (data[0].IsAuto == "True") {
+                $('input[name="IsAuto"]')[0].checked = true;
+                $('#divManualSetting').hide();
+            }
+            else {
+                $('input[name="IsAuto"]')[1].checked = true;
+                $('#sele_Con_Hiera').val(data[0].Con_Hiera)
+                $('#txtEffectiveStartDate').datepicker("setDate", data[0].EffectiveStartDate);
+                $('#txtEffectiveEndDate').datepicker("setDate", data[0].EffectiveEndDate);
+                $('#divManualSetting').show();
+            }
+            $('#sele_Con_SysHiera').val(data[0].Con_SysHiera)
+
+            $('#maindiv').jqLoading("destroy");
+            $('#myModalForHieraSetting').modal('show');
+        })
+    }
+    function SubmitHieraSetting() {
+        var IsAuto = $("input[name=IsAuto]:checked").val();//自動手動
+
+        var obj = {};
+        //如果手動 判斷該填的欄位是否都有填寫
+        if (IsAuto == 'Manual') {
+            if ($('#sele_Con_Hiera').val() == null) {
+                //alert('請設定職級')
+                sweetAlert("請設定職級!", "", "warning");
+                return;
+            }
+            if ($('#txtEffectiveStartDate').val() == '' || $('#txtEffectiveEndDate').val() == '') {
+                //alert('請設定日期')
+                sweetAlert("請設定日期!", "", "warning");
+                return;
+            }
+            if ($('#txtEffectiveStartDate').val() > $('#txtEffectiveEndDate').val()) {
+                //alert('結束日不能小於開始日')
+                sweetAlert("結束日不能小於開始日!", "", "warning");
+                return;
+            }
+            obj.Con_ID = Con_ID;
+            obj.IsAuto = IsAuto;
+            obj.EffectiveStartDate = $('#txtEffectiveStartDate').val();
+            obj.EffectiveEndDate = $('#txtEffectiveEndDate').val();
+            obj.Con_Hiera = $('#sele_Con_Hiera').val();
+            obj.Con_SysHiera = $('#sele_Con_SysHiera').val();
+            obj.LoginACCOUNT = userAccount;
+        } else {
+            obj.Con_ID = Con_ID;
+            obj.IsAuto = IsAuto;
+            obj.EffectiveStartDate = '';
+            obj.EffectiveEndDate = '';
+            obj.Con_Hiera = 0;
+            obj.Con_SysHiera = $('#sele_Con_SysHiera').val();
+            obj.LoginACCOUNT = userAccount;
+        }
+       
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/SaveHieraSetting";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                clicktoSearch();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                $('#myModalForHieraSetting').modal('hide');
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+        //----------------------------------
+
+
+    //計算報表
+    function CalculateBonus() {
+        var obj = {};
+        obj.IsReCalculate = false;
+        obj.ReCalYeay = '';
+        obj.ReCalMonth = '';
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Bonus/CalculateBonus";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('計算完畢!');
+                swal("計算完畢!", "", "success")
+            } else {
+                //alert('計算失敗!');
+                sweetAlert("計算失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('計算失敗!');
+            sweetAlert("計算失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

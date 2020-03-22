@@ -1,0 +1,177 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item active">
+            <a href="#">缺件一覽表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">缺件一覽表</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+@*<div id="maindiv">
+    <div>
+        <h2>缺件一覽表</h2>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+</div>*@
+
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+        
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_17 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/LackDoc/GetConLackDoc/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Cli_ID = $.trim(row.Cli_ID)
+            },
+            columns: [
+                {
+                    field: 'Con_ID',
+                    title: '顧問編號',
+                    formatter: function (value, row, index) {
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Con_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Con_ID) + '</button >';
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Con_ID) + '\')" >' + $.trim(row.Con_ID) + '</a></li></ul>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Name', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsIDCardPos',
+                    title: '身份ID正面',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'IsIDCardBack',
+                    title: '身份ID反面',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'IsResidenceProof',
+                    title: '居住證明',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'IsConsent',
+                    title: '制度職級表',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Con_ID) {
+        sessionStorage["Con_ID"] = Con_ID;
+        window.location.href = "/BackEnd/ConInfo";
+    }
+</script>

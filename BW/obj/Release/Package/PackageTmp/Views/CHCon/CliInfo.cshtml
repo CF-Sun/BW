@@ -1,0 +1,564 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶總覽</li>
+        <li class="breadcrumb-item active">
+            <a href="#">客戶列表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">客戶列表</h4>
+        </div>
+    </section>
+    <section id="form1" style="display:none">
+        <h3>基本資料</h3>
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <section id="form2" style="display:none">
+        <h3>出入金紀錄</h3>
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTableForSum"></table>
+        </div>
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTableForDetail"></table>
+        </div>
+    </section>
+    
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    //初始化設定---------------
+    var Cli_ID;
+    var CredentialID;
+    var CredentialOriName;
+    var CliROLE;
+    Cli_ID = sessionStorage["Cli_ID"];
+
+    if (Cli_ID != "" && Cli_ID != undefined) {
+        $('#maindiv').jqLoading();
+        loadData();
+        loadDataForSum(Cli_ID);
+        loadDataForDetail(Cli_ID);
+        $('#maindiv').jqLoading("destroy");
+        $('#form1').show();
+        $('#form2').show();
+        //sessionStorage.removeItem('Cli_ID')
+    }
+
+    $("#sele_Census_Country").change(function () {
+        var t = $("option:selected", this).val();
+        switch (t) {
+            case 'TW':
+                $("#txtCli_Phone_site").val('886');
+                break;
+            case 'HK':
+                $("#txtCli_Phone_site").val('852');
+                break;
+            case 'MO':
+                $("#txtCli_Phone_site").val('853');
+                break;
+            case 'CHN':
+                $("#txtCli_Phone_site").val('86');
+                break;
+            case 'JP':
+                $("#txtCli_Phone_site").val('81');
+                break;
+        }
+    });
+    $('#txtCli_BirthDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    function loadData() {
+        var apiURL = "/CliInfo/GetCliInfo/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Cli_ID = $.trim(row.Cli_ID);
+                CliROLE = $.trim(row.Cli_ROLE)
+            },
+            columns: [
+                { field: 'Cli_ID', title: '編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'EngNAME', title: '英文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_ID', title: '所屬顧問', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConChiName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Cli_Gender',
+                    title: '性別',
+                    formatter: function (value, row, index) {
+                        switch (value) {
+                            case 'F':
+                                value = '女';
+                                break;
+                            case 'M':
+                                value = '男';
+                                break;
+                            default:
+                                value = '';
+                                break;
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Phone',
+                    title: '行動電話',
+                    formatter: function (value, row, index) {
+                        return '(' + $.trim(row.Cli_Phone_site) + ')' + $.trim(row.Cli_Phone)
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'Cli_Email', title: 'Email', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsBuyCerti',
+                    title: '憑證發送狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            return '已發送'
+                        else
+                            return '未發送'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        value += '<a href="#" class="dropdown-item" onclick="Edit(\'' + $.trim(row.Cli_ID) + '\')" >基本資料修改</a>'
+
+                        value += '<a href="#" class="dropdown-item" onclick="Credentials(\'' + $.trim(row.Cli_ID) + '\',\'' + $.trim(row.Cli_ROLE) + '\')" >證件狀態</a>'
+                        value += '</div></div>'
+
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: Cli_ID, CliName: '' },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 300,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            //search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function loadDataForSum(Cli_ID) {
+        var apiURL = "/Deposite/GetCliDepositeStatus/";
+        $("#theTableForSum").bootstrapTable({
+            columns: [
+                {
+                    field: 'Deposit_Type', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true,
+                    footerFormatter: function (value) {
+                        return '合計';
+                    }
+                },
+                {
+                    field: 'Deposit',
+                    title: '累積入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Deposit);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Withdrawal',
+                    title: '累積出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Withdrawal);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'NetDeposit',
+                    title: '淨入金(入-出)',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].NetDeposit);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: Cli_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            height: 200,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function loadDataForDetail(Cli_ID) {
+        var apiURL = "/Deposite/GetCliDepositeDetail/";
+        $("#theTableForDetail").bootstrapTable({
+            //onClickRow: function (row, $data, field) {
+            //    if (field == "edit") {
+            //        ID = $.trim(row.ID)
+            //        Kind = row.Kind
+            //        oriFileName = $.trim(row.FileName)
+            //        $("#txtFrom").val('')
+            //        $("#txtFrom").val($.trim(row.WithdrawalFrom))
+            //        setStatus(row.Kind, row.StatusNo)
+            //    }
+            //},
+            columns: [
+                { field: 'ID', title: '編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Kind', title: '出／入金', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Type', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Amount',
+                    title: '金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CREATE_DATE', title: '登記時間', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Arrival_DATE', title: '匯出日／水單日', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'WithdrawalFrom', title: '出金來源', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Status', title: '處理狀態', align: 'center', halign: 'center', visible: true, sortable: true }
+                //{
+                //    field: 'edit',
+                //    title: '動作',
+                //    formatter: function (value, row, index) {
+
+                //        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                //        value += '<div class="dropdown-menu">'
+                //        if (IsAuth_5 == true) {
+                //            if (row.Kind == "出金")
+                //                value += '<a class="dropdown-item" onclick="openFileUpload(\'myModalForFrom\')">設定出金來源</a>'
+                //            value += '<a class="dropdown-item" onclick="openFileUpload(\'myModalForStatus\')">設定處理狀態</a>'
+                //        }
+                //        value += '<a class="dropdown-item" onclick="upload()">上傳水單檔案</a>'
+
+                //        if (row.Isfile == "True")
+                //            value += '<a class="dropdown-item" onclick="downloadss(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.FileName) + '\',\'' + $.trim(row.Kind) + '\')">檢視水單</a>'
+                //        value += '<a class="dropdown-item" onclick="AmountEdit()">修改金額</a>'
+                //        value += '</div></div>'
+
+                //        return value
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: true
+                //}
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: Cli_ID, DeporWith: '0' },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 350,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                console.log(data)
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    //button event
+    //檢視編輯-------
+    function Edit(CliID) {
+        //清空資料
+        $('#txtCli_ChiName_Last').val(''); $('#txtCli_ChiName_First').val(''); $('#txtCli_EngName_Last').val(''); $('#txtCli_EngName_First').val('');
+        $('#sele_Gender').val('0'); $('#txtCli_ID_Num').val(''); $('#txtCli_PassPort').val(''); $('#txtCli_BirthDay').val(''); $('#sele_Census_Country').val('0');
+        $('#txtCli_Phone_site').val(''); $('#txtCli_Phone').val(''); $('#txtCli_Email').val(''); $('#txtCli_Live_Addr').val(''); $('#txtCli_Eng_Addr').val(''); $('#txtCli_PostalCode').val('');
+
+        //查詢詳細顧問資料
+        var obj =
+        {
+            CliID: $.trim(CliID)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/CliInfo/GetCliInfoByID", obj).done(function (data) {
+            //填入資料
+            $('#txtCli_ChiName_Last').val($.trim(data[0].Cli_ChiNAME_Last)); $('#txtCli_ChiName_First').val($.trim(data[0].Cli_ChiNAME_First));
+            $('#txtCli_EngName_Last').val($.trim(data[0].Cli_EngNAME_Last)); $('#txtCli_EngName_First').val($.trim(data[0].Cli_EngNAME_First));
+            $('#sele_Gender').val(data[0].Cli_Gender); $('#txtCli_ID_Num').val($.trim(data[0].Cli_ID_Num)); $('#txtCli_PassPort').val($.trim(data[0].Cli_PassPort));
+            $('#txtCli_BirthDay').datepicker("setDate", data[0].Cli_BirthDay_new); $('#sele_Census_Country').val(data[0].Cli_Census_Country);
+            $('#txtCli_Phone_site').val($.trim(data[0].Cli_Phone_site)); $('#txtCli_Phone').val($.trim(data[0].Cli_Phone)); $('#txtCli_Email').val($.trim(data[0].Cli_Email));
+            $('#txtCli_Live_Addr').val($.trim(data[0].Cli_Live_Address)); $('#txtCli_Eng_Addr').val($.trim(data[0].Cli_Eng_Address)); $('#txtCli_PostalCode').val($.trim(data[0].Cli_PostalCode));
+
+            $('#maindiv').jqLoading("destroy");
+            $('#myModalForEdit').modal('show');
+
+        })
+    }
+    function SubmitEdit() {
+        var obj = {};
+        obj.Cli_ID = Cli_ID
+        obj.Cli_ChiNAME_Last = $('#txtCli_ChiName_Last').val();
+        obj.Cli_ChiNAME_First = $('#txtCli_ChiName_First').val();
+        obj.Cli_EngNAME_Last = $('#txtCli_EngName_Last').val();
+        obj.Cli_EngNAME_First = $('#txtCli_EngName_First').val();
+        obj.Cli_Gender = $('#sele_Gender').val();
+        obj.Cli_ID_Num = $('#txtCli_ID_Num').val();
+        obj.Cli_PassPort = $('#txtCli_PassPort').val();
+        obj.Cli_BirthDay = $('#txtCli_BirthDay').val();
+        obj.Cli_Census_Country = $('#sele_Census_Country').val();
+        obj.Cli_Phone_site = $('#txtCli_Phone_site').val();
+        obj.Cli_Phone = $('#txtCli_Phone').val();
+        obj.Cli_Email = $('#txtCli_Email').val();
+        obj.Cli_Live_Address = $('#txtCli_Live_Addr').val();
+        obj.Cli_Eng_Address = $('#txtCli_Eng_Addr').val(); 
+        obj.Cli_PostalCode = $('#txtCli_PostalCode').val();
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/CliInfo/SaveCliInfo";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //----------------------------------
+    //證件資料------------------------
+    function Credentials(CliID, CliROLE) {
+        var apiURL = "/CliInfo/GetCredentialsByID/";
+        $("#theTableCredentials").bootstrapTable('destroy');
+        $("#theTableCredentials").bootstrapTable({
+            columns: [
+                { field: 'Name', title: '證件', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+                //{
+                //    field: 'edit',
+                //    title: '動作',
+                //    formatter: function (value, row, index) {
+
+                //        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                //        value += '<div class="dropdown-menu">'
+                //        value += '<a class="dropdown-item" onclick="downloadss(\'' + $.trim(row.fileName) + '\')" >檢視檔案</a>'
+                //        value += '<a class="dropdown-item" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\',\'' + CliROLE + '\')" >狀態修改</a>'
+                //        value += '<a class="dropdown-item" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\',\'' + CliROLE + '\')" >上傳檔案</a>'
+                //        value += '</div></div>'
+
+                //        return value
+
+                //        //value = '<ul class="actions"><li><a class="btn btn-light"  onclick="downloadss(\'' + $.trim(row.fileName) + '\')" >檢視檔案</a></li>'
+                //        //value += '<li><a class="btn btn-light" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\',\'' + CliROLE + '\')" >狀態修改</a></li>'
+                //        //value += '<li><a class="btn btn-light" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\',\'' + CliROLE + '\')" >上傳檔案</a></li></ul>'
+                //        //return value
+
+                //        //var value = '<button type = "button" onclick="download(\'' + $.trim(row.fileName) + '\')"  class="btn btn-default btnDelay">檢視檔案</button >';
+                //        //value += '<button type = "button" onclick="updateStatus(\'' + $.trim(row.ID) + '\',\'' + row.IsHave + '\',\'' + CliROLE + '\')"  class="btn btn-default btnDelay">狀態修改</button >';
+                //        //value += '<button type = "button" onclick="upload(\'' + $.trim(row.ID) + '\',\'' + $.trim(row.fileName) + '\',\'' + CliROLE + '\')"  class="btn btn-default btnDelay">上傳檔案</button >';
+                //        //return value
+                //    },
+                //    halign: 'center',
+                //    align: 'center',
+                //    visible: IsAuth_2
+                //}
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: CliID, CliROLE: CliROLE },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                $('#myModalForCredentials').modal('show');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+</script>

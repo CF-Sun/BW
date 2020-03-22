@@ -1,0 +1,1163 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶登記</li>
+        <li class="breadcrumb-item active">
+            <a href="#">報客戶</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">編輯建檔</h4>
+        </div>
+    </section>
+    <section id="CliData">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ChiName_Last" class="col-3 col-form-label">中文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ChiName_Last" name="txtCli_ChiName_Last" required
+                                   data-error="請填寫中文姓">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ChiName_First" class="col-3 col-form-label">中文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ChiName_First" name="txtCli_ChiName_First" required
+                                   data-error="請填寫中文名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_EngName_Last" class="col-3 col-form-label">英文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_EngName_Last" name="txtCli_EngName_Last" required
+                                   data-error="請填寫英文姓">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_EngName_First" class="col-3 col-form-label">英文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_EngName_First" name="txtCli_EngName_First" required
+                                   data-error="請填寫英文名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Gender" class="col-3 col-form-label">性別</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Gender" id="sele_Gender" class="br-cus" required>
+                                <option value="0">請選擇</option>
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ID_Num" class="col-3 col-form-label">身份ID</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ID_Num" name="txtCli_ID_Num" required
+                                   data-error="請填寫身份ID">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_PassPort" class="col-3 col-form-label">護照號</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_PassPort" name="txtCli_PassPort" required
+                                   data-error="請填寫護照號">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_BirthDay" class="col-3 col-form-label">出生日期</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_BirthDay" name="txtCli_BirthDay" readonly
+                                   data-error="請選擇出生日期">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Census_Country" class="col-3 col-form-label">地區</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" required>
+                                <option value="0" disabled selected>請選擇</option>
+                                <option value="TW">台灣</option>
+                                <option value="CHN">中國</option>
+                                <option value="HK">香港</option>
+                                <option value="MO">澳門</option>
+                                <option value="JP">日本</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Phone_site" class="col-3 col-form-label">行動電話</label>
+                        <div class="col-4 underline">
+                            <input type="text" id="txtCli_Phone_site" name="txtCli_Phone_site" readonly style="background-color:lightgray">
+                        </div>
+                        <div class="col-5">
+                            <input type="text" id="txtCli_Phone" name="txtCli_Phone" required
+                                   data-error="請填寫行動電話">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Email" class="col-3 col-form-label">Email</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_Email" name="txtCli_Email" required
+                                   data-error="請填寫Email">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Live_Addr" class="col-3 col-form-label">居住地址</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_Live_Addr" name="txtCli_Live_Addr" required
+                                   data-error="請填寫居住地址">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <div class="col-3">
+                            <label for="txtCli_Eng_Addr" class="col-form-label">英文居住地址</label><br />
+                            <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=207" class="hp-txt" target="_blank">地址翻譯連結</a>
+                        </div>
+
+                        <div class="col-9">
+                            <textarea rows="6" id="txtCli_Eng_Addr" name="txtCli_Eng_Addr" required
+                                      data-error="請填寫英文居住地址"></textarea>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_PostalCode" class="col-3 col-form-label">郵政編號</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_PostalCode" name="txtCli_PostalCode" required
+                                   data-error="請填寫郵政編號">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio1" name="rdoType" class="custom-control-input" value="Individual">
+                            <label class="custom-control-label" for="customRadio1">
+                                個人戶
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="customRadio2" name="rdoType" class="custom-control-input" value="Corporate">
+                            <label class="custom-control-label" for="customRadio2">
+                                法人戶
+                            </label>
+                        </div>
+                    </div>
+                    @*<label class="col-3 col-form-label">客戶別證件上傳</label>*@
+                    @*<input type="radio" name="rdoType" value="Individual">個人戶
+        <input type="radio" name="rdoType" value="Corporate">法人戶*@
+                    <div class="form-group au-form row">
+                        <label class="col-form-label"></label>
+                        <div class="col-12">
+                            <div class="overflow" id="divTableIndivi" style="display:none">
+                                <table class="table table-bordered table-hover" id="theTableIndivi"></table>
+                            </div>
+                            <div class="overflow" id="divTableCorp" style="display:none">
+                                <table class="table table-bordered table-hover" id="theTableCorp"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitSave()" value="暫存">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitRegi()" value="提交">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+    <section id="SMS" style="display:none">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ChiName_Last" class="col-3 col-form-label">簡訊驗證碼</label>
+                        <div class="col-9">
+                            <input type="text" id="txtSMSCode" name="txtSMSCode">
+                        </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="back()" value="回到上一步">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForSMSValidate()" value="送出">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="ReSendSMS()" value="重新發送驗證碼" disabled id="resendSMS">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    var inputfile = '';
+    var uploadName = '';
+    var FileName1 = "";
+    var FileName2 = "";
+    var FileName3 = "";
+    var FileName4 = "";
+    var FileName5 = "";
+    var FileName6 = "";
+    var FileName7 = "";
+    var FileName8 = "";
+    var FileName9 = "";
+    var FileName10 = "";
+    var FileName11 = "";
+    var FileName12 = "";
+    var FileName13 = "";
+    var FileName14 = "";
+    var FileName15 = "";
+
+    var SMSCode = "";
+    var TempID = "";
+    TempID = sessionStorage["TempID"];
+
+    $("#sele_Census_Country").change(function () {
+        var t = $("option:selected", this).val();
+        switch (t) {
+            case 'TW':
+                $("#txtCli_Phone_site").val('886');
+                break;
+            case 'HK':
+                $("#txtCli_Phone_site").val('852');
+                break;
+            case 'MO':
+                $("#txtCli_Phone_site").val('853');
+                break;
+            case 'CHN':
+                $("#txtCli_Phone_site").val('86');
+                break;
+            case 'JP':
+                $("#txtCli_Phone_site").val('81');
+                break;
+        }
+    });
+    $('#txtCli_BirthDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    $('input[type=radio][name=rdoType]').change(function () {
+        if (this.value == 'Individual') {
+            $("#divTableIndivi").show();
+            $("#divTableCorp").hide();
+        }
+        else if (this.value == 'Corporate') {
+            $("#divTableIndivi").hide();
+            $("#divTableCorp").show();
+        }
+    });
+
+    $(document).ready(function () {
+        if (TempID != "") {
+            $('#maindiv').jqLoading();
+            loadCliData()
+            $('#maindiv').jqLoading("destroy");
+        }
+    });
+
+    function loadCliData() {
+        var obj =
+        {
+            TempID: $.trim(TempID)
+        }
+        $.getJSON("/CliInfo/GetCliInfoByTempID", obj).done(function (data) {
+            //填入資料
+            $('#txtCli_ChiName_Last').val($.trim(data[0].Cli_ChiNAME_Last)); $('#txtCli_ChiName_First').val($.trim(data[0].Cli_ChiNAME_First));
+            $('#txtCli_EngName_Last').val($.trim(data[0].Cli_EngNAME_Last)); $('#txtCli_EngName_First').val($.trim(data[0].Cli_EngNAME_First));
+            $('#sele_Gender').val(data[0].Cli_Gender); $('#txtCli_ID_Num').val($.trim(data[0].Cli_ID_Num)); $('#txtCli_PassPort').val($.trim(data[0].Cli_PassPort));
+            $('#txtCli_BirthDay').datepicker("setDate", data[0].Cli_BirthDay_new); $('#sele_Census_Country').val(data[0].Cli_Census_Country);
+            $('#txtCli_Phone_site').val($.trim(data[0].Cli_Phone_site)); $('#txtCli_Phone').val($.trim(data[0].Cli_Phone)); $('#txtCli_Email').val($.trim(data[0].Cli_Email));
+            $('#txtCli_Live_Addr').val($.trim(data[0].Cli_Live_Address)); $('#txtCli_Eng_Addr').val($.trim(data[0].Cli_Eng_Address)); $('#txtCli_PostalCode').val($.trim(data[0].Cli_PostalCode));
+
+            if ($.trim(data[0].Cli_ROLE) == 'Individual') {
+                $('input[name="rdoType"]')[0].checked = true;
+                loadIndiviData(true)
+                loadCorpData(false)
+                $("#divTableIndivi").show();
+                $("#divTableCorp").hide();
+            }
+            else if ($.trim(data[0].Cli_ROLE) == 'Corporate') {
+                $('input[name="rdoType"]')[1].checked = true;
+                loadIndiviData(false)
+                loadCorpData(true)
+                $("#divTableIndivi").hide();
+                $("#divTableCorp").show();
+            } else {
+                loadIndiviData(false)
+                loadCorpData(false)
+            }
+
+        })
+    }
+
+    function loadIndiviData(ischeck) {
+        var apiURL = "/CliInfo/GetCredentialsByTempID/";
+        $("#theTableIndivi").bootstrapTable('destroy');
+        $("#theTableIndivi").bootstrapTable({
+            columns: [
+                { field: 'Name', title: '證件', align: 'center', halign: 'center', visible: true, sortable: true},
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        return "X"
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '';
+                        if (row.IsHave == "True") {
+                            if (index == 0) FileName1 = 'V'
+                            if (index == 1) FileName2 = 'V'
+                            if (index == 2) FileName3 = 'V'
+                            if (index == 3) FileName4 = 'V'
+                            if (index == 4) FileName5 = 'V'
+                            if (index == 5) FileName6 = 'V'
+
+                            value += '<label class="col-form-label" id="lblUpload_' + row.ID + '">已上傳</label>'
+                        } else {
+                            value += '<ul class="actions" id="ulUpload_' + row.ID + '" > <li><a class="btn btn-light" onclick="upload(\'' + $.trim(row.ID) + '\')">上傳</a></li></ul>'
+                            value += '<label class="col-form-label" id="lblUpload_' + row.ID + '" style="display:none">已上傳</label>'
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { TempID: TempID, CliROLE: 'Individual', ischeck: ischeck },
+            //data: getIndiviData(ischeck),
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            search: false,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                console.log(data)
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function getIndiviData(ischeck) {
+        if (ischeck == true) {
+            var obj =
+            {
+                TempID: TempID,
+                CliROLE:'Individual'
+            }
+            $.getJSON("/CliInfo/GetCredentialsByTempID", obj).done(function (data) {
+                return data;
+            })
+        } else {
+            var data = [];
+            data.push({ ID: '1', Name: '護照正面', IsHave: false });
+            data.push({ ID: '2', Name: '護照反面', IsHave: false });
+            data.push({ ID: '3', Name: '護照公證副本', IsHave: false });
+            data.push({ ID: '4', Name: '三個月內居住證明', IsHave: false });
+            data.push({ ID: '5', Name: '收息/出金銀行存簿', IsHave: false });
+            data.push({ ID: '6', Name: '申購書', IsHave: false });
+            console.log(data)
+            return data;
+        }
+    }
+    function loadCorpData(ischeck) {
+        var apiURL = "/CliInfo/GetCredentialsByTempID/";
+        $("#theTableCorp").bootstrapTable('destroy');
+        $("#theTableCorp").bootstrapTable({
+            columns: [
+                { field: 'Name', title: '證件', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        return 'X'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var index = eval(row.ID) + 6
+                        var value = '';
+                        if (row.IsHave == "True") {
+                            if (index == 7) FileName7 = 'V'
+                            if (index == 8) FileName8 = 'V'
+                            if (index == 9) FileName9 = 'V'
+                            if (index == 10) FileName10 = 'V'
+                            if (index == 11) FileName11 = 'V'
+                            if (index == 12) FileName12 = 'V'
+                            if (index == 13) FileName13 = 'V'
+                            if (index == 14) FileName14 = 'V'
+                            if (index == 15) FileName15 = 'V'
+                            value += '<label class="col-form-label" id="lblUpload_' + index + '">已上傳</label>'
+                        } else {
+                            value += '<ul class="actions" id="ulUpload_' + index + '" > <li><a class="btn btn-light" onclick="upload(\'' + index + '\')">上傳</a></li></ul>'
+                            value += '<label class="col-form-label" id="lblUpload_' + index + '" style="display:none">已上傳</label>'
+                        }
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { TempID: TempID, CliROLE: 'Corporate', ischeck: ischeck },
+            //data: getCorpData(ischeck),
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            search: false,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function getCorpData(ischeck) {
+        if (ischeck == true) {
+            var obj =
+            {
+                TempID: TempID,
+                CliROLE: 'Corporate'
+            }
+            $.getJSON("/CliInfo/GetCredentialsByTempID", obj).done(function (data) {
+
+                console.log(data)
+                return data;
+            })
+        } else {
+            var data = [];
+            data.push({ ID: '1', Name: '公司註冊證書or商業登記證的公證副本', IsHave: false });
+            data.push({ ID: '2', Name: '所有董事的公證名單', IsHave: false });
+            data.push({ ID: '3', Name: '股東登記冊公證副本', IsHave: false });
+            data.push({ ID: '4', Name: '完好存續證明', IsHave: false });
+            data.push({ ID: '5', Name: '公司備忘錄和章程的公證副本 (如有)', IsHave: false });
+            data.push({ ID: '6', Name: '董事與10％以上股東每人的居住證明公證副本', IsHave: false });
+            data.push({ ID: '7', Name: '董事與10％以上股東每人的護照(包含簽名)公證副本', IsHave: false });
+            data.push({ ID: '8', Name: '收息/出金銀行存簿', IsHave: false });
+            data.push({ ID: '9', Name: '申購書', IsHave: false });
+            return data;
+        }
+    }
+
+    function upload(ID) {
+        $("#divFile1").hide(); $("#divFile2").hide(); $("#divFile3").hide();
+        $("#divFile4").hide(); $("#divFile5").hide(); $("#divFile6").hide();
+        $("#divFile7").hide(); $("#divFile8").hide(); $("#divFile9").hide();
+        $("#divFile10").hide(); $("#divFile11").hide(); $("#divFile12").hide();
+        $("#divFile13").hide(); $("#divFile14").hide(); $("#divFile15").hide();
+
+        inputfile = '';
+        uploadName = '';
+        $("#divFile" + ID).show();
+        $('#myModalForUpload').modal('show');
+    }
+
+    function chkfile(s, f) {
+        inputfile = s;
+        uploadName = f;
+    }
+
+    function SubmitUpload(s, f) {
+        if (s == '') {
+            //alert('請選擇上傳檔案')
+            sweetAlert("請選擇上傳檔案!", "", "warning");
+            return;
+        }
+        s = inputfile;
+        f = uploadName;
+
+        var url = '/CliInfo/chkFileForBigFile';
+        if (s == 'fileUpload1' || s == 'fileUpload2' || s == 'fileUpload3' || s == 'fileUpload4' || s == 'fileUpload5')
+            url = '/CliInfo/chkFile';
+
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: url,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            if (s == "fileUpload1") {
+                                FileName1 = data.filename
+                                $('#ulUpload_1').hide();
+                                $('#lblUpload_1').show();
+                            }
+                            if (s == "fileUpload2") {
+                                FileName2 = data.filename
+                                $('#ulUpload_2').hide();
+                                $('#lblUpload_2').show();
+                            }
+                            if (s == "fileUpload3") {
+                                FileName3 = data.filename
+                                $('#ulUpload_3').hide();
+                                $('#lblUpload_3').show();
+                            }
+                            if (s == "fileUpload4") {
+                                FileName4 = data.filename
+                                $('#ulUpload_4').hide();
+                                $('#lblUpload_4').show();
+                            }
+                            if (s == "fileUpload5") {
+                                FileName5 = data.filename
+                                $('#ulUpload_5').hide();
+                                $('#lblUpload_5').show();
+                            }
+                            if (s == "fileUpload6") {
+                                FileName6 = data.filename
+                                $('#ulUpload_6').hide();
+                                $('#lblUpload_6').show();
+                            }
+                            if (s == "fileUpload7") {
+                                FileName7 = data.filename
+                                $('#ulUpload_7').hide();
+                                $('#lblUpload_7').show();
+                            }
+                            if (s == "fileUpload8") {
+                                FileName8 = data.filename
+                                $('#ulUpload_8').hide();
+                                $('#lblUpload_8').show();
+                            }
+                            if (s == "fileUpload9") {
+                                FileName9 = data.filename
+                                $('#ulUpload_9').hide();
+                                $('#lblUpload_9').show();
+                            }
+                            if (s == "fileUpload10") {
+                                FileName10 = data.filename
+                                $('#ulUpload_10').hide();
+                                $('#lblUpload_10').show();
+                            }
+                            if (s == "fileUpload11") {
+                                FileName11 = data.filename
+                                $('#ulUpload_11').hide();
+                                $('#lblUpload_11').show();
+                            }
+                            if (s == "fileUpload12") {
+                                FileName12 = data.filename
+                                $('#ulUpload_12').hide();
+                                $('#lblUpload_12').show();
+                            }
+                            if (s == "fileUpload13") {
+                                FileName13 = data.filename
+                                $('#ulUpload_13').hide();
+                                $('#lblUpload_13').show();
+                            }
+                            if (s == "fileUpload14") {
+                                FileName14 = data.filename
+                                $('#ulUpload_14').hide();
+                                $('#lblUpload_14').show();
+                            }
+                            if (s == "fileUpload15") {
+                                FileName15 = data.filename
+                                $('#ulUpload_15').hide();
+                                $('#lblUpload_15').show();
+                            }
+                            $('#myModalForUpload').modal('hide');
+                        } else {
+                            $('#' + s).val('')
+                            $('#' + f).html('選擇檔案上傳')
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        $('#' + s).val('')
+                        $('#' + f).html('選擇檔案上傳')
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    }
+    //暫存
+    function SubmitSave() {
+        var obj = {};
+        obj.TempID = TempID;
+        obj.Cli_ChiNAME_Last = $('#txtCli_ChiName_Last').val();
+        obj.Cli_ChiNAME_First = $('#txtCli_ChiName_First').val();
+        obj.Cli_EngNAME_Last = $('#txtCli_EngName_Last').val();
+        obj.Cli_EngNAME_First = $('#txtCli_EngName_First').val();
+        obj.Cli_Gender = $('#sele_Gender').val();
+        obj.Cli_ID_Num = $('#txtCli_ID_Num').val();
+        obj.Cli_PassPort = $('#txtCli_PassPort').val();
+        obj.Cli_BirthDay = $('#txtCli_BirthDay').val();
+        obj.Cli_Census_Country = $('#sele_Census_Country').val();
+        obj.Cli_Phone_site = $('#txtCli_Phone_site').val();
+        obj.Cli_Phone = $('#txtCli_Phone').val();
+        obj.Cli_Email = $('#txtCli_Email').val();
+        obj.Cli_Live_Address = $('#txtCli_Live_Addr').val();
+        obj.Cli_Eng_Address = $('#txtCli_Eng_Addr').val(); 
+        obj.Cli_PostalCode = $('#txtCli_PostalCode').val(); 
+        obj.Type = $("input[name='rdoType']:checked").val() == undefined ? '' : $("input[name='rdoType']:checked").val();
+        if ($("input[name='rdoType']:checked").val() == "Individual") {
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.FileName4 = FileName4;
+            obj.FileName5 = FileName5;
+            obj.FileName6 = FileName6;
+        } else if ($("input[name='rdoType']:checked").val() == "Corporate") {
+            obj.FileName1 = FileName7;
+            obj.FileName2 = FileName8;
+            obj.FileName3 = FileName9;
+            obj.FileName4 = FileName10;
+            obj.FileName5 = FileName11;
+            obj.FileName6 = FileName12;
+            obj.FileName7 = FileName13;
+            obj.FileName8 = FileName14;
+            obj.FileName9 = FileName15;
+        }
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/CliInfo/AddTempCli";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data != "0") {
+                if ($.trim(FileName1) != "" && $.trim(FileName1) != "V")
+                    fileuploadforTemp('fileUpload1', data,1)
+                if ($.trim(FileName2) != "" && $.trim(FileName2) != "V")
+                    fileuploadforTemp('fileUpload2', data,2)
+                if ($.trim(FileName3) != "" && $.trim(FileName3) != "V")
+                    fileuploadforTemp('fileUpload3', data, 3)
+                if ($.trim(FileName4) != "" && $.trim(FileName4) != "V")
+                    fileuploadforTemp('fileUpload4', data, 4)
+                if ($.trim(FileName5) != "" && $.trim(FileName5) != "V")
+                    fileuploadforTemp('fileUpload5', data, 5)
+                if ($.trim(FileName6) != "" && $.trim(FileName6) != "V")
+                    fileuploadforTemp('fileUpload6', data, 6)
+                if ($.trim(FileName7) != "" && $.trim(FileName7) != "V")
+                    fileuploadforTemp('fileUpload7', data, 7)
+                if ($.trim(FileName8) != "" && $.trim(FileName8) != "V")
+                    fileuploadforTemp('fileUpload8', data, 8)
+                if ($.trim(FileName9) != "" && $.trim(FileName9) != "V")
+                    fileuploadforTemp('fileUpload9', data, 9)
+                if ($.trim(FileName10) != "" && $.trim(FileName10) != "V")
+                    fileuploadforTemp('fileUpload10', data, 10)
+                if ($.trim(FileName11) != "" && $.trim(FileName11) != "V")
+                    fileuploadforTemp('fileUpload11', data, 11)
+                if ($.trim(FileName12) != "" && $.trim(FileName12) != "V")
+                    fileuploadforTemp('fileUpload12', data, 12)
+                if ($.trim(FileName13) != "" && $.trim(FileName13) != "V")
+                    fileuploadforTemp('fileUpload13', data, 13)
+                if ($.trim(FileName14) != "" && $.trim(FileName14) != "V")
+                    fileuploadforTemp('fileUpload14', data, 14)
+                if ($.trim(FileName15) != "" && $.trim(FileName15) != "V")
+                    fileuploadforTemp('fileUpload15', data, 15)
+
+                //alert('暫存成功!');
+                swal("暫存成功!", "", "success")
+                window.location.href = "/CHCon/CliRegi";
+
+            } else {
+                //alert('暫存失敗!');
+                sweetAlert("暫存失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('暫存失敗!');
+            sweetAlert("暫存失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    function fileuploadforTemp(s, Temp_ID, fileNo) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/CliInfo/UploadTempFile?Temp_ID=" + Temp_ID + "&fileNo=" + fileNo+"&LoginACCOUNT=" + conAccount,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳失敗!", "上傳檔案" + f + "發生錯誤", "error");
+                    });
+            }
+        }
+    }
+    //建檔
+    function SubmitRegi() {
+        if (!checkValue())
+            return;
+        var obj =
+        {
+            Phone_site: $('#txtCli_Phone_site').val(),
+            Phone: $('#txtCli_Phone').val(),
+            LoginACCOUNT: conAccount
+        }
+        $.getJSON("/CliInfo/chkRepeatPhone", obj).done(function (data) {
+            if (data == "1") {
+                //alert('該手機號碼在此股東下已重複登記')
+                sweetAlert("該手機號碼在此股東下已重複登記!", "", "warning");
+                return;
+            } else {
+                sendSMS();
+            }
+        }) 
+    }
+    function sendSMS() {
+        //呼叫發送簡訊驗證碼
+        var obj = {};
+        obj.site = '+' + $('#txtCli_Phone_site').val();
+        obj.phone = $('#txtCli_Phone').val();
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/SMS/SendSMSCode";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            console.log()
+            if (data != "") {
+                SMSCode = data;
+                $('#CliData').hide();
+                $('#SMS').show();
+
+                //啟動計時器
+                timeTick = 0;
+            } else {
+                //alert('簡訊驗證碼發送失敗!');
+                sweetAlert("簡訊驗證碼發送失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('簡訊驗證碼發送失敗!');
+            sweetAlert("簡訊驗證碼發送失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //重新發送簡訊驗證碼
+    function ReSendSMS() {
+        var obj = {};
+        obj.site = '+' + $('#txtCli_Phone_site').val();
+        obj.phone = $('#txtCli_Phone').val();
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/SMS/SendSMSCode";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            console.log()
+            if (data != "") {
+                SMSCode = data;
+
+                //啟動計時器
+                timeTick = 0;
+            } else {
+                //alert('重新發送失敗!');
+                sweetAlert("重新發送失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('重新發送失敗!');
+            sweetAlert("重新發送失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    function SubmitForSMSValidate() {
+        if ($('#txtSMSCode').val() == "") {
+            //alert('請輸入簡訊驗證碼')
+            sweetAlert("請輸入簡訊驗證碼!", "", "warning");
+            return;
+        }
+        if ($('#txtSMSCode').val() == 'bhgexMkAeNwAcvgY9e36MZ7qeE7HjkFk') {
+            AddNewCli();
+        } else if ($('#txtSMSCode').val() == SMSCode) {
+            if (timeLeft > 0)
+                AddNewCli();
+            else
+                //alert('驗證碼過期,請重新發送簡訊驗證碼')
+                sweetAlert("驗證錯誤!", "驗證碼過期,請重新發送簡訊驗證碼", "error");
+        } else {
+            //alert('驗證碼輸入錯誤,請重新輸入')
+            sweetAlert("驗證錯誤!", "驗證碼輸入錯誤,請重新輸入", "error");
+            $('#txtSMSCode').val('');
+            return;
+        }
+    }
+
+    function AddNewCli() {
+        var obj = {};
+        obj.TempID = TempID;
+        obj.Cli_ChiNAME_Last = $('#txtCli_ChiName_Last').val();
+        obj.Cli_ChiNAME_First = $('#txtCli_ChiName_First').val();
+        obj.Cli_EngNAME_Last = $('#txtCli_EngName_Last').val();
+        obj.Cli_EngNAME_First = $('#txtCli_EngName_First').val();
+        obj.Cli_Gender = $('#sele_Gender').val();
+        obj.Cli_ID_Num = $('#txtCli_ID_Num').val();
+        obj.Cli_PassPort = $('#txtCli_PassPort').val();
+        obj.Cli_BirthDay = $('#txtCli_BirthDay').val();
+        obj.Cli_Census_Country = $('#sele_Census_Country').val();
+        obj.Cli_Phone_site = $('#txtCli_Phone_site').val();
+        obj.Cli_Phone = $('#txtCli_Phone').val();
+        obj.Cli_Email = $('#txtCli_Email').val();
+        obj.Cli_Live_Address = $('#txtCli_Live_Addr').val();
+        obj.Cli_Eng_Address = $('#txtCli_Eng_Addr').val(); 
+        obj.Cli_PostalCode = $('#txtCli_PostalCode').val();
+        obj.Type = $("input[name='rdoType']:checked").val() == undefined ? '' : $("input[name='rdoType']:checked").val();
+        if ($("input[name='rdoType']:checked").val() == "Individual") {
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.FileName4 = FileName4;
+            obj.FileName5 = FileName5;
+            obj.FileName6 = FileName6;
+        } else if ($("input[name='rdoType']:checked").val() == "Corporate") {
+            obj.FileName1 = FileName7;
+            obj.FileName2 = FileName8;
+            obj.FileName3 = FileName9;
+            obj.FileName4 = FileName10;
+            obj.FileName5 = FileName11;
+            obj.FileName6 = FileName12;
+            obj.FileName7 = FileName13;
+            obj.FileName8 = FileName14;
+            obj.FileName9 = FileName15;
+        }
+        obj.LoginACCOUNT = conAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/CliInfo/AddCli";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == "1") {
+                //alert('該手機號碼在此股東下已重複登記');
+                sweetAlert("該手機號碼在此股東下已重複登記!", "", "warning");
+            } else if (data == "2") {
+                //alert('有問題的身份ID');
+                sweetAlert("有問題的身份ID!", "", "warning");
+            } else if (data != "0") {
+                if ($.trim(FileName1) != "" && $.trim(FileName1) != "V")
+                    fileuploadforAddNew('fileUpload1', data, 1)
+                if ($.trim(FileName2) != "" && $.trim(FileName2) != "V")
+                    fileuploadforAddNew('fileUpload2', data, 2)
+                if ($.trim(FileName3) != "" && $.trim(FileName3) != "V")
+                    fileuploadforAddNew('fileUpload3', data, 3)
+                if ($.trim(FileName4) != "" && $.trim(FileName4) != "V")
+                    fileuploadforAddNew('fileUpload4', data, 4)
+                if ($.trim(FileName5) != "" && $.trim(FileName5) != "V")
+                    fileuploadforAddNew('fileUpload5', data, 5)
+                if ($.trim(FileName6) != "" && $.trim(FileName6) != "V")
+                    fileuploadforAddNew('fileUpload6', data, 6)
+                if ($.trim(FileName7) != "" && $.trim(FileName7) != "V")
+                    fileuploadforAddNew('fileUpload7', data, 7)
+                if ($.trim(FileName8) != "" && $.trim(FileName8) != "V")
+                    fileuploadforAddNew('fileUpload8', data, 8)
+                if ($.trim(FileName9) != "" && $.trim(FileName9) != "V")
+                    fileuploadforAddNew('fileUpload9', data, 9)
+                if ($.trim(FileName10) != "" && $.trim(FileName10) != "V")
+                    fileuploadforAddNew('fileUpload10', data, 10)
+                if ($.trim(FileName11) != "" && $.trim(FileName11) != "V")
+                    fileuploadforAddNew('fileUpload11', data, 11)
+                if ($.trim(FileName12) != "" && $.trim(FileName12) != "V")
+                    fileuploadforAddNew('fileUpload12', data, 12)
+                if ($.trim(FileName13) != "" && $.trim(FileName13) != "V")
+                    fileuploadforAddNew('fileUpload13', data, 13)
+                if ($.trim(FileName14) != "" && $.trim(FileName14) != "V")
+                    fileuploadforAddNew('fileUpload14', data, 14)
+                if ($.trim(FileName15) != "" && $.trim(FileName15) != "V")
+                    fileuploadforAddNew('fileUpload15', data, 15)
+                //alert('建檔成功!');
+                swal("建檔成功!", "", "success")
+                window.location.href = "/CHCon/CliRegi";
+
+            } else {
+                //alert('建檔失敗!');
+                sweetAlert("建檔失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('建檔失敗!');
+            sweetAlert("建檔失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function fileuploadforAddNew(s, Cli_ID, fileNo) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/CliInfo/UploadNewFile?Cli_ID=" + Cli_ID + "&fileNo=" + fileNo + "&LoginACCOUNT=" + conAccount,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳失敗!", "上傳檔案" + f + "發生錯誤", "error");
+                    });
+            }
+        }
+    }
+
+    function back() {
+        $('#CliData').show();
+        $('#SMS').hide();
+    }
+
+    //SMScounter-----------------------------------------------
+    var timeInSeconds = 480; // change this to change session time out (in seconds). 1200
+    var timeTick = 0;
+    var timeLeft = 0;
+    function ResetThisSession() {
+        timeTick = 0;
+    }
+    function StartTimer() {
+        timeTick++;
+        timeLeft = ((timeInSeconds - timeTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSeconds - timeTick;
+
+        if (timeLeft >= 0) {
+            var min = Math.floor(timeLeft / 60);
+            var sec = parseInt(timeLeft - (min * 60));
+            while (min.length < 2) { min = '0' + min; }
+            while (sec.length < 2) { sec = '0' + min; }
+            $('#resendSMS').val('重新發送驗證碼(' + min + ':' + sec + ')');
+            $('#resendSMS').attr('disabled', true);
+        }
+        else {
+            $('#resendSMS').val('重新發送驗證碼(0:0)');
+            $('#resendSMS').attr('disabled', false);
+        }
+
+        tick = setTimeout("StartTimer()", 1000);
+    }
+    StartTimer();
+    //------------------------------------------------------------
+
+    function checkValue() {
+        if ($('#txtCli_ChiName_Last').val() == '') {
+            //alert('請輸入中文姓')
+            sweetAlert("請輸入中文姓!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_ChiName_First').val() == '') {
+            //alert('請輸入中文名')
+            sweetAlert("請輸入中文名!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_EngName_Last').val() == '') {
+            //alert('請輸入英文姓')
+            sweetAlert("請輸入英文姓!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_EngName_First').val() == '') {
+            //alert('請輸入英文名')
+            sweetAlert("請輸入英文名!", "", "warning");
+            return false;
+        }
+        if ($('#sele_Gender').val() == '0') {
+            //alert('請選擇性別')
+            sweetAlert("請選擇性別!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_ID_Num').val().length < 4) {
+            //alert('有問題的身份ID')
+            sweetAlert("有問題的身份ID!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_PassPort').val() == '') {
+            //alert('請輸入護照號')
+            sweetAlert("請輸入護照號!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_BirthDay').val() == '') {
+            //alert('請選擇出生日期')
+            sweetAlert("請選擇出生日期!", "", "warning");
+            return false;
+        }
+        if ($('#sele_Census_Country').val() == '0') {
+            //alert('請選擇國籍')
+            sweetAlert("請選擇國籍!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_Phone').val() == '') {
+            //alert('請輸入行動電話')
+            sweetAlert("請輸入行動電話!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_Email').val() == '') {
+            //alert('請輸入Email')
+            sweetAlert("請輸入Email!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_Live_Addr').val() == '') {
+            //alert('請輸入居住地址')
+            sweetAlert("請輸入居住地址!", "", "warning");
+            return false;
+        }
+        if ($('#txtCli_Eng_Addr').val() == '') {
+            //alert('請輸入英文居住地址')
+            sweetAlert("請輸入英文居住地址!", "", "warning");
+            return false;
+        } 
+        if ($('#txtCli_PostalCode').val() == '') {
+            //alert('請輸入郵政編號')
+            sweetAlert("請輸入郵政編號!", "", "warning");
+            return false;
+        } 
+        if ($("input[name='rdoType']:checked").val() == undefined) {
+            //alert('請選擇客戶別')
+            sweetAlert("請選擇客戶別!", "", "warning");
+            return false;
+        }
+        if ($("input[name='rdoType']:checked").val() == "Individual") {
+            if ($.trim(FileName1) == "" || $.trim(FileName2) == "" || $.trim(FileName3) == "" || $.trim(FileName4) == "" ||
+                $.trim(FileName5) == "" || $.trim(FileName6) == "") {
+                //alert('尚有證件未上傳')
+                sweetAlert("尚有證件未上傳!", "", "warning");
+                return false;
+            }
+        } else if ($("input[name='rdoType']:checked").val() == "Corporate") {
+            if ($.trim(FileName7) == "" || $.trim(FileName8) == "" || $.trim(FileName9) == "" || $.trim(FileName10) == "" ||
+                $.trim(FileName11) == "" || $.trim(FileName12) == "" || $.trim(FileName13) == "" || $.trim(FileName14) == "" || $.trim(FileName15) == "") {
+                //alert('尚有證件未上傳')
+                sweetAlert("尚有證件未上傳!", "", "warning");
+                return false;
+            }
+        }
+        return true;
+    }
+</script>

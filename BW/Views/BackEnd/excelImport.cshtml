@@ -1,0 +1,118 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+
+@using (Html.BeginForm("Upload", "excelImport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <input type="file" class="form-control" name="file" />
+    <select class="form-control" id="uploadType" name="uploadType">
+        <option value="0" selected>名單</option>
+        <option value="1">存款</option>
+    </select>
+    <button type="submit" class="btn btn-primary" id="btnSubmit">Upload!</button>
+}
+
+<button type="button" class="btn btn-primary" onclick="clearMem()">清除人員資料</button>
+<button type="button" class="btn btn-primary" onclick="clearDepo()">清除存款資料</button>
+
+<script>
+    function calculate() {
+        loadData();
+    }
+
+
+    function loadData() {
+        var apiURL = "/Home/calculate/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_EngNAME', title: '英文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_ChiNAME', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'HIERABonus', title: '差階獎金', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CounselBonus', title: '輔導獎金', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'TutorBonus', title: '教育獎金', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Bonus', title: '總獎金', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            //queryParams: { userid: userid },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            //uniqueId: 'id',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            //search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+                //displayMsg("lblMsg", "頁面切換!", "label label-warning")
+            },
+            pageSize: 20,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                console.log(data);
+                //displayMsg("lblMsg", "讀取完畢!", "label label-success");
+            },
+            onLoadError: function (res) {
+                //displayMsg("lblMsg", "讀取失敗或逾時!", "label label-danger");
+            },
+            onClickCell: function (field, value, row, $element) {
+
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+
+    }
+    function clearMem() {
+        clear(0)
+    }
+    function clearDepo() {
+        clear(1)
+    }
+    function clear(type) {
+        var obj = {};
+        obj.type = type
+        var options = {};
+        options.url = "/excelImport/clear";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            console.log(data)
+            if (data) {
+                //alert('刪除成功!');
+                swal("刪除成功!", "", "success")
+            } else {
+                //alert('刪除失敗!');
+                sweetAlert("刪除失敗!", "", "error");
+            }
+        };
+        options.error = function () {
+            //alert('刪除失敗!');
+            sweetAlert("刪除失敗!", "", "error");
+        };
+        $.ajax(options);
+    }
+</script>

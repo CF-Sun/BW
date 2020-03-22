@@ -1,0 +1,279 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">業績總覽</li>
+        <li class="breadcrumb-item active">
+            <a href="#">個人業績</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">個人業績</h4>
+            <div class="row">
+                <div class="col-lg-7">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="" class="col-md-3 col-form-label">日期區間</label>
+                            <div class="col-md-4 col-6 select-wrapper underline">
+                                <input type="text" id="txtStartDate" name="txtStartDate">
+                            </div>
+                            <div class="offset-md-1 col-md-4 col-6 select-wrapper">
+                                <input type="text" id="txtEndDate" name="txtEndDate">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    //初始化設定---------------
+    $('#txtStartDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEndDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    //查詢
+    function clicktoSearch() {
+        Con_NO = conAccount
+        startDate = $('#txtStartDate').val()
+        endDate = $('#txtEndDate').val()
+        if (startDate != "" && endDate != "") {
+            //起日大於迄日的話則return
+            if (startDate > endDate) {
+                //alert('開始日期不能大於結束日期')
+                sweetAlert("開始日期不能大於結束日期!", "", "warning");
+                return;
+            }
+        }
+        $('#maindiv').jqLoading();
+        getDataTotal(Con_NO, startDate, endDate);
+        $('#maindiv').jqLoading("destroy");
+    }
+    function getDataTotal(Con_NO, startDate, endDate) {
+        var obj =
+        {
+            Con_NO: Con_NO,
+            Con_Name: '',
+            startDate: startDate,
+            endDate: endDate
+        }
+        $.getJSON("/Deposite/GetIndividualDataTotal", obj).done(function (data) {
+            loadIndividualData(Con_NO, startDate, endDate, data);
+        })
+    }
+    function loadIndividualData(Con_NO, startDate, endDate, totalData) {
+        var apiURL = "/Deposite/GetConIndividualPerform/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                {
+                    field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + totalData[i].CODE_DESC + '小計'
+                            else
+                                value += totalData[i].CODE_DESC + '小計'
+                        }
+                        value += '<br>合計'
+                        return value;
+
+                        //return '一案小計<br>二案小計<br>三案小計<br>合計';
+                    }
+                },
+                { field: 'ChiName', title: '客戶姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CODE_DESC', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Deposit_Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Deposit_Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Deposit_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Deposit_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Withdrawal_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Withdrawal_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Amount',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Con_NO: Con_NO, Con_Name: '', startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: "auto",
+
+            search: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+</script>

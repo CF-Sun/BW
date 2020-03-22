@@ -1,0 +1,7 @@
+2019/10/26 00:29:04:060 SendMail/Send=>System.Net.Mail.SmtpException: SMTP 伺服器需要安全連接，或用戶端未經驗證。 伺服器回應為: 5.7.57 SMTP; Client was not authenticated to send anonymous mail during MAIL FROM [HK0PR03CA0051.apcprd03.prod.outlook.com]
+   於 System.Net.Mail.MailCommand.CheckResponse(SmtpStatusCode statusCode, String response)
+   於 System.Net.Mail.MailCommand.Send(SmtpConnection conn, Byte[] command, MailAddress from, Boolean allowUnicode)
+   於 System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.Send(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\SourceCode\BW\BW\Helpers\SendMail.cs: 行 22

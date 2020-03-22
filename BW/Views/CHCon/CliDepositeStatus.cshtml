@@ -1,0 +1,153 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶總覽</li>
+        <li class="breadcrumb-item active">
+            <a href="#">客戶出入金紀錄</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">客戶出入金紀錄</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="" class="col-md-3 col-form-label">日期區間</label>
+                            <div class="col-md-4 col-6 select-wrapper underline">
+                                <input type="text" id="txtStartDate" name="txtStartDate">
+                            </div>
+                            <div class="offset-md-1 col-md-4 col-6 select-wrapper">
+                                <input type="text" id="txtEndDate" name="txtEndDate">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_DeporWith" class="col-3 col-form-label">出／入金</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_DeporWith" id="sele_DeporWith" class="br-cus">
+                                    <option value="0">全部</option>
+                                    <option value="1">出金</option>
+                                    <option value="2">入金</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    //初始化設定---------------
+    $('#txtStartDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEndDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    //----------------------
+
+    //查詢
+    function clicktoSearch() {
+        startDate = $('#txtStartDate').val()
+        endDate = $('#txtEndDate').val()
+        if (startDate != "" && endDate != "") {
+            //起日大於迄日的話則return
+            if (startDate > endDate) {
+                //alert('開始日期不能大於結束日期')
+                sweetAlert("開始日期不能大於結束日期!", "", "warning");
+                return;
+            }
+        }
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    }
+
+    function loadData() {
+        var apiURL = "/Deposite/GetCliDepositeByID/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'ID', title: '單號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CliName', title: '客戶名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Kind', title: '出／入金', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Type', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Amount',
+                    title: '金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CREATE_DATE', title: '登記時間', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Arrival_DATE', title: '匯出日／水單日', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'WithdrawalFrom', title: '出金來源', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Status', title: '處理狀態', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount, DeporWith: $('#sele_DeporWith').val(), StartDate: $('#txtStartDate').val(), EndDate: $('#txtEndDate').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 350,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                console.log(data)
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+</script>

@@ -1,0 +1,869 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問業績總覽</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">顧問業績總覽</h4>
+            <div class="row">
+                <div class="col-lg-7">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_item" class="col-md-3 col-form-label">查詢業績</label>
+                            <div class="col-md-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_item" id="sele_item" class="br-cus">
+                                    <option value="0">個人業績</option>
+                                    <option value="1">轄下組織業績</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="" class="col-md-3 col-form-label">日期區間</label>
+                            <div class="col-md-4 col-6 select-wrapper underline2">
+                                <input type="text" id="txtStartDate" name="txtStartDate">
+                            </div>
+                            <div class="offset-md-1 col-md-4 col-6 select-wrapper">
+                                <input type="text" id="txtEndDate" name="txtEndDate">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div id="Individual">
+            <h3>個人業績</h3>
+            <div class="overflow">
+                <table class="table table-bordered table-hover" id="theTableForIndividual"></table>
+            </div>
+        </div>
+        <div id="Organ">
+            <h3>組織業績</h3>
+            <div class="overflow">
+                <table class="table table-bordered table-hover" id="theTableForOrgan"></table>
+            </div>
+        </div>
+        <div id="Total">
+            <h3>全體總計</h3>
+            <div class="overflow">
+                <table class="table table-bordered table-hover" id="theTableForTotal"></table>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        個人業績
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableForModal"></table>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="submit" class="btn btn-sm btn-primary" data-dismiss="modal" value="確認">
+                </div>
+                <a id="download_a"></a>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+        
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_13 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+
+    //初始化設定---------------
+    $('#txtStartDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEndDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#Individual').hide();
+    $('#Organ').hide();
+    $('#Total').hide();
+    //----------------------
+
+    var IndividualDataTotal
+    var OrganDataTotal
+    //查詢
+    function clicktoSearch() {
+        $('#Individual').hide();
+        $('#Organ').hide();
+        $('#Total').hide(); 
+
+        Con_NO = $('#txtCon_NO').val()
+        Con_Name = $('#txtCon_Name').val()
+        startDate = $('#txtStartDate').val()
+        endDate = $('#txtEndDate').val()
+        if (startDate != "" && endDate != "") {
+            //起日大於迄日的話則return
+            if (startDate > endDate) {
+                //alert('開始日期不能大於結束日期')
+                sweetAlert("開始日期不能大於結束日期!", "", "warning");
+                return;
+            }
+        }
+        $('#maindiv').jqLoading();
+        //若都為空則查詢全部
+        if ($.trim(Con_NO) == '' && $.trim(Con_Name) == '') {
+            loadTotalData(startDate, endDate);
+            $('#Total').show(); 
+        } else {
+            if ($('#sele_item').val() == 0) {
+                getDataTotal(Con_NO, Con_Name, startDate, endDate, 0)
+                //loadIndividualData(Con_NO, Con_Name, startDate, endDate);
+                $('#Individual').show();
+            } else if ($('#sele_item').val() == 1) {
+                getDataTotal(Con_NO, Con_Name, startDate, endDate, 1);
+                //loadOrganData(Con_NO, Con_Name, startDate, endDate);
+                $('#Organ').show();
+            }
+        }
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadIndividualData(Con_NO, Con_Name, startDate, endDate, totalData) {
+        var apiURL = "/Deposite/GetConIndividualPerform/";
+        $("#theTableForIndividual").bootstrapTable('destroy');
+        $("#theTableForIndividual").bootstrapTable({
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')" >' + $.trim(row.Cli_ID) + '</a></li></ul>'
+
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + totalData[i].CODE_DESC+'小計'
+                            else
+                                value += totalData[i].CODE_DESC + '小計'
+                        }
+                        value += '<br>合計'
+                        return value;
+                    }
+                },
+                { field: 'ChiName', title: '客戶姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CODE_DESC', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Deposit_Amount).toFixed(2)) 
+                            else
+                                value += toThousands(eval(totalData[i].Deposit_Amount).toFixed(2)) 
+                            totalcount += eval(totalData[i].Deposit_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Deposit_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Withdrawal_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Withdrawal_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Amount',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Con_NO: Con_NO, Con_Name: Con_Name, startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: 500,
+            search: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function loadOrganData(Con_NO, Con_Name, startDate, endDate, totalData) {
+        var apiURL = "/Deposite/GetConOrganPerform/";
+        $("#theTableForOrgan").bootstrapTable('destroy');
+        $("#theTableForOrgan").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                //按鈕控制
+                if (field == "Con_ID") {
+
+                    $('#maindiv').jqLoading();
+                    loadModalData(row.Con_ID, startDate, endDate);
+                    $('#myModal').modal('show');
+                    $('#maindiv').jqLoading("destroy");
+
+                };
+            },
+            columns: [
+                {
+                    field: 'Con_ID',
+                    title: '顧問編號',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" >' + $.trim(row.Con_ID) + '</a></li></ul>'
+                        //var value = '<button type = "button"  class="btn btn-default btnDelay">' + $.trim(row.Con_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + totalData[i].CODE_DESC + '小計'
+                            else
+                                value += totalData[i].CODE_DESC + '小計'
+                        }
+                        value += '<br>合計'
+                        return value;
+
+                        //return '一案小計<br>二案小計<br>三案小計<br>合計';
+                    }
+                },
+                { field: 'ChiName', title: '顧問姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CODE_DESC', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Deposit_Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Deposit_Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Deposit_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Deposit_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Deposit_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Withdrawal_Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Withdrawal_Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Withdrawal_Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Withdrawal_Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Amount',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        value = "";
+                        var totalcount = 0;
+                        for (var i in totalData) {
+                            if (value.length > 0)
+                                value += '<br>' + toThousands(eval(totalData[i].Amount).toFixed(2))
+                            else
+                                value += toThousands(eval(totalData[i].Amount).toFixed(2))
+                            totalcount += eval(totalData[i].Amount);
+                        }
+                        return value + '<br>' + toThousands(eval(totalcount).toFixed(2));
+
+                        //var count1 = 0;
+                        //var count2 = 0;
+                        //var count3 = 0;
+                        //var totalcount = 0;
+                        //for (var i in value) {
+                        //    switch (value[i].Deposit_Type) {
+                        //        case "1":
+                        //            count1 += eval(value[i].Amount);
+                        //            break;
+                        //        case "2":
+                        //            count2 += eval(value[i].Amount);
+                        //            break;
+                        //        case "3":
+                        //            count3 += eval(value[i].Amount);
+                        //            break;
+                        //    }
+                        //    totalcount += eval(value[i].Amount);
+                        //}
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Con_NO: Con_NO, Con_Name: Con_Name, startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: 600,
+            search: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function getDataTotal(Con_NO, Con_Name, startDate, endDate, type) {
+        var URL = "";
+        if (type == 0)
+            URL = "/Deposite/GetIndividualDataTotal";
+        else if (type == 1)
+            URL = "/Deposite/GetOrganDataTotal";
+        var obj =
+        {
+            Con_NO: Con_NO,
+            Con_Name: Con_Name,
+            startDate: startDate,
+            endDate: endDate
+        }
+        $.getJSON(URL, obj).done(function (data) {
+            if (type == 0) {
+                loadIndividualData(Con_NO, Con_Name, startDate, endDate, data);
+            } else if (type == 1) {
+                loadOrganData(Con_NO, Con_Name, startDate, endDate, data);
+            }
+        })
+    }
+    function loadTotalData(startDate, endDate) {
+        var apiURL = "/Deposite/GetConTotalData/";
+        $("#theTableForTotal").bootstrapTable('destroy');
+        $("#theTableForTotal").bootstrapTable({
+            columns: [
+                {
+                    field: 'CODE_DESC', title: '案別', align: 'center', halign: 'center', visible: true, sortable: true,
+                    footerFormatter: function (value) {
+                        return '合計';
+                    }
+                },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        var count1 = 0;
+                        var count2 = 0;
+                        var count3 = 0;
+                        var totalcount = 0;
+                        for (var i in value) {
+                            //switch (value[i].Deposit_Type) {
+                            //    case "1":
+                            //        count1 += eval(value[i].Deposit_Amount);
+                            //        break;
+                            //    case "2":
+                            //        count2 += eval(value[i].Deposit_Amount);
+                            //        break;
+                            //    case "3":
+                            //        count3 += eval(value[i].Deposit_Amount);
+                            //        break;
+                            //}
+                            totalcount += eval(value[i].Deposit_Amount);
+                        }
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                        return toThousands(eval(totalcount).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        var count1 = 0;
+                        var count2 = 0;
+                        var count3 = 0;
+                        var totalcount = 0;
+                        for (var i in value) {
+                            //switch (value[i].Deposit_Type) {
+                            //    case "1":
+                            //        count1 += eval(value[i].Withdrawal_Amount);
+                            //        break;
+                            //    case "2":
+                            //        count2 += eval(value[i].Withdrawal_Amount);
+                            //        break;
+                            //    case "3":
+                            //        count3 += eval(value[i].Withdrawal_Amount);
+                            //        break;
+                            //}
+                            totalcount += eval(value[i].Withdrawal_Amount);
+                        }
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                        return toThousands(eval(totalcount).toFixed(2))
+                    }
+                },
+                {
+                    field: 'Amount',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        var count1 = 0;
+                        var count2 = 0;
+                        var count3 = 0;
+                        var totalcount = 0;
+                        for (var i in value) {
+                            //switch (value[i].Deposit_Type) {
+                            //    case "1":
+                            //        count1 += eval(value[i].Amount);
+                            //        break;
+                            //    case "2":
+                            //        count2 += eval(value[i].Amount);
+                            //        break;
+                            //    case "3":
+                            //        count3 += eval(value[i].Amount);
+                            //        break;
+                            //}
+                            totalcount += eval(value[i].Amount);
+                        }
+                        //return toThousands(eval(count1).toFixed(2)) + '<br>' + toThousands(eval(count2).toFixed(2)) + '<br>' + toThousands(eval(count3).toFixed(2)) + '<br>' + toThousands(eval(totalcount).toFixed(2));
+                        return toThousands(eval(totalcount).toFixed(2))
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Con_NO: Con_NO, Con_Name: Con_Name, startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: 360,
+            search: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function loadModalData(Con_NO, startDate, endDate) {
+        var apiURL = "/Deposite/GetConIndividualPerform/";
+        $("#theTableForModal").bootstrapTable('destroy');
+        $("#theTableForModal").bootstrapTable({
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')" >' + $.trim(row.Cli_ID) + '</a></li></ul>'
+
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+                        return '合計';
+                    }
+                },
+                { field: 'ChiName', title: '客戶姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Deposit_Amount);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Withdrawal_Amount);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    }
+                },
+                {
+                    field: 'Amount',
+                    title: '淨入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true,
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Amount);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Con_NO: Con_NO, Con_Name: " ", startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: 400,
+            search: true,
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Cli_ID) {
+        sessionStorage["Cli_ID"] = Cli_ID;
+        window.location.href = "/BackEnd/CliDepositeStatus";
+    }
+</script>

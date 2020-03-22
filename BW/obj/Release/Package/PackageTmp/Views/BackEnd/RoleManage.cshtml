@@ -1,0 +1,547 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">系統管理</li>
+        <li class="breadcrumb-item active">
+            <a href="#">角色管理</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">角色管理</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtRole_Name" class="col-md-3 col-form-label">角色名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtRole_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoAdd()" value="新增">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModalForAdd" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        新增角色
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtRoleName" class="col-3 col-form-label">角色</label>
+                            <div class="col-9">
+                                <input type="text" id="txtRoleName" name="txtRoleName" placeholder="角色名稱" required
+                                       data-error="請填一角色名稱">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForAdd()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForEdit" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        編輯權限
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label class="col-2 col-form-label" style="color:red">客戶</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_1" value="Auth_1">查詢功能>基本資料-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_2" value="Auth_2">查詢功能>基本資料-編輯/證件資料檢視/上傳/狀態修改
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_3" value="Auth_3">查詢功能>基本資料-憑證上傳、查詢功能>發息紀錄-發息記錄上傳
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_4" value="Auth_4">查詢功能>出入金狀態-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_5" value="Auth_5">查詢功能>出入金狀態-出入金日期設定/出金來源/處理狀態設定
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_6" value="Auth_6">查詢功能>發息紀錄-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_7" value="Auth_7">新開戶列表-檢視、缺件一覽表-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_8" value="Auth_8">新入金一覽表-檢視、新出金一覽表-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_9" value="Auth_9">新入金一覽表-到帳動作確認、新出金一覽表-設定處理狀態/上傳匯出紀錄
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label class="col-2 col-form-label" style="color:red">顧問</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_10" value="Auth_10">查詢功能>基本資料-基本資料檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_11" value="Auth_11">查詢功能>基本資料-基本資料編輯/證件資料檢視/上傳/狀態修改
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_12" value="Auth_12">查詢功能>基本資料-職級設定
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_13" value="Auth_13">查詢功能>客戶管理、查詢功能>業績總覽
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_14" value="Auth_14">查詢功能>發佣紀錄-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_15" value="Auth_15">查詢功能>發佣紀錄-報表重算
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_16" value="Auth_16">查詢功能>核佣-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_17" value="Auth_17">新報聘列表-檢視、缺件一覽表-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_18" value="Auth_18">組織樹
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label class="col-2 col-form-label" style="color:red">照會</label>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_19" value="Auth_19">新進照會、客戶照會紀錄-檢視、顧問照會紀錄-檢視
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_20" value="Auth_20">客戶照會紀錄-回覆/結案確認、顧問照會紀錄-回覆/結案確認
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmitEdit" onclick="SubmitEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else {
+        $('#maindiv').hide();
+    }
+    //初始化
+    var ROLEID;
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/Account/GetAccountRole/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'ROLE_ID', title: '角色編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ROLE_Name', title: '角色名稱', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Enable',
+                    title: '狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            return '啟用'
+                        else
+                            return '停用'
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+                        value += '<a class="dropdown-item" onclick="Edit(\'' + $.trim(row.ROLE_ID) + '\')" >編輯權限</a>'
+                        if (row.Enable == "True")
+                            value += '<a class="dropdown-item" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')" >停用</a>'
+                        else
+                            value += '<a class="dropdown-item" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')" >啟用</a>'
+
+                        value += '<a class="dropdown-item" onclick="deleteRole(\'' + $.trim(row.ROLE_ID) + '\')" >刪除</a>'
+                        value += '</div></div>'
+
+                        return value
+
+
+                        //var value = '<ul class="actions"><li><a class="btn btn-light" onclick="Edit(\'' + $.trim(row.ROLE_ID) + '\')" >編輯權限</a></li>'
+                        //if (row.Enable == "True")
+                        //    value += '<li><a class="btn btn-light" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')" >停用</a></li>'
+                        //else
+                        //    value += '<li><a class="btn btn-light" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')" >啟用</a></li>'
+                        //value += '<li><a class="btn btn-light" onclick="deleteRole(\'' + $.trim(row.ROLE_ID) + '\')" >刪除</a></li></ul>'
+                        //return value
+
+                        //var value = '<button type = "button" onclick="Edit(\'' + $.trim(row.ROLE_ID) + '\')"  class="btn btn-default btnDelay">編輯權限</button >';
+                        //if (row.Enable == "True")
+                        //    value += '<button type = "button" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')"  class="btn btn-default btnDelay">停用</button >';
+                        //else
+                        //    value += '<button type = "button" onclick="enable(\'' + $.trim(row.ROLE_ID) + '\',\'' + $.trim(row.Enable) + '\')"  class="btn btn-default btnDelay">啟用</button >';
+                        //value += '<button type = "button" onclick="deleteRole(\'' + $.trim(row.ROLE_ID) + '\')"  class="btn btn-default btnDelay">刪除</button >';
+                        //return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { Role_Name: $('#txtRole_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+
+    //click event
+    function clicktoAdd(){
+        $('#txtRoleName').val('')
+        $('#myModalForAdd').modal('show');
+    }
+    function SubmitForAdd() {
+        var obj = {};
+        obj.RoleName = $("#txtRoleName").val();
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/AddNewRole";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                //alert('新增成功!');
+                swal("新增成功!", "", "success")
+            } else if (data == 2) {
+                //alert('角色名稱重複!');
+                sweetAlert("新增失敗!", "角色名稱重複", "warning");
+            }
+            else {
+                //alert('新增失敗!');
+                sweetAlert("新增失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('新增失敗!');
+            sweetAlert("新增失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function Edit(ROLE_ID) {
+        ROLEID = ROLE_ID
+        var obj =
+        {
+            ROLE_ID: ROLE_ID
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_1 == "True") { $("#Auth_1").attr("checked", true) } else { $("#Auth_1").attr("checked", false) }
+            if (data[0].Auth_2 == "True") { $("#Auth_2").attr("checked", true) } else { $("#Auth_2").attr("checked", false) }
+            if (data[0].Auth_3 == "True") { $("#Auth_3").attr("checked", true) } else { $("#Auth_3").attr("checked", false) }
+            if (data[0].Auth_4 == "True") { $("#Auth_4").attr("checked", true) } else { $("#Auth_4").attr("checked", false) }
+            if (data[0].Auth_5 == "True") { $("#Auth_5").attr("checked", true) } else { $("#Auth_5").attr("checked", false) }
+            if (data[0].Auth_6 == "True") { $("#Auth_6").attr("checked", true) } else { $("#Auth_6").attr("checked", false) }
+            if (data[0].Auth_7 == "True") { $("#Auth_7").attr("checked", true) } else { $("#Auth_7").attr("checked", false) }
+            if (data[0].Auth_8 == "True") { $("#Auth_8").attr("checked", true) } else { $("#Auth_8").attr("checked", false) }
+            if (data[0].Auth_9 == "True") { $("#Auth_9").attr("checked", true) } else { $("#Auth_9").attr("checked", false) }
+            if (data[0].Auth_10 == "True") { $("#Auth_10").attr("checked", true) } else { $("#Auth_10").attr("checked", false) }
+            if (data[0].Auth_11 == "True") { $("#Auth_11").attr("checked", true) } else { $("#Auth_11").attr("checked", false) }
+            if (data[0].Auth_12 == "True") { $("#Auth_12").attr("checked", true) } else { $("#Auth_12").attr("checked", false) }
+            if (data[0].Auth_13 == "True") { $("#Auth_13").attr("checked", true) } else { $("#Auth_13").attr("checked", false) }
+            if (data[0].Auth_14 == "True") { $("#Auth_14").attr("checked", true) } else { $("#Auth_14").attr("checked", false) }
+            if (data[0].Auth_15 == "True") { $("#Auth_15").attr("checked", true) } else { $("#Auth_15").attr("checked", false) }
+            if (data[0].Auth_16 == "True") { $("#Auth_16").attr("checked", true) } else { $("#Auth_16").attr("checked", false) }
+            if (data[0].Auth_17 == "True") { $("#Auth_17").attr("checked", true) } else { $("#Auth_17").attr("checked", false) }
+            if (data[0].Auth_18 == "True") { $("#Auth_18").attr("checked", true) } else { $("#Auth_18").attr("checked", false) }
+            if (data[0].Auth_19 == "True") { $("#Auth_19").attr("checked", true) } else { $("#Auth_19").attr("checked", false) }
+            if (data[0].Auth_20 == "True") { $("#Auth_20").attr("checked", true) } else { $("#Auth_20").attr("checked", false) }
+
+
+            $('#maindiv').jqLoading("destroy");
+        })
+        $('#myModalForEdit').modal('show');
+    }
+    function SubmitEdit() {
+        var obj = {};
+        obj.LoginACCOUNT = userAccount;
+        obj.ROLEID = ROLEID;
+        obj.Auth_1 = $("#Auth_1").prop('checked') ? true : false;
+        obj.Auth_2 = $("#Auth_2").prop('checked') ? true : false;
+        obj.Auth_3 = $("#Auth_3").prop('checked') ? true : false;
+        obj.Auth_4 = $("#Auth_4").prop('checked') ? true : false;
+        obj.Auth_5 = $("#Auth_5").prop('checked') ? true : false;
+        obj.Auth_6 = $("#Auth_6").prop('checked') ? true : false;
+        obj.Auth_7 = $("#Auth_7").prop('checked') ? true : false;
+        obj.Auth_8 = $("#Auth_8").prop('checked') ? true : false;
+        obj.Auth_9 = $("#Auth_9").prop('checked') ? true : false;
+        obj.Auth_10 = $("#Auth_10").prop('checked') ? true : false;
+        obj.Auth_11 = $("#Auth_11").prop('checked') ? true : false;
+        obj.Auth_12 = $("#Auth_12").prop('checked') ? true : false;
+        obj.Auth_13 = $("#Auth_13").prop('checked') ? true : false;
+        obj.Auth_14 = $("#Auth_14").prop('checked') ? true : false;
+        obj.Auth_15 = $("#Auth_15").prop('checked') ? true : false;
+        obj.Auth_16 = $("#Auth_16").prop('checked') ? true : false;
+        obj.Auth_17 = $("#Auth_17").prop('checked') ? true : false;
+        obj.Auth_18 = $("#Auth_18").prop('checked') ? true : false;
+        obj.Auth_19 = $("#Auth_19").prop('checked') ? true : false;
+        obj.Auth_20 = $("#Auth_20").prop('checked') ? true : false;
+
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/EditRole";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            }
+            else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+
+    }
+    function enable(ROLE_ID, Enable) {
+        var obj = {};
+        obj.ROLEID = ROLE_ID;
+        obj.Enable = Enable == '' ? false : Enable;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/enableRole";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                if (Enable == "True")
+                    //alert('停用成功!');
+                    swal("停用成功!", "", "success")
+                else
+                    //alert('啟用成功!');
+                    swal("啟用成功!", "", "success")
+            }
+            else if (data == 2) {
+                //alert('尚有帳號為該角色,停用失敗!');
+                sweetAlert("停用失敗!", "尚有帳號為該角色", "error");
+            } else {
+                if (Enable == "True")
+                    //alert('停用失敗!');
+                    sweetAlert("停用失敗!", "", "error");
+                else
+                    //alert('啟用失敗!');
+                    sweetAlert("啟用失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            if (Enable == "True")
+                //alert('停用失敗!');
+                sweetAlert("停用失敗!", "", "error");
+            else
+                //alert('啟用失敗!');
+                sweetAlert("啟用失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function deleteRole(ID) {
+        var obj = {};
+        obj.ROLEID = ID;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/DeleteRole";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                //alert('刪除成功!');
+                swal("刪除成功!", "", "success")
+            } else if (data == 2) {
+                //alert('尚有帳號為該角色!');
+                sweetAlert("刪除失敗!", "尚有帳號為該角色", "warning");
+            }
+            else {
+                //alert('刪除失敗!');
+                sweetAlert("刪除失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('刪除失敗!');
+            sweetAlert("刪除失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

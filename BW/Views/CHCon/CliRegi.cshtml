@@ -1,0 +1,128 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶登記</li>
+        <li class="breadcrumb-item active">
+            <a href="#">報客戶</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">報客戶</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="text-left">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoAddCli()" value="新增客戶">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <br />
+    <section id="form">
+        <label class="col-form-label" style="font-size:larger">客戶暫存列表</label>
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+
+    function loadData() {
+        var apiURL = "/CliInfo/GetTempCliInfoByConID/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'ChiName', title: '中文姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'EngNAME', title: '英文姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Phone',
+                    title: '手機',
+                    formatter: function (value, row, index) {
+                        value = '';
+                        if ($.trim(row.Cli_Phone_site) != "" && $.trim(row.Cli_Phone) != "")
+                            value = '(' + $.trim(row.Cli_Phone_site) + ')' + $.trim(row.Cli_Phone)
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        if (row.IsTemp=="True")
+                            value = '<ul class="actions"><li><a class="btn btn-light" onclick="Edit(\'' + $.trim(row.Temp_ID) + '\')">繼續編輯</a></li></ul>'
+                        else
+                            value='已提交'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                console.log(data)
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function clicktoAddCli() {
+        window.location.href = "/CHCon/CliRegiAdd";
+    }
+    function Edit(TempID) {
+        sessionStorage["TempID"] = TempID;
+        window.location.href = "/CHCon/CliRegiDetail";
+
+    }
+</script>

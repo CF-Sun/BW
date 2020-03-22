@@ -1,0 +1,52 @@
+﻿@{
+    Layout = "~/Views/Shared/PurchaseLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">立即申購</li>
+        <li class="breadcrumb-item active">
+            <a href="/CH/pur_download">相關文件下載</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set text-center">
+            <h4 class="title">相關文件下載</h4>
+        </div>
+    </section>
+    <section id="download">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                @*<h5>法律文件</h5>*@
+                <ul>
+                    <li>
+                        <a href="/Export/Open?FileName=基金匯款帳號.pdf">
+                            <span class="iconify" data-icon="bx-bxs-file-pdf" data-inline="false"></span>
+                            基金匯款帳號
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Export/Open?FileName=申購書原文版.pdf">
+                            <span class="iconify" data-icon="bx-bxs-file-pdf" data-inline="false"></span>
+                            申購書原文版
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/Export/Open?FileName=申購書中譯版.pdf">
+                            <span class="iconify" data-icon="bx-bxs-file-pdf" data-inline="false"></span>
+                            申購書中譯版
+                        </a>
+                    </li>
+                    @*<li>  --------------------------word圖案範例------------------------------------
+                        <a href="#">
+                            <span class="iconify" data-icon="ant-design:file-word-filled" data-inline="false"></span>
+                            Financial Services Guide
+                        </a>
+                    </li>*@
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>

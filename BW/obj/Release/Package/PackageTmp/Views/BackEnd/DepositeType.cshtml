@@ -1,0 +1,377 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">系統管理</li>
+        <li class="breadcrumb-item active">
+            <a href="#">案別管理</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">案別管理</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="text-left">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoAddType()" value="新增案別">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <div class="modal fade" id="myModalForEdit" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="h5title">
+                        編輯
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtType_NAME" class="col-3 col-form-label">案別名稱</label>
+                            <div class="col-9">
+                                <input type="text" id="txtType_NAME" name="txtType_NAME" required
+                                       data-error="請填寫案別名稱">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtType_RATE" class="col-3 col-form-label">案別比率</label>
+                            <div class="col-9">
+                                <input type="text" id="txtType_RATE" name="txtType_RATE" required
+                                       data-error="請填寫案別比率" onkeyup="clearNoNum(this)">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        @*<div class="form-group au-form row">
+                            <label for="txtActural_RATE" class="col-3 col-form-label">實際％</label>
+                            <div class="col-9">
+                                <input type="text" id="txtActural_RATE" name="txtActural_RATE" required
+                                       data-error="請填寫實際％" onkeyup="clearNoNum(this)">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>*@
+                        <div class="form-group au-form row">
+                            <label for="txtType_MinAmount" class="col-3 col-form-label">最小投資金額(萬)</label>
+                            <div class="col-9">
+                                <input type="text" id="txtType_MinAmount" name="txtType_MinAmount" required
+                                       data-error="請填寫最小投資金額" onkeyup="value=accounting.formatNumber(value.replace(/[^\d.,]/g,''))">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSubmitEdit" class="btn btn-sm btn-primary" onclick="SubmitEdit()" value="確認修改">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        //var obj =
+        //{
+        //    ROLE_ID: userRole
+        //}
+        //$.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+        //    if (data[0].Auth_19 != "True") { //如果沒檢視權限 則頁面全隱藏
+        //        $('#maindiv').hide();
+        //        sweetAlert("您沒有檢視權限", "", "warning");
+        //        return;
+        //    }
+        //});
+    }
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+
+    var Type_NO = "";
+
+    function loadData() {
+        var apiURL = "/DepositeType/GetDepositeType/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Type_NO = $.trim(row.Type_NO)
+            },
+            columns: [
+                { field: 'Type_NAME', title: '案別名稱', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Type_RATE',
+                    title: '案別比率',
+                    formatter: function (value, row, index) {
+                        if (row.Type_Status != "True")
+                            return 'N/A';
+                        else
+                            return value;
+                    },
+                    align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Actural_RATE',
+                    title: '實際％',
+                    formatter: function (value, row, index) {
+                        if (row.Type_Status != "True")
+                            return 'N/A';
+                        else
+                            return value;
+                    },
+                    align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type_MinAmount',
+                    title: '最小投資金額(萬)',
+                    formatter: function (value, row, index) {
+                        if (row.Type_Status != "True")
+                            return 'N/A';
+                        else
+                            return parseFloat(toThousands(eval(value).toFixed(4)));
+                    },
+                    align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<div class="btn-group"><button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"aria-haspopup="true" aria-expanded="false">查看</button>'
+                        value += '<div class="dropdown-menu">'
+
+                        value += '<a class="dropdown-item" onclick="Edit(\'' + $.trim(row.Type_NAME) + '\',\'' + $.trim(row.Type_RATE) + '\',\'' + $.trim(row.Actural_RATE) + '\',\'' + parseFloat(toThousands(eval($.trim(row.Type_MinAmount)).toFixed(4))) + '\')" >編輯</a>'
+
+                        if (row.Type_Status != "True")
+                            value += '<a class="dropdown-item" onclick="enableSale(\'' + $.trim(row.Type_NO) + '\',1)" >販售</a>'
+                        else
+                            value += '<a class="dropdown-item" onclick="enableSale(\'' + $.trim(row.Type_NO) + '\',0)" >停售</a>'
+
+                        value += '</div></div>'
+
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 400,
+            //search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 5,
+            pageList: [5, 10, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    //button event
+    //新增-------
+    var action;
+    function clicktoAddType() {
+        action = 'Add';
+        $('#txtType_NAME').val(''); $('#txtType_RATE').val(''); $('#txtType_MinAmount').val('');
+        //$('#txtActural_RATE').val('');
+        $('#btnSubmitEdit').val('確認新增')
+        $('#h5title').html('新增')
+        $('#myModalForEdit').modal('show');
+    }
+    //編輯-------
+    function Edit(Type_NAME, Type_RATE, Actural_RATE, Type_MinAmount) {
+        action = 'Edit';
+        $('#txtType_NAME').val(Type_NAME); $('#txtType_RATE').val(Type_RATE); $('#txtType_MinAmount').val(Type_MinAmount);
+        //$('#txtActural_RATE').val(Actural_RATE);
+        $('#btnSubmitEdit').val('確認修改')
+        $('#h5title').html('編輯')
+        $('#myModalForEdit').modal('show');
+    }
+
+    ////確認編輯或新增
+    function SubmitEdit() {
+        var valtxtType_NAME = $.trim($('#txtType_NAME').val())
+        var valtxtType_RATE = $.trim($('#txtType_RATE').val())
+        //var valtxtActural_RATE = $.trim($('#txtActural_RATE').val())
+        var valType_MinAmount = $.trim($('#txtType_MinAmount').val())
+
+        //if (valtxtType_NAME == '' || valtxtType_RATE == '' || valtxtActural_RATE == '' || valType_MinAmount == '') {
+        if (valtxtType_NAME == '' || valtxtType_RATE == '' || valType_MinAmount == '') {
+            //alert('請輸入必填欄位')
+            sweetAlert("請輸入必填欄位!", "", "warning");
+            return
+        }
+        if (eval(valtxtType_RATE) >= 100) {
+            //alert('案別比率需小於100')
+            sweetAlert("案別比率需小於100!", "", "warning");
+            return
+        }
+        //if (eval(valtxtActural_RATE) >= 100) {
+        //    //alert('案別比率需小於100')
+        //    sweetAlert("案別比率需小於100!", "", "warning");
+        //    return
+        //}
+        //編輯
+        if (action == 'Edit') {
+            var obj = {};
+            obj.Type_NO = Type_NO;
+            obj.Type_NAME = valtxtType_NAME;
+            obj.Type_RATE = valtxtType_RATE;
+            //obj.Actural_RATE = valtxtActural_RATE;
+            obj.Type_MinAmount = valType_MinAmount;
+            obj.LoginACCOUNT = userAccount;
+            $('#maindiv').jqLoading();
+            var options = {};
+            options.url = "/DepositeType/EditDepositeType";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data == 1) {
+                    //alert('修改成功!');
+                    swal("修改成功!", "", "success")
+                    loadData();
+                    $('#myModalForEdit').modal('hide');
+                } else {
+                    //alert('修改失敗!');
+                    sweetAlert("修改失敗!", "", "error");
+                }
+                $('#maindiv').jqLoading("destroy");
+            };
+            options.error = function () {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        } else if (action == 'Add') { //新增
+            var obj = {};
+            obj.Type_NAME = valtxtType_NAME;
+            obj.Type_RATE = valtxtType_RATE;
+            //obj.Actural_RATE = valtxtActural_RATE;
+            obj.Type_MinAmount = valType_MinAmount;
+            obj.LoginACCOUNT = userAccount;
+            $('#maindiv').jqLoading();
+            var options = {};
+            options.url = "/DepositeType/AddDepositeType";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data == 1) {
+                    //alert('新增成功!');
+                    swal("新增成功!", "", "success")
+                    loadData();
+                    $('#myModalForEdit').modal('hide');
+                } else {
+                    //alert('新增失敗!');
+                    sweetAlert("新增失敗!", "", "error");
+                }
+                $('#maindiv').jqLoading("destroy");
+            };
+            options.error = function () {
+                //alert('新增失敗!');
+                sweetAlert("新增失敗!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        }
+
+    }
+
+    //販售or停售
+    function enableSale(Type_NO, Enable) {
+        var sale='停售'
+        if (Enable == 1)
+            sale = '販售'
+
+        var obj = {};
+        obj.Type_NO = Type_NO;
+        obj.Enable = Enable;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/DepositeType/EnableDepositeType";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert(sale+'成功!');
+                swal(sale + '成功!', "", "success")
+                loadData();
+            } else {
+                //alert(sale + '失敗!');
+                sweetAlert(sale + '失敗!', "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert(sale + '失敗!');
+            sweetAlert(sale + '失敗!', "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function clearNoNum(obj) {
+        obj.value = obj.value.replace(/[^\d.]/g, ""); //清除"数字"和"."以外的字符
+        obj.value = obj.value.replace(/^\./g, ""); //验证第一个字符是数字
+        obj.value = obj.value.replace(/\.{2,}/g, "."); //只保留第一个, 清除多余的
+        obj.value = obj.value.replace(".", "$#$").replace(/\./g, "").replace("$#$", ".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d\d).*$/, '$1$2.$3'); //控制可输入的小数
+   }
+</script>

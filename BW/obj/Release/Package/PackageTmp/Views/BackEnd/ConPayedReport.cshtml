@@ -1,0 +1,858 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問佣金報表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">顧問佣金報表</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCon_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCon_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                            <input type="button" id="btnReCalculte" class="btn btn-sm btn-primary" onclick="clicktoReCalculte()" style="display:none" value="報表重算">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModalForOldReport" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        選擇舊報表
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="sele_Report" class="col-3 col-form-label">舊報表</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Report" id="sele_Report" class="br-cus" required></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForView()" value="檢視">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForReCalculte" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        選擇重算月份
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="sele_Month" class="col-3 col-form-label">重算月份</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Month" id="sele_Month" class="br-cus" required></select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForReCalculte()" value="重算">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForReport" role="dialog">
+        <div class="modal-dialog md">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        佣金計算報表
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="ExportPDF" class="btn btn-sm btn-primary" onclick="document.getElementById('buttonConvertUrl').click()" value="匯出報表">
+                </div>
+                <div class="modal-body">
+                    <form id="" class="" name="">
+                        <div id="divReportSum" class="overflow">
+                            <table class="table table-bordered table-hover" id="theTableforReportSum"></table>
+                        </div>
+                        <div id="divReport" class="overflow">
+                            <div id="Month1" style="display:none">
+                                <label id="lblMon1" class="col-3 col-form-label"></label>
+                                <div id="divExtension1"></div>
+                            </div>
+                            <br />
+                            <br />
+                            <div id="Month2" style="display:none">
+                                <label id="lblMon2" class="col-3 col-form-label"></label>
+                                <div id="divExtension2"></div>
+                            </div>
+                            <br />
+                            <br />
+                            <div id="Month3" style="display:none">
+                                <label id="lblMon3" class="col-3 col-form-label"></label>
+                                <div id="divExtension3"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div style="display:none">
+                    <form action="/Export/BonusReport2Pdf" method="post" target="HideProgressBar();">
+                        <input type="hidden" id="ReportMasterID" name="ReportMasterID" />
+                        <input type="hidden" id="Report_Con_ID" name="Report_Con_ID" />
+                        <input type="hidden" id="ReportType" name="ReportType" value="Individual" />
+                        <input type="submit" name="buttonConvertUrl" id="buttonConvertUrl" value="Convert URL to PDF">
+                    </form>
+                    <iframe id="myIframe" name="myIframe"></iframe>
+                </div>
+                <a id="download_a"></a>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div>
+            <h2>顧問佣金報表</h2>
+        </div>
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問編號：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_NO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問姓名：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="clicktoSearch()">查詢</button>
+                                        <button type="button" class="btn btn-success" onclick="clicktoReCalculte()" id="btnReCalculte" style="display:none">報表重算</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+
+    <div id="myModalForOldReport" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">選擇舊報表</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select id="sele_Report" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="SubmitForView()">檢視</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForReport" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:80%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">佣金計算報表</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="ExportPDF" onclick="document.getElementById('buttonConvertUrl').click()">匯出報表</button>
+                </div>
+                <div class="modal-body">
+                    <div id="divReportSum">
+                        <table id="theTableforReportSum" class="table table-bordered" data-editable="true"></table>
+                    </div>
+                    <div id="divReport">
+                        <div id="Month1" style="display:none">
+                            <label id="lblMon1" class="col-sm-3 control-label"></label>
+                            <div id="divExtension1"></div>
+                        </div>
+                        <br />
+                        <br />
+                        <div id="Month2" style="display:none">
+                            <label id="lblMon2" class="col-sm-3 control-label"></label>
+                            <div id="divExtension2"></div>
+                        </div>
+                        <br />
+                        <br />
+                        <div id="Month3" style="display:none">
+                            <label id="lblMon3" class="col-sm-3 control-label"></label>
+                            <div id="divExtension3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <form action="/Export/BonusReport2Pdf" method="post" target="HideProgressBar();">
+                        <input type="hidden" id="ReportMasterID" name="ReportMasterID" />
+                        <input type="hidden" id="Report_Con_ID" name="Report_Con_ID" />
+                        <input type="hidden" id="ReportType" name="ReportType" value="Individual"/>
+                        <input type="submit" name="buttonConvertUrl" id="buttonConvertUrl" value="Convert URL to PDF">
+                    </form>
+                    <iframe id="myIframe" name="myIframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="myModalForReCalculte" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog" style="width:30%">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">選擇重算月份</h3>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <select id="sele_Month" class="form-control"></select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="SubmitForReCalculte()">重算</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    var IsAuth_15 = false;
+    if (userAccount == 'BW') {
+        IsAuth_15 = true;
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_14 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+            if (data[0].Auth_15 == "True")
+                IsAuth_15 = true;
+        });
+    }
+    if (IsAuth_15 == true) {
+        $('#btnReCalculte').show();
+    }
+
+    //初始化-------------
+    var ConID;
+    var ReportID;
+    //--------------------
+    //查詢
+    function clicktoSearch() {
+        if ($.trim($('#txtCon_NO').val()) == '' && $.trim($('#txtCon_Name').val()) == '') {
+            //alert("請輸入顧問編號或顧問姓名");
+            sweetAlert("請輸入顧問編號或顧問姓名!", "", "warning");
+            return;
+        }
+        $('#maindiv').jqLoading();
+
+        loadData();
+        $("#divExtensionReport").html('');
+
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/PayedRecord/GetReportDataById/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                ConID = $.trim(row.Report_Con_ID);
+                ReportID = $.trim(row.Report_ID);
+                if (field == "Report") {
+                    $('#maindiv').jqLoading();
+                    ReportSum(row.ID, row.Report_Con_ID);
+                    ExtensionReport(row.ID, row.Report_Con_ID);
+                    $('#myModalForReport').modal('show');
+                    $('#maindiv').jqLoading("destroy");
+                }
+            },
+            columns: [
+                {
+                    field: 'Report',
+                    title: '發佣報表',
+                    formatter: function (value, row, index) {
+                        var date = '';
+                        switch (row.Calculate_Quarterly) {
+                            case '1':
+                                date = row.Calculate_Year + '/04/15';
+                                break;
+                            case '2':
+                                date = row.Calculate_Year + '/07/15';
+                                break;
+                            case '3':
+                                date = row.Calculate_Year + '/10/15';
+                                break;
+                            case '4':
+                                date = eval(row.Calculate_Year) + 1 + '/01/15';
+                                break;
+                        }
+                        value = '<ul class="actions"><li><a class="btn btn-light" >' + date + '</a></li></ul>';
+                        //var value = '<button type = "button"  class="btn btn-default btnDelay">' + date + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Bonus',
+                    title: '本期發佣金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '發佣舊報表',
+                    formatter: function (value, row, index) {
+                        var value = '';
+                        if (row.Report_Ver > 1)
+                            value = '<ul class="actions"><li><a class="btn btn-light" onclick="View(\'' + row.Report_Ver + '\',\'' + row.Calculate_Quarterly + '\',\'' + row.Calculate_Year + '\')" >檢視</a></li></ul>';
+                        return value
+                        //var value = '';
+                        //if (row.Report_Ver > 1)
+                        //    value = '<button type = "button" onclick="View(\'' + row.Report_Ver + '\',\'' + row.Calculate_Quarterly + '\',\'' + row.Calculate_Year + '\')"  class="btn btn-default btnDelay">檢視</button >';
+                        //return value
+
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: $('#txtCon_NO').val(), ConName: $('#txtCon_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    //function View(ReportMonth) {
+    //    $('#maindiv').jqLoading();
+    //    $.getJSON("/PayedRecord/GetOldReport").done(function (data) {
+    //        console.log(data)
+    //        $("#sele_Report").empty();
+    //        $("#sele_Report").append($("<option>").val('0').text('請選擇'))
+    //        $.each(data, function (i, item) { $("#sele_Report").append($("<option>").val(item.ReportMonth).text(item.ReportMonth)) });
+
+    //        $('#maindiv').jqLoading("destroy");
+    //        $('#myModalForOldReport').modal('show');
+    //    })
+    //}
+
+    //btn click event
+    //重算-----------------------------------------------------------
+    function clicktoReCalculte() {
+        $('#maindiv').jqLoading();
+        $.getJSON("/PayedRecord/GetReportMonth").done(function (data) {
+            $("#sele_Month").empty();
+            $("#sele_Month").append($("<option>").val('0').text('請選擇'))
+            $.each(data, function (i, item) { $("#sele_Month").append($("<option>").val(item.ReportMonth).text(item.ReportMonth)) });
+
+            $('#maindiv').jqLoading("destroy");
+            $('#myModalForReCalculte').modal('show');
+        })
+    }
+    function SubmitForReCalculte() {
+        var sele_Month = $("#sele_Month").val();
+        if (sele_Month == 0) {
+            //alert('請選擇重算月份!')
+            sweetAlert("請選擇重算月份!", "", "warning");
+            return;
+        }
+        var obj = {};
+        obj.IsReCalculate = true;
+        obj.ReCalYeay = sele_Month.split("/")[0];
+        obj.ReCalMonth = sele_Month.split("/")[1];
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Bonus/ReCalculateBonus";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('計算完畢!');
+                swal("計算完畢!", "", "success")
+            } else {
+                //alert('計算失敗!');
+                sweetAlert("計算失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('計算失敗!');
+            sweetAlert("計算失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    //檢視舊報表=--------------------------------
+    function View(Report_Ver, Calculate_Quarterly, Calculate_Year) {
+        //計算日期
+        var date = '';
+        switch (Calculate_Quarterly) {
+            case '1':
+                date = Calculate_Year + '/04/15';
+                break;
+            case '2':
+                date = Calculate_Year + '/07/15';
+                break;
+            case '3':
+                date = Calculate_Year + '/10/15';
+                break;
+            case '4':
+                date = eval(Calculate_Year) + 1 + '/01/15';
+                break;
+        }
+
+        $("#sele_Report").empty();
+        $("#sele_Report").append($("<option>").val('0').text('請選擇'))
+        for (var i = 1; i < Report_Ver; i++) {
+            $("#sele_Report").append($("<option>").val(i).text(date + '(' + i + ')'))
+        }
+        $('#myModalForOldReport').modal('show');
+    }
+    function SubmitForView() {
+        var Report_Ver = $("#sele_Report").val();
+        if (Report_Ver == 0) {
+            //alert('請選擇舊報表版號!')
+            sweetAlert("請選擇舊報表版號!", "", "warning");
+            return;
+        }
+        var obj = {};
+        obj.Report_ID = ReportID;
+        obj.Report_Ver = Report_Ver;
+        $('#maindiv').jqLoading();
+        $.getJSON("/PayedRecord/GetReportMasterID", obj).done(function (data) {
+            ExtensionReport(data[0].ID, ConID)
+            $('#myModalForReport').modal('show');
+            $('#maindiv').jqLoading("destroy");
+        })
+    }
+    //------------------------------------------
+    function ReportSum(ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/GetReportSumById/";
+        $("#theTableforReportSum").bootstrapTable('destroy');
+        $("#theTableforReportSum").bootstrapTable({
+            columns: [
+                {
+                    field: 'Type1Bouns', title: '差階獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type2Bouns', title: '輔導獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type3Bouns', title: '體系獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type4Bouns', title: '未撥獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: false, sortable: true
+                },
+                {
+                    field: 'TotalBouns', title: '合計', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ID: ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height:"auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                if (data[0].Con_ROLE=="SHA")
+                    $("#theTableforReportSum").bootstrapTable('showColumn', 'Type4Bouns');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    function ExtensionReport(ID, Report_Con_ID) {
+        $("#ReportMasterID").val($.trim(ID));
+        $("#Report_Con_ID").val($.trim(Report_Con_ID));
+
+        var obj =
+        {
+            ID: $.trim(ID),
+            Report_Con_ID: $.trim(Report_Con_ID)
+        }
+        $.getJSON("/PayedRecord/GetReportViewByID", obj).done(function (data) {
+            $("#divExtensionReport").html('');
+
+            var objstring1 = "";
+            var objstring2 = "";
+            var objstring3 = "";
+            $("#Month1").hide();
+            $("#Month2").hide();
+            $("#Month3").hide();
+
+            //動態產生報表table
+            $.each(data, function (i, item) {
+                switch (item.MonNo) {
+                    case '1':
+                        objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '2':
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '3':
+                        objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                }
+            });
+            $("#divExtension1").html(objstring1);
+            $("#divExtension2").html(objstring2);
+            $("#divExtension3").html(objstring3);
+
+            if (objstring1 != "")
+                $("#Month1").show();
+            if (objstring2 != "")
+                $("#Month2").show();
+            if (objstring3 != "")
+                $("#Month3").show();
+
+            //依序抓取每個table的資料
+            $.each(data, function (i, item) {
+                TableReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+                TableDetailReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+            });
+        });
+    }
+    //------------------------END----------------------------------
+
+    function TableReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/TableReportIndivi/";
+        $("#Table_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Total_Amount',
+                    title: '存量金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Bonus',
+                    title: '獎金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: false,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height:100,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function TableDetailReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/TableDetailReportIndivi/";
+        $("#TableDetail_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+            columns: [
+                {
+                    field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true,
+                    footerFormatter: function (value) {
+                        return '合計';
+                    }
+                },
+                { field: 'CliName', title: '客戶姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Total_Amount',
+                    title: '金額',
+                    formatter: function (value, row, index) {
+                        if (row.Bonus_Type == '1' || row.Bonus_Type == '2' || row.Bonus_Type == '3')
+                            return toThousands(eval(value).toFixed(2));
+                        else
+                            return 0
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CODE_DESC', title: '佣金項目', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'BonusType_Rate', title: '比率', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'DepositType_Rate', title: '案別比率', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Bonus', title: '獎金', align: 'center', halign: 'center', visible: true, sortable: true,
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Bonus);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            //toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: false,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: "auto",
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+</script>

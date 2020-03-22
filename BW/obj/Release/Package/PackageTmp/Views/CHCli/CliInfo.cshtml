@@ -1,0 +1,311 @@
+﻿@{
+    Layout = "~/Views/Shared/CliLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">基本資料</li>
+        <li class="breadcrumb-item active">
+            <a href="#">檢視編輯</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">檢視編輯</h4><p class="w100" style="color:red">*無法自行修改的欄位，請檢附相關證明文件，寫一封照會請公司修改</p>
+        </div>
+    </section>
+    <section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ChiName_Last" class="col-3 col-form-label">中文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ChiName_Last" name="txtCli_ChiName_Last" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ChiName_First" class="col-3 col-form-label">中文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ChiName_First" name="txtCli_ChiName_First" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_EngName_Last" class="col-3 col-form-label">英文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_EngName_Last" name="txtCli_EngName_Last" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_EngName_First" class="col-3 col-form-label">英文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_EngName_First" name="txtCli_EngName_First" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Gender" class="col-3 col-form-label">性別</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Gender" id="sele_Gender" class="br-cus" disabled style="background-color:lightgray">
+                                <option value="0">請選擇</option>
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_ID_Num" class="col-3 col-form-label">身份ID</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_ID_Num" name="txtCli_ID_Num" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_PassPort" class="col-3 col-form-label">護照號ID</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_PassPort" name="txtCli_PassPort" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_BirthDay" class="col-3 col-form-label">出生日期</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_BirthDay" name="txtCli_BirthDay" required
+                                   data-error="請填寫出生日期">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Census_Country" class="col-3 col-form-label">地區</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" disabled style="background-color:lightgray">
+                                <option value="0" disabled selected>請選擇</option>
+                                <option value="TW">台灣</option>
+                                <option value="CHN">中國</option>
+                                <option value="HK">香港</option>
+                                <option value="MO">澳門</option>
+                                <option value="JP">日本</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Phone_site" class="col-3 col-form-label">行動電話</label>
+                        <div class="col-4 underline">
+                            <input type="text" id="txtCli_Phone_site" name="txtCli_Phone_site" readonly style="background-color:lightgray">
+                        </div>
+                        <div class="col-5">
+                            <input type="text" id="txtCli_Phone" name="txtCli_Phone"
+                                   required data-error="請填寫行動電話" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Email" class="col-3 col-form-label">Email</label>
+                        <div class="col-9">
+                            <input type="email" id="txtCli_Email" name="txtCli_Email" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Live_Addr" class="col-3 col-form-label">居住地址</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_Live_Addr" name="txtCli_Live_Addr" required
+                                   data-error="請填寫居住地址">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_Eng_Addr" class="col-3 col-form-label">英文居住地址</label>
+                        <div class="col-9">
+                            <textarea rows="6" id="txtCli_Eng_Addr" name="txtCli_Eng_Addr" required
+                                      data-error="請填寫英文居住地址"></textarea>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCli_PostalCode" class="col-3 col-form-label">郵政編號</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCli_PostalCode" name="txtCli_PostalCode" required
+                                   data-error="請填寫郵政編號">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="Credentials()" value="證件狀態">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitEdit()" value="確認修改">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+</div>
+<script>
+    //權限設定
+    var cliRole = readCookie('cliRole');
+    var cliAccount = readCookie('cliAccount');
+
+    //日期設定
+    $('#txtCli_BirthDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $("#sele_Census_Country").change(function () {
+        var t = $("option:selected", this).val();
+        switch (t) {
+            case 'TW':
+                $("#txtCli_Phone_site").val('886');
+                break;
+            case 'HK':
+                $("#txtCli_Phone_site").val('852');
+                break;
+            case 'MO':
+                $("#txtCli_Phone_site").val('853');
+                break;
+            case 'CHN':
+                $("#txtCli_Phone_site").val('86');
+                break;
+            case 'JP':
+                $("#txtCli_Phone_site").val('81');
+                break;
+        }
+    });
+
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+
+    function loadData() {
+        //清空資料
+        $('#txtCli_ChiName_Last').val(''); $('#txtCli_ChiName_First').val(''); $('#txtCli_EngName_Last').val(''); $('#txtCli_EngName_First').val('');
+        $('#sele_Gender').val('0'); $('#txtCli_ID_Num').val(''); $('#txtCli_PassPort').val(''); $('#txtCli_BirthDay').val(''); $('#sele_Census_Country').val('0');
+        $('#txtCli_Phone_site').val(''); $('#txtCli_Phone').val(''); $('#txtCli_Email').val(''); $('#txtCli_Live_Addr').val(''); $('#txtCli_Eng_Addr').val(''); $('#txtCli_PostalCode').val('');
+
+        //查詢詳細顧問資料
+        var obj =
+        {
+            CliID: $.trim(cliAccount)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/CliInfo/GetCliInfoByID", obj).done(function (data) {
+            //填入資料
+            $('#txtCli_ChiName_Last').val($.trim(data[0].Cli_ChiNAME_Last)); $('#txtCli_ChiName_First').val($.trim(data[0].Cli_ChiNAME_First));
+            $('#txtCli_EngName_Last').val($.trim(data[0].Cli_EngNAME_Last)); $('#txtCli_EngName_First').val($.trim(data[0].Cli_EngNAME_First));
+            $('#sele_Gender').val(data[0].Cli_Gender); $('#txtCli_ID_Num').val($.trim(data[0].Cli_ID_Num)); $('#txtCli_PassPort').val($.trim(data[0].Cli_PassPort));
+            $('#txtCli_BirthDay').datepicker("setDate", data[0].Cli_BirthDay_new); $('#sele_Census_Country').val(data[0].Cli_Census_Country);
+            $('#txtCli_Phone_site').val($.trim(data[0].Cli_Phone_site)); $('#txtCli_Phone').val($.trim(data[0].Cli_Phone)); $('#txtCli_Email').val($.trim(data[0].Cli_Email));
+            $('#txtCli_Live_Addr').val($.trim(data[0].Cli_Live_Address)); $('#txtCli_Eng_Addr').val($.trim(data[0].Cli_Eng_Address)); $('#txtCli_PostalCode').val($.trim(data[0].Cli_PostalCode)); 
+
+            $('#maindiv').jqLoading("destroy");
+        })
+    }
+    function SubmitEdit() {
+        var obj = {};
+        obj.Cli_ID = cliAccount
+        obj.Cli_ChiNAME_Last = $('#txtCli_ChiName_Last').val();
+        obj.Cli_ChiNAME_First = $('#txtCli_ChiName_First').val();
+        obj.Cli_EngNAME_Last = $('#txtCli_EngName_Last').val();
+        obj.Cli_EngNAME_First = $('#txtCli_EngName_First').val();
+        obj.Cli_Gender = $('#sele_Gender').val();
+        obj.Cli_ID_Num = $('#txtCli_ID_Num').val();
+        obj.Cli_PassPort = $('#txtCli_PassPort').val();
+        obj.Cli_BirthDay = $('#txtCli_BirthDay').val();
+        obj.Cli_Census_Country = $('#sele_Census_Country').val();
+        obj.Cli_Phone_site = $('#txtCli_Phone_site').val();
+        obj.Cli_Phone = $('#txtCli_Phone').val();
+        obj.Cli_Email = $('#txtCli_Email').val();
+        obj.Cli_Live_Address = $('#txtCli_Live_Addr').val();
+        obj.Cli_Eng_Address = $('#txtCli_Eng_Addr').val(); 
+        obj.Cli_PostalCode = $('#txtCli_PostalCode').val();
+        obj.LoginACCOUNT = cliAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/CliInfo/SaveCliInfo";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    //證件資料-----------------------
+    function Credentials() {
+        var apiURL = "/CliInfo/GetCredentialsByIDFromFront/";
+        $("#theTableCredentials").bootstrapTable('destroy');
+        $("#theTableCredentials").bootstrapTable({
+            columns: [
+                { field: 'Name', title: '證件', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: cliAccount },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                $('#myModalForCredentials').modal('show');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+</script>

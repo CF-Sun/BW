@@ -1,0 +1,2017 @@
+﻿@{
+    Layout = "~/Views/Shared/PurchaseLayout.cshtml";
+}
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/LoadGo/2.2/loadgo.min.js"></script>
+<div id="maindiv" class="container">
+    <div id="progress">
+        <img id="logo" src="~/Content/files/Image/progress.png" alt="" class="img-fluid" style="width: 100%;">
+        @*<img id="logo" src="~/Content/files/Image/progress.png" alt="Logo" style="width: 100%; float:right" aria-valuenow="5" aria-valuemin="0"
+            aria-valuemax="100" />*@
+    </div>
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">立即申購</li>
+        <li class="breadcrumb-item active">
+            <a href="/CH/PurchasePDF">製作我的申購書</a>
+        </li>
+    </ul>
+    <section id="login">
+        <h2 class="m-title title text-center">
+            <span>製作我的申購書</span>
+        </h2>
+    </section>
+    <section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="pur_doc" class="" action="" method="POST" name="">
+                    <p class="">
+                        親愛的客戶您好，<br>
+                        為簡化手寫申購書的繁瑣內容，提供以下表格供客戶輸入，待資料登打完成後，按下「製作我的申購書」，即會產出一份申購書給您，您只需儲存檔案並將文件影印出來，將缺漏欄位、簽名、日期補齊，即可完成申購書的填寫。<br>
+                        請注意：<br>
+                    </p>
+                    <p class="red">***以下內容請全部以英文書寫</p>
+                    <p class="red">***中文翻譯僅供參考，實際內容以<a href="/Export/Open?FileName=申購書原文版.pdf" target="_blank">英文版申購書</a>為準(<a href="/Export/Open?FileName=申購書中譯版.pdf" target="_blank">申購書譯文版下載</a>)</p>
+                    <div class="form-group au-form pl-2">
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="PruchaseType1" name="PruchaseType" class="custom-control-input" value=0>
+                            <label class="custom-control-label" for="PruchaseType1">
+                                個人名義申購
+                            </label>
+                        </div>
+                        <div class="custom-control custom-radio custom-control-inline">
+                            <input type="radio" id="PruchaseType2" name="PruchaseType" class="custom-control-input" value=1>
+                            <label class="custom-control-label" for="PruchaseType2">
+                                法人申購
+                            </label>
+                        </div>
+                    </div>
+                    <hr />
+                    <div id="divType1" style="display:none">
+                        <h5>Part1 基本資料</h5>
+                        <div class="form-group au-form row">
+                            <label for="txt2" class="col-md-3 col-form-label">1.英文姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt2" name="txt2" required data-error="請填寫英文姓名" maxlength="100" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt3" class="col-md-3 col-form-label">2.註冊/戶籍地址</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt3" name="txt3" required data-error="註冊/戶籍地址" maxlength="200" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=207"
+                                   class="hp-txt" target="_blank">地址翻譯連結</a>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt3_1" class="col-md-3 col-form-label">3.通訊地址 (若與戶籍地不同才需填寫)</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt3_1" name="txt3_1" maxlength="200" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt4" class="col-md-3 col-form-label">4.電話號碼</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt4" name="txt4" required data-error="請填寫電話號碼" maxlength="20" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt5" class="col-md-3 col-form-label">5.E-mail</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt5" name="txt5" required data-error="請填寫E-mail" maxlength="50" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt6" class="col-md-3 col-form-label">6.國籍/公司註冊地</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt6" name="txt6" required data-error="請填寫國籍/公司註冊地" maxlength="40" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt7" class="col-md-3 col-form-label">7.財富來源與職業</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt7" name="txt7" required data-error="請填寫財富來源與職業" maxlength="40" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr />
+                        <h5>Part2 銀行帳戶資訊</h5>
+                        <div class="form-group au-form row">
+                            <label for="txt8" class="col-md-3 col-form-label">8.銀行名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt8" name="txt8" required data-error="請填寫銀行名稱" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt9" class="col-md-3 col-form-label">9.銀行帳號</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt9" name="txt9" required data-error="請填寫銀行帳號" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt10" class="col-md-3 col-form-label">10.帳戶名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt10" name="txt10" required data-error="請填寫帳戶名稱" maxlength="57" onkeyup="this.value=check(this.value)" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')" onblur="setProgress()" onchange="setValue()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt11" class="col-md-3 col-form-label">11.Swift code</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt11" name="txt11" required data-error="請填寫Swift code" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt12" class="col-md-3 col-form-label">12.銀行分行地址</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt12" name="txt12" required data-error="請填寫銀行分行地址" maxlength="100" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <!-- 13-15 -->
+                        <h5>Part3 財富來源</h5>
+                        <div class="area">
+                            <p class="red">13.～15.通匯行資訊請參考附件，若下方資訊無您的銀行，請自行詢問銀行<a href="/Export/Open?FileName=台灣各家銀行HKD-通匯行.pdf" target="_blank">台灣各家銀行HKD通匯行</a></p>
+                            <div class="form-group au-form row">
+                                <label for="txt13" class="col-md-3 col-form-label">13.通匯行/存同行名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt13" name="txt13" maxlength="55" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt14" class="col-md-3 col-form-label">14.通匯行/存同行分行</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt14" name="txt14" maxlength="42" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt15" class="col-md-3 col-form-label">15.通匯行/存同行Swift code</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt15" name="txt15" maxlength="42" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 13-15 -->
+                        <hr />
+                        <div class="form-group au-form row">
+                            <label for="txt16" class="col-md-3 col-form-label">16.資金來源(請詳細說明您如何獲得此筆投資資金)</label>
+                            <div class="col-md-9">
+                                <textarea rows="4" id="txt16" name="txt16" required data-error="請填寫資金來源" maxlength="210" onkeyup="this.value=check(this.value)" onblur="setProgress()"></textarea>
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        @*<div class="form-group au-form row">
+                                <label class="col-md-3 col-form-label"></label>
+                                <div class="col-md-9">
+                                    <p style="color:gray">
+                                        資金來源參考，例如:
+                                        存款和投資Deposits and Investments
+                                        資產出售Sale of asset
+                                    </p>
+                                </div>
+                            </div>*@
+                        <!-- 17-23 -->
+                        <div class="area sp">
+                            <p class="red">17.～23.請擇一勾選並填寫對應內容</p>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio1" name="jobRadio"
+                                           class="custom-control-input" value="0" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio1">
+                                        17.
+                                        就業收入，職業：
+                                        <input type="text" id="txtjobRadio_1" name="txtjobRadio_1" value="" maxlength="48" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                        <span class="block"></span>
+                                        、雇主姓名
+                                        <input type="text" id="txtjobRadio_2" name="txtjobRadio_2" value="" maxlength="42" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio2" name="jobRadio"
+                                           class="custom-control-input" value="1" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio2">
+                                        18.
+                                        營業利潤，業務性質
+                                        <input type="text" id="txtjobRadio_3" name="txtjobRadio_3" value="" maxlength="38" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                        <span class="block"></span>
+                                        公司名稱
+                                        <input type="text" id="txtjobRadio_4" name="txtjobRadio_4" value="" maxlength="43" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio3" name="jobRadio"
+                                           class="custom-control-input" value="2" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio3">
+                                        19.
+                                        儲蓄/投資收入，投資性質和名稱
+                                        <input type="text" id="txtjobRadio_5" name="txtjobRadio_5" value="" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio4" name="jobRadio"
+                                           class="custom-control-input" value="3" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio4">
+                                        20.
+                                        資產售出，資產性質和出售金額
+                                        <input type="text" id="txtjobRadio_6" name="txtjobRadio_6" value="" maxlength="38" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio5" name="jobRadio"
+                                           class="custom-control-input" value="4" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio5">
+                                        21.退休/養老金收入
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio6" name="jobRadio"
+                                           class="custom-control-input" value="5" onblur="setProgress()">
+                                    <label class="custom-control-label" for="jobRadio6">
+                                        22.信託/繼承
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form">
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="jobRadio7" name="jobRadio"
+                                           class="custom-control-input" value="6" onblur="setProgress()">
+                                    <label class="custom-control-label " for="jobRadio7">
+                                        23.
+                                        其他，說明
+                                        <input type="text" id="txtjobRadio_7" name="txtjobRadio_7" value="" maxlength="38" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 17-23 -->
+                        <hr />
+                        <h5>Part4 支付股息帳戶資訊(自動帶出，如與打款銀行帳戶不同，請自行修改)</h5>
+                        <div class="form-group au-form row">
+                            <label for="txt17" class="col-md-3 col-form-label">8.銀行名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt17" name="txt17" required data-error="請填寫銀行名稱" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt18" class="col-md-3 col-form-label">9.銀行帳號</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt18" name="txt18" required data-error="請填寫銀行帳號" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt19" class="col-md-3 col-form-label">10.帳戶名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt19" name="txt19" required data-error="請填寫帳戶名稱" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt20" class="col-md-3 col-form-label">11.Swift code</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt20" name="txt20" required data-error="請填寫Swift code" maxlength="57" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt21" class="col-md-3 col-form-label">12.銀行分行地址</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt21" name="txt21" required data-error="請填寫銀行分行地址" maxlength="100" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt22" class="col-md-3 col-form-label">13.通匯行/存同行名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt22" name="txt22" maxlength="55" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt23" class="col-md-3 col-form-label">14.通匯行/存同行分行</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt23" name="txt23" maxlength="42" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt24" class="col-md-3 col-form-label">15.通匯行/存同行Swift code</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt24" name="txt24" maxlength="42" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class="form-group au-form">
+                            <label for="fname" class="pr-3">24.基金資訊接收方式</label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="purTypeRadi1" name="purTypeRadio" class="custom-control-input" value="0" onblur="setProgress()">
+                                <label class="custom-control-label" for="purTypeRadi1">
+                                    電子郵件
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="purTypeRadi2" name="purTypeRadio" class="custom-control-input" value="1" onblur="setProgress()">
+                                <label class="custom-control-label" for="purTypeRadi2">
+                                    郵寄
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="fname" class="pr-3">25.若帳戶為聯名戶，誰可以指示行事</label>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="fname" class="pr-3"></label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="permitRadio1" name="permitRadio" class="custom-control-input" value="0" onblur="setProgress()">
+                                <label class="custom-control-label" for="permitRadio1">
+                                    任一名同意指示即可
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="permitRadio2" name="permitRadio" class="custom-control-input" value="1" onblur="setProgress()">
+                                <label class="custom-control-label" for="permitRadio2">
+                                    需經所有聯名人同意指示
+                                </label>
+                            </div>
+                        </div>
+                        <hr />
+                        <h5>個人身分自我證明</h5>
+                        <div class="form-group au-form row">
+                            <label for="bd" class="col-md-3 col-form-label">26.西元生日<br />(日/月/年，例: 31/12/1988):</label>
+                            <div class="col-md-3">
+                                <input type="text" id="txt25" name="txt25" placeholder="日" required data-error="請填寫出生日" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="txt26" name="txt26" placeholder="月" required data-error="請填寫出生月" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="txt27" name="txt27" placeholder="年" required data-error="請填寫出生年" maxlength="4" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">27.註冊/戶籍地址</label>
+                            <div class="form-group au-form row">
+                                <label for="txt28" class="col-md-3 col-form-label">　街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt28" name="txt28" required data-error="請填寫街道和門牌號碼" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt29" class="col-md-3 col-form-label">　城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt29" name="txt29" required data-error="請填寫城市" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt30" class="col-md-3 col-form-label">　省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt30" name="txt30" required data-error="請填寫省份" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt31" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt31" name="txt31" required data-error="請填寫郵遞區號" maxlength="15" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt32" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt32" name="txt32" required data-error="請填寫國家" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()" onchange="setValue()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">28.通訊地址(若與戶籍地不同才需填寫)</label>
+                            <div class="form-group au-form row">
+                                <label for="txt28_1" class="col-md-3 col-form-label">　街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt28_1" name="txt28_1" maxlength="70" onkeyup="this.value=check(this.value)" onchange="setValue()">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt29_1" class="col-md-3 col-form-label">　城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt29_1" name="txt29_1" maxlength="30" onkeyup="this.value=check(this.value)" onchange="setValue()">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt30_1" class="col-md-3 col-form-label">　省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt30_1" name="txt30_1" maxlength="30" onkeyup="this.value=check(this.value)" onchange="setValue()">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt31_1" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt31_1" name="txt31_1" maxlength="15" onkeyup="this.value=check(this.value)" onchange="setValue()">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt32_1" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt32_1" name="txt32_1" maxlength="30" onkeyup="this.value=check(this.value)" onchange="setValue()">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="AmericRadio1" name="AmericRadio" class="custom-control-input" value="0" onblur="setProgress()">
+                                <label class="custom-control-label" for="AmericRadio1">
+                                    29.我確認本人在美國出生（或美國領土）但不再是美國公民，因為本人已自願放棄了本人的公民身份，相關證明請隨同申購書一併附上
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" id="AmericRadio2" name="AmericRadio" class="custom-control-input" value="1" onblur="setProgress()">
+                                <label class="custom-control-label" for="AmericRadio2">
+                                    30.我確認本人不是美國公民或居住在美國的稅務居民
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt33" class="col-md-3 col-form-label">31.稅務居住國家</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt33" name="txt33" required data-error="請填寫稅務居住國家" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt34" class="col-md-3 col-form-label">32.稅號類型(請填個人individual或公司company)</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt34" name="txt34" required data-error="請填寫稅號類型" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt35" class="col-md-3 col-form-label">33.稅號(稅號即為統一編號、身分證號)</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt35" name="txt35" required data-error="請填寫稅號" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
+                    <div id="divType2" style="display:none">
+                        <h5>實體自我證明</h5>
+                        <div class="form-group au-form row">
+                            <label for="txt36" class="col-md-3 col-form-label">34.實體法定名稱</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt36" name="txt36" required data-error="請填寫實體法定名稱" maxlength="50" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt37" class="col-md-3 col-form-label">35.所在國家</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt37" name="txt37" required data-error="請填寫所在國家" maxlength="25" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">36.現居地址或註冊地址</label>
+                            <div class="form-group au-form row">
+                                <label for="txt38" class="col-md-3 col-form-label">　街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt38" name="txt38" required data-error="請填寫街道和門牌號碼" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt39" class="col-md-3 col-form-label">　城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt39" name="txt39" required data-error="請填寫城市" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt40" class="col-md-3 col-form-label">　省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt40" name="txt40" required data-error="請填寫省份" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt41" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt41" name="txt41" required data-error="請填寫郵遞區號" maxlength="15" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt42" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt42" name="txt42" required data-error="請填寫國家" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">37.通訊地址(若與戶籍地不同才需填寫)</label>
+                            <div class="form-group au-form row">
+                                <label for="txt38_1" class="col-md-3 col-form-label">　街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt38_1" name="txt38_1" maxlength="70" onkeyup="this.value=check(this.value)">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt39_1" class="col-md-3 col-form-label">　城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt39_1" name="txt39_1" maxlength="30" onkeyup="this.value=check(this.value)">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt40_1" class="col-md-3 col-form-label">　省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt40_1" name="txt40_1" maxlength="30" onkeyup="this.value=check(this.value)">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt41_1" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt41_1" name="txt41_1" maxlength="15" onkeyup="this.value=check(this.value)">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt42_1" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt42_1" name="txt42_1" maxlength="30" onkeyup="this.value=check(this.value)">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="fname" class="pr-3">38.如果該實體不是外國金融機構，請在下面確認實體的FATCA狀態：</label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="FATCARadio1" name="FATCARadio" class="custom-control-input" value="0" onblur="setProgress()">
+                                <label class="custom-control-label" for="FATCARadio1">
+                                    該實體是積極的非金融外國機構
+                                </label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="FATCARadio2" name="FATCARadio" class="custom-control-input" value="1" onblur="setProgress()">
+                                <label class="custom-control-label" for="FATCARadio2">
+                                    該實體是消極的非金融外國機構
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt43" class="col-md-3 col-form-label">39.請填寫該實體的控制人全名</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt43" name="txt43" required data-error="請填寫該實體的控制人全名" maxlength="165" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr />
+                        <h5>CRS共同申報標準</h5>
+                        <div class="form-group au-form row">
+                            <label for="txt44" class="col-md-3 col-form-label">40.該實體的稅務管轄區</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt44" name="txt44" required data-error="請填寫該實體的稅務管轄區" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt45" class="col-md-3 col-form-label">41.該實體稅號類型</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt45" name="txt45" required data-error="請填寫該實體稅號類型" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txt46" class="col-md-3 col-form-label">42.該實體的稅號</label>
+                            <div class="col-md-9">
+                                <input type="text" id="txt46" name="txt46" required data-error="請填寫該實體的稅號" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <hr />
+                        <h5>控制人資料</h5>
+                        <div class="area">
+                            <label for="bd">43.控制人姓名</label>
+                            <div class="form-group au-form row">
+                                <label for="txt47" class="col-md-3 col-form-label">　姓</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt47" name="txt47" required data-error="請填寫控制人的姓" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt48" class="col-md-3 col-form-label">　名</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt48" name="txt48" required data-error="請填寫控制人的名" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">44.現居地址</label>
+                            <div class="form-group au-form row">
+                                <label for="txt49" class="col-md-3 col-form-label">　門牌號、巷弄、街道</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt49" name="txt49" required data-error="請填寫控制人的門牌號、巷弄、街道" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt50" class="col-md-3 col-form-label">　區域、城市、省分</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt50" name="txt50" required data-error="請填寫控制人的區域、城市、省分" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt51" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt51" name="txt51" required data-error="請填寫控制人的國家" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt52" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt52" name="txt52" required data-error="請填寫控制人的郵遞區號" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">45.通訊地址</label>
+                            <div class="form-group au-form row">
+                                <label for="txt53" class="col-md-3 col-form-label">　門牌號、巷弄、街道</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt53" name="txt53" required data-error="請填寫控制人的門牌號、巷弄、街道" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt54" class="col-md-3 col-form-label">　區域、城市、省分</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt54" name="txt54" required data-error="請填寫控制人的區域、城市、省分" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt55" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt55" name="txt55" required data-error="請填寫控制人的國家" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt56" class="col-md-3 col-form-label">　郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt56" name="txt56" required data-error="請填寫控制人的郵遞區號" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="bd" class="col-md-3 col-form-label">46.西元生日<br />(日/月/年，例: 31/12/1988):</label>
+                            <div class="col-md-3">
+                                <input type="text" id="txt57" name="txt57" placeholder="日" required data-error="請填寫出生日" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="txt58" name="txt58" placeholder="月" required data-error="請填寫出生月" maxlength="2" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" id="txt59" name="tx59" placeholder="年" required data-error="請填寫出生年" maxlength="4" onkeyup="value=value.replace(/[^\d]/g,'') " onblur="setProgress()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">47.出生地</label>
+                            <div class="form-group au-form row">
+                                <label for="txt60" class="col-md-3 col-form-label">　城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt60" name="txt60" required data-error="請填寫控制人的出生城市" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt61" class="col-md-3 col-form-label">　國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt61" name="txt61" required data-error="請填寫控制人的出生國家" maxlength="35" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="area">
+                            <label for="bd">48.您作為控制人之相關實體帳戶之法人名稱</label>
+                            <div class="form-group au-form row">
+                                <label for="txt62" class="col-md-3 col-form-label">　實體一法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt62" name="txt62" required data-error="請填寫實體一法人名稱" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt63" class="col-md-3 col-form-label">　實體二法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt63" name="txt63" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt64" class="col-md-3 col-form-label">　實體三法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt64" name="txt64" maxlength="70" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt65" class="col-md-3 col-form-label">49.控制人稅務居住管轄地</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt65" name="txt65" required data-error="請填寫控制人稅務居住管轄地" maxlength="30" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt66" class="col-md-3 col-form-label">50.控制人稅號類型</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt66" name="txt66" required data-error="請填寫控制人稅號類型" maxlength="18" onkeyup="this.value=check(this.value)" onblur="setProgress()" value="individual">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txt67" class="col-md-3 col-form-label">51.控制人稅號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txt67" name="txt67" required data-error="請填寫控制人稅號" maxlength="20" onkeyup="this.value=check(this.value)" onblur="setProgress()">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4" id="divbtn" style="display:none">
+                        <input type="button" id="btnExport" class="btn btn-sm btn-primary" value="確認匯出" onclick="LoginBtn_click()" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <div style="display:none">
+        <form action="/Export/AgreeMent2PDF" method="post" target="_self">
+            <input type="hidden" id="exPruchaseType" name="PruchaseType" />
+            <input type="hidden" id="extxt2" name="txt2" />
+            <input type="hidden" id="extxt3" name="txt3" />
+            <input type="hidden" id="extxt3_1" name="txt3_1" />
+            <input type="hidden" id="extxt4" name="txt4" />
+            <input type="hidden" id="extxt5" name="txt5" />
+            <input type="hidden" id="extxt6" name="txt6" />
+            <input type="hidden" id="extxt7" name="txt7" />
+            <input type="hidden" id="extxt8" name="txt8" />
+            <input type="hidden" id="extxt9" name="txt9" />
+            <input type="hidden" id="extxt10" name="txt10" />
+            <input type="hidden" id="extxt11" name="txt11" />
+            <input type="hidden" id="extxt12" name="txt12" />
+            <input type="hidden" id="extxt13" name="txt13" />
+            <input type="hidden" id="extxt14" name="txt14" />
+            <input type="hidden" id="extxt15" name="txt15" />
+            <input type="hidden" id="extxt16" name="txt16" />
+            <input type="hidden" id="exjobRadio" name="jobRadio" />
+            <input type="hidden" id="extxtjobRadio_1" name="txtjobRadio_1" />
+            <input type="hidden" id="extxtjobRadio_2" name="txtjobRadio_2" />
+            <input type="hidden" id="extxtjobRadio_3" name="txtjobRadio_3" />
+            <input type="hidden" id="extxtjobRadio_4" name="txtjobRadio_4" />
+            <input type="hidden" id="extxtjobRadio_5" name="txtjobRadio_5" />
+            <input type="hidden" id="extxtjobRadio_6" name="txtjobRadio_6" />
+            <input type="hidden" id="extxtjobRadio_7" name="txtjobRadio_7" />
+            <input type="hidden" id="extxt17" name="txt17" />
+            <input type="hidden" id="extxt18" name="txt18" />
+            <input type="hidden" id="extxt19" name="txt19" />
+            <input type="hidden" id="extxt20" name="txt20" />
+            <input type="hidden" id="extxt21" name="txt21" />
+            <input type="hidden" id="extxt22" name="txt22" />
+            <input type="hidden" id="extxt23" name="txt23" />
+            <input type="hidden" id="extxt24" name="txt24" />
+            <input type="hidden" id="expurTypeRadio" name="purTypeRadio" />
+            <input type="hidden" id="expermitRadio" name="permitRadio" />
+            <input type="hidden" id="extxt25" name="txt25" />
+            <input type="hidden" id="extxt26" name="txt26" />
+            <input type="hidden" id="extxt27" name="txt27" />
+            <input type="hidden" id="extxt28" name="txt28" />
+            <input type="hidden" id="extxt29" name="txt29" />
+            <input type="hidden" id="extxt30" name="txt30" />
+            <input type="hidden" id="extxt31" name="txt31" />
+            <input type="hidden" id="extxt32" name="txt32" />
+            <input type="hidden" id="extxt25_1" name="txt25_1" />
+            <input type="hidden" id="extxt26_1" name="txt26_1" />
+            <input type="hidden" id="extxt27_1" name="txt27_1" />
+            <input type="hidden" id="extxt28_1" name="txt28_1" />
+            <input type="hidden" id="extxt29_1" name="txt29_1" />
+            <input type="hidden" id="extxt30_1" name="txt30_1" />
+            <input type="hidden" id="extxt31_1" name="txt31_1" />
+            <input type="hidden" id="extxt32_1" name="txt32_1" />
+            <input type="hidden" id="exAmericRadio" name="AmericRadio" />
+            <input type="hidden" id="extxt33" name="txt33" />
+            <input type="hidden" id="extxt34" name="txt34" />
+            <input type="hidden" id="extxt35" name="txt35" />
+            <input type="hidden" id="extxt36" name="txt36" />
+            <input type="hidden" id="extxt37" name="txt37" />
+            <input type="hidden" id="extxt38" name="txt38" />
+            <input type="hidden" id="extxt39" name="txt39" />
+            <input type="hidden" id="extxt40" name="txt40" />
+            <input type="hidden" id="extxt41" name="txt41" />
+            <input type="hidden" id="extxt42" name="txt42" />
+            <input type="hidden" id="extxt38_1" name="txt38_1" />
+            <input type="hidden" id="extxt39_1" name="txt39_1" />
+            <input type="hidden" id="extxt40_1" name="txt40_1" />
+            <input type="hidden" id="extxt41_1" name="txt41_1" />
+            <input type="hidden" id="extxt42_1" name="txt42_1" />
+            <input type="hidden" id="exFATCARadio" name="FATCARadio" />
+            <input type="hidden" id="extxt43" name="txt43" />
+            <input type="hidden" id="extxt44" name="txt44" />
+            <input type="hidden" id="extxt45" name="txt45" />
+            <input type="hidden" id="extxt46" name="txt46" />
+            <input type="hidden" id="extxt47" name="txt47" />
+            <input type="hidden" id="extxt48" name="txt48" />
+            <input type="hidden" id="extxt49" name="txt49" />
+            <input type="hidden" id="extxt50" name="txt50" />
+            <input type="hidden" id="extxt51" name="txt51" />
+            <input type="hidden" id="extxt52" name="txt52" />
+            <input type="hidden" id="extxt53" name="txt53" />
+            <input type="hidden" id="extxt54" name="txt54" />
+            <input type="hidden" id="extxt55" name="txt55" />
+            <input type="hidden" id="extxt56" name="txt56" />
+            <input type="hidden" id="extxt57" name="txt57" />
+            <input type="hidden" id="extxt58" name="txt58" />
+            <input type="hidden" id="extxt59" name="txt59" />
+            <input type="hidden" id="extxt60" name="txt60" />
+            <input type="hidden" id="extxt61" name="txt61" />
+            <input type="hidden" id="extxt62" name="txt62" />
+            <input type="hidden" id="extxt63" name="txt63" />
+            <input type="hidden" id="extxt64" name="txt64" />
+            <input type="hidden" id="extxt65" name="txt65" />
+            <input type="hidden" id="extxt66" name="txt66" />
+            <input type="hidden" id="extxt67" name="txt67" />
+            <input type="submit" name="buttonConvertUrl" id="buttonConvertUrl" value="Convert URL to PDF">
+        </form>
+        <iframe id="myIframe" name="myIframe"></iframe>
+        <a id="download_a"></a>
+        <a id="download_b"></a>
+    </div>
+    @*<div class="row justify-content-center">
+            <div class="col-lg-8 col-md-8">
+                <div class="context-bg">
+                    <form id="login-form" class="confirm" action="" method="POST" name="login-form">
+                        <div class="form-group au-form">
+                            <label>親愛的客戶您好，</label><br />
+                            <label>為簡化手寫申購書的繁瑣內容，提供以下表格供客戶輸入，待資料登打完成後，按下「製作我的申購書」，即會產出一份申購書給您，您只需儲存檔案並將文件影印出來，將缺漏欄位、簽名、日期補齊，即可完成申購書的填寫。</label><br />
+                            <label>請注意：</label><br />
+                            <label style="color:red">***以下內容請全部以英文書寫</label><br />
+                            <label style="color:red">***中文翻譯僅供參考，實際內容以英文版申購書為準</label>
+                            <a style="color:cornflowerblue" href="/Export/Open?FileName=譯文_Aquarius Protection Fund SPC - Safety Property SP - Subscription Agreement(2019.06.24).pdf">申購書譯文版下載</a>
+                        </div>
+                        <input type="radio" name="rdoType" value="0">個人名義申購
+                        <input type="radio" name="rdoType" value="1">法人申購
+                        <hr />
+                        <div id="divType1" style="display:none">
+                            <h4>Part1基本資料</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtFullName" class="col-md-3 col-form-label">1. 英文姓名</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtFullName" name="txtFullName" required
+                                           data-error="請填寫英文姓名" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtRegi_address" class="col-md-3 col-form-label">2. 註冊/戶籍地址</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtRegi_address" name="txtRegi_address" required
+                                           data-error="請填寫註冊/戶籍地址" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                    <a style="color:cornflowerblue" href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=207" target="_blank">地址翻譯連結</a>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorres_address" class="col-md-3 col-form-label">3. 通訊地址(若與戶籍地不同才需填寫)</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorres_address" name="txtCorres_address" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtTelephone" class="col-md-3 col-form-label">4. 電話號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtTelephone" name="txtTelephone" required
+                                           data-error="請填寫電話號碼" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtEmail" class="col-md-3 col-form-label">5. E-mail</label>
+                                <div class="col-md-9">
+                                    <input type="email" id="txtEmail" name="txtEmail" required
+                                           data-error="請填寫E-mail">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtNationality" class="col-md-3 col-form-label">6. 國籍/公司註冊地</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtNationality" name="txtNationality" required
+                                           data-error="請填寫國籍/公司註冊地" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtWealth" class="col-md-3 col-form-label">7. 財富來源與職業</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtWealth" name="txtWealth" required
+                                           data-error="請填寫財富來源與職業" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Part2銀行帳戶資訊</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtBankName" class="col-md-3 col-form-label">8. 銀行名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankName" name="txtBankName" required
+                                           data-error="請填寫銀行名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBankAccount" class="col-md-3 col-form-label">9. 銀行帳號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankAccount" name="txtBankAccount" required
+                                           data-error="請填寫銀行帳號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtAccountName" class="col-md-3 col-form-label">10.帳戶名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtAccountName" name="txtAccountName" required
+                                           data-error="請填寫帳戶名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtSwiftcode" class="col-md-3 col-form-label">11.Swift code</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtSwiftcode" name="txtSwiftcode" required
+                                           data-error="請填寫Swift code" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBankAddr" class="col-md-3 col-form-label">12.銀行分行地址</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankAddr" name="txtBankAddr" required
+                                           data-error="請填寫銀行分行地址" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-md-3 col-form-label"></label>
+                                <div class="col-md-9">
+                                    <label class="col-form-label">通匯行資訊請參考附件，若下方資訊無您的銀行，請自行詢問銀行</label>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankName" class="col-md-3 col-form-label">13.通匯行/存同行名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankName" name="txtCorrBankName" required
+                                           data-error="請填寫通匯行/存同行名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankBranch" class="col-md-3 col-form-label">14.通匯行/存同行分行</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankBranch" name="txtCorrBankBranch" required
+                                           data-error="請填寫通匯行/存同行分行" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankSwiftcode" class="col-md-3 col-form-label">15.通匯行/存同行Swift code</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankSwiftcode" name="txtCorrBankSwiftcode" required
+                                           data-error="請填寫通匯行/存同行Swift code" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Part3財富來源</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtSource" class="col-12 col-form-label">16.資金來源(請詳細說明您如何獲得此筆投資資金)</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <div class="col-12">
+                                    <textarea rows="3" id="txtSource" name="txtSource" required
+                                              data-error="請填寫資金來源"></textarea>
+                                    <div class="help-block with-errors mt-none"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-12 col-form-label" style="color:red">　　17~23請擇一勾選並填寫對應內容</label>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No17">17.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">就業收入，職業：</label>
+                                    <input type="text" id="txtOccupation" name="txtOccupation" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <label class="col-form-label">、雇主姓名</label>
+                                    <input type="text" id="txtEmployerName" name="txtEmployerName" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No18">18.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">營業利潤，業務性質</label>
+                                    <input type="text" id="txtBusinessProfits" name="txtBusinessProfits" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <label class="col-form-label">公司名稱</label>
+                                    <input type="text" id="txtCompanyName" name="txtCompanyName" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No19">19.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">儲蓄/投資收入，投資性質和名稱</label>
+                                    <input type="text" id="txtInvestmentName" name="txtInvestmentName" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No20">20.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">資產售出，資產性質和出售金額</label>
+                                    <input type="text" id="txtAssetsAmount" name="txtAssetsAmount" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No21">21.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">退休/養老金收入</label>
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No22">22.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">信託/繼承</label>
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup1" value="No23">23.
+                            <div class="form-group au-form row">
+                                <label class="col-2 col-form-label"></label>
+                                <div class="col-10">
+                                    <label class="col-form-label">其他，說明</label>
+                                    <input type="text" id="txtOther" name="txtOther" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Part4支付股息帳戶資訊(自動帶出，如與打款銀行帳戶不同，請自行修改)</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtBankName2" class="col-md-3 col-form-label">8. 銀行名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankName2" name="txtBankName2" required
+                                           data-error="請填寫銀行名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBankAccount2" class="col-md-3 col-form-label">9. 銀行帳號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankAccount2" name="txtBankAccount2" required
+                                           data-error="請填寫銀行帳號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtAccountName2" class="col-md-3 col-form-label">10.帳戶名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtAccountName2" name="txtAccountName2" required
+                                           data-error="請填寫帳戶名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtSwiftcode2" class="col-md-3 col-form-label">11.Swift code</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtSwiftcode2" name="txtSwiftcode2" required
+                                           data-error="請填寫Swift code" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBankAddr2" class="col-md-3 col-form-label">12.銀行分行地址</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBankAddr2" name="txtBankAddr2" required
+                                           data-error="請填寫銀行分行地址" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankName2" class="col-md-3 col-form-label">13.通匯行/存同行名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankName2" name="txtCorrBankName2" required
+                                           data-error="請填寫通匯行/存同行名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankBranch2" class="col-md-3 col-form-label">14.通匯行/存同行分行</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankBranch2" name="txtCorrBankBranch2" required
+                                           data-error="請填寫通匯行/存同行分行" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCorrBankSwiftcode2" class="col-md-3 col-form-label">15.通匯行/存同行Swift code</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCorrBankSwiftcode2" name="txtCorrBankSwiftcode2" required
+                                           data-error="請填寫通匯行/存同行Swift code" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>Part5 其他資訊</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtFundWay" class="col-12 col-form-label">24.基金資訊接收方式</label>
+                            </div>
+                            <input type="radio" name="rdoGroup2" value="0">E-mail
+                            <input type="radio" name="rdoGroup2" value="1">郵寄
+                            <div class="form-group au-form row">
+                                <label for="txtholders" class="col-12 col-form-label">25.若帳戶為聯名戶，誰可以指示行事</label>
+                            </div>
+                            <input type="radio" name="rdoGroup3" value="0">任一名同意指示即可
+                            <input type="radio" name="rdoGroup3" value="1">需經所有聯名人同意指示
+                            <hr />
+                            <h4>個人身分自我證明</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtBirthDay" class="col-md-3 col-form-label">26.西元生日(日/月/年，例: 31/12/1988):</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBirthDay" name="txtBirthDay" required
+                                           data-error="請填寫西元生日">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">27.註冊/戶籍地址</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtRoadandNo" class="col-md-3 col-form-label">27-1.街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtRoadandNo" name="txtRoadandNo" required
+                                           data-error="請填寫街道和門牌號碼" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCity" class="col-md-3 col-form-label">27-2.城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCity" name="txtCity" required
+                                           data-error="請填寫城市" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtProvince" class="col-md-3 col-form-label">27-3.省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtProvince" name="txtProvince" required
+                                           data-error="請填寫省份" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtPostCode" class="col-md-3 col-form-label">27-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtPostCode" name="txtPostCode" required
+                                           data-error="請填寫郵遞區號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCountry" class="col-md-3 col-form-label">27-5.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCountry" name="txtCountry" required
+                                           data-error="請填寫國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">28.通訊地址(若與戶籍地不同才需填寫)</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtRoadandNo2" class="col-md-3 col-form-label">28-1.街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtRoadandNo2" name="txtRoadandNo2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCity2" class="col-md-3 col-form-label">28-2.城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCity2" name="txtCity2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtProvince2" class="col-md-3 col-form-label">28-3.省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtProvince2" name="txtProvince2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtPostCode2" class="col-md-3 col-form-label">28-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtPostCode2" name="txtPostCode2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCountry2" class="col-md-3 col-form-label">28-5.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCountry2" name="txtCountry2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <input type="radio" name="rdoGroup2" value="0">29.我確認本人在美國出生（或美國領土）但不再是美國公民，因為本人已
+                            自願放棄了本人的公民身份，如附件所示 <br />
+                            <input type="radio" name="rdoGroup2" value="1">30.我確認本人不是美國公民或居住在美國的稅務居民
+                            <div class="form-group au-form row">
+                                <label for="txtTaxCountry" class="col-md-3 col-form-label">31.稅務居住國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtTaxCountry" name="txtTaxCountry" required
+                                           data-error="請填寫稅務居住國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtTaxType" class="col-md-3 col-form-label">32.稅號類型(請填個人individual或公司company)</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtTaxType" name="txtTaxType" required
+                                           data-error="請填寫稅號類型" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtTaxNo" class="col-md-3 col-form-label">33.稅號(稅號即為統一編號、身分證號)</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtTaxNo" name="txtTaxNo" required
+                                           data-error="請填寫稅號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                        </div>
+                        <div id="divType2" style="display:none">
+                            <h4>實體自我證明</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtActualName" class="col-md-3 col-form-label">34.實體法定名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtActualName" name="txtActualName" required
+                                           data-error="請填寫實體法定名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtActualCountry" class="col-md-3 col-form-label">35.所在國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtActualCountry" name="txtActualCountry" required
+                                           data-error="請填寫所在國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">36.現居地址或註冊地址</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtRoadandNoNow" class="col-md-3 col-form-label">36-1.街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtRoadandNoNow" name="txtRoadandNoNow" required
+                                           data-error="請填寫街道和門牌號碼" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCityNow" class="col-md-3 col-form-label">36-2.城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCityNow" name="txtCityNow" required
+                                           data-error="請填寫城市" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtProvinceNow" class="col-md-3 col-form-label">36-3.省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtProvinceNow" name="txtProvinceNow" required
+                                           data-error="請填寫省份" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtPostCodeNow" class="col-md-3 col-form-label">36-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtPostCodeNow" name="txtPostCodeNow" required
+                                           data-error="請填寫郵遞區號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCountryNow" class="col-md-3 col-form-label">36-5.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCountryNow" name="txtCountryNow" required
+                                           data-error="請填寫國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">37.通訊地址(若與戶籍地不同才需填寫)</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtRoadandNoNow2" class="col-md-3 col-form-label">37-1.街道和門牌號碼</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtRoadandNoNow2" name="txtRoadandNoNow2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCityNow2" class="col-md-3 col-form-label">37-2.城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCityNow2" name="txtCityNow2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtProvinceNow2" class="col-md-3 col-form-label">37-3.省份</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtProvinceNow2" name="txtProvinceNow2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtPostCodeNow2" class="col-md-3 col-form-label">37-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtPostCodeNow2" name="txtPostCodeNow2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtCountryNow2" class="col-md-3 col-form-label">37-5.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtCountryNow2" name="txtCountryNow2" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtholders" class="col-12 col-form-label">38.如果該實體不是外國金融機構，請在下面確認實體的FATCA狀態：</label>
+                            </div>
+                            <input type="radio" name="rdoGroup4" value="0">該實體是積極的非金融外國機構
+                            <input type="radio" name="rdoGroup4" value="1">該實體是消極的非金融外國機構
+                            <div class="form-group au-form row">
+                                <label for="txtObjFullName" class="col-md-3 col-form-label">39.請填寫該實體的控制人全名</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtObjFullName" name="txtObjFullName" required
+                                           data-error="請填寫該實體的控制人全名" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>CRS共同申報標準</h4>
+                            <div class="form-group au-form row">
+                                <label for="txtObjTaxArea" class="col-md-3 col-form-label">40.該實體的稅務管轄區</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtObjTaxArea" name="txtObjTaxArea" required
+                                           data-error="請填寫該實體的稅務管轄區" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtObjTaxType" class="col-md-3 col-form-label">41.該實體稅號類型</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtObjTaxType" name="txtObjTaxType" required
+                                           data-error="請填寫該實體稅號類型" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtObjTaxNo" class="col-md-3 col-form-label">42.該實體的稅號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtObjTaxNo" name="txtObjTaxNo" required
+                                           data-error="請填寫該實體的稅號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <hr />
+                            <h4>控制人資料</h4>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">43.控制人姓名</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlNameLast" class="col-md-3 col-form-label">43-1.姓</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlNameLast" name="txtControlNameLast" required
+                                           data-error="請填寫姓" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlNameFirst" class="col-md-3 col-form-label">43-2.名</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlNameFirst" name="txtControlNameFirst" required
+                                           data-error="請填寫名" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">44.現居地址</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlRoadNo" class="col-md-3 col-form-label">44-1.門牌號、巷弄、街道</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlRoadNo" name="txtControlRoadNo" required
+                                           data-error="請填寫門牌號、巷弄、街道" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlCity" class="col-md-3 col-form-label">44-2.區域、城市、省分</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlCity" name="txtControlCity" required
+                                           data-error="請填寫區域、城市、省分" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlCountry" class="col-md-3 col-form-label">44-3.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlCountry" name="txtControlCountry" required
+                                           data-error="請填寫國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlPostCode" class="col-md-3 col-form-label">44-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlPostCode" name="txtControlPostCode" required
+                                           data-error="請填寫郵遞區號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">45.通訊地址</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlRoadNo2" class="col-md-3 col-form-label">45-1.門牌號、巷弄、街道</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlRoadNo2" name="txtControlRoadNo2" required
+                                           data-error="請填寫門牌號、巷弄、街道" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlCity2" class="col-md-3 col-form-label">45-2.區域、城市、省分</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlCity2" name="txtControlCity2" required
+                                           data-error="請填寫區域、城市、省分" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlCountry2" class="col-md-3 col-form-label">45-3.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlCountry2" name="txtControlCountry2" required
+                                           data-error="請填寫國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlPostCode2" class="col-md-3 col-form-label">45-4.郵遞區號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlPostCode2" name="txtControlPostCode2" required
+                                           data-error="請填寫郵遞區號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBirthDay" class="col-md-3 col-form-label">46.生日(日/月/年，例: 31/12/1988)</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlBirthDay" name="txtBirthDay" required
+                                           data-error="請填寫西元生日">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">47.出生地</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBirthCity" class="col-md-3 col-form-label">47-1.城市</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBirthCity" name="txtBirthCity" required
+                                           data-error="請填寫城市" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtBirthCountry" class="col-md-3 col-form-label">47-2.國家</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtBirthCountry" name="txtBirthCountry" required
+                                           data-error="請填寫國家" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label class="col-5 col-form-label">48.您作為控制人之相關實體帳戶之法人名稱</label>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtLegalName1" class="col-md-3 col-form-label">48-1.實體一法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtLegalName1" name="txtLegalName1" required
+                                           data-error="請填寫實體一法人名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtLegalName2" class="col-md-3 col-form-label">48-2.實體二法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtLegalName2" name="txtLegalName2" required
+                                           data-error="請填寫實體二法人名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtLegalName3" class="col-md-3 col-form-label">48-3.實體三法人名稱</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtLegalName3" name="txtLegalName3" required
+                                           data-error="請填寫實體三法人名稱" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlTaxPlace" class="col-md-3 col-form-label">49.控制人稅務居住管轄地</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlTaxPlace" name="txtControlTaxPlace" required
+                                           data-error="請填寫控制人稅務居住管轄地" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlTaxType" class="col-md-3 col-form-label">50.控制人稅號類型</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlTaxType" name="txtControlTaxType" required
+                                           data-error="請填寫控制人稅號類型" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="form-group au-form row">
+                                <label for="txtControlTaxNo" class="col-md-3 col-form-label">51.控制人稅號</label>
+                                <div class="col-md-9">
+                                    <input type="text" id="txtControlTaxNo" name="txtControlTaxNo" required
+                                           data-error="請填寫控制人稅號" onkeyup="value=value.replace(/[^\w\.\/]/ig,'')">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="divbtn" style="display:none">
+                            <ul class="act-btns">
+                                <li>
+                                    <input type="button" class="btn btn-sm btn-primary w-100" value="確認匯出" onclick="LoginBtn_click()" />
+                                </li>
+                            </ul>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>*@
+</div>
+<script>
+    $(document).ready(function () {
+        $('#logo').loadgo();
+
+        $('#btnExport').click(function () {
+            $("#maindiv").load("http://www.w3schools.com/jquery/demo_test.txt");
+        });
+    });
+
+    var PruchaseType = 0;
+    var PdfGuid = "";
+    var WordGuid = "";
+    //var cocacolaInterval;
+    //function mainDemo() {
+    //    var p = 0;
+    //    $('#logo').loadgo('resetprogress');   // reset progress to start again
+    //    cocacolaInterval = window.setInterval(function () {
+    //        if ($('#logo').loadgo('getprogress') == 100) {
+    //            // When progress completes, we have to clear the interval
+    //            window.clearInterval(cocacolaInterval);
+    //        }
+    //        else {
+    //            var prog = p * 10;
+    //            $('#logo').loadgo('setprogress', prog);
+    //            p++;
+    //        }
+    //    }, 150);
+    //};
+    var placeholder = '例如: \n 存款和投資Deposits and Investments \n 資產出售Sale of asset \n 就業收入Employment Income';
+    $('#txt16').val(placeholder);
+    $('#txt16').css("color", "#c2c0c0"); 
+    $('#txt16').focus(function () {
+        $(this).css("color", "#000000");
+        if ($(this).val() == placeholder) {
+            $(this).val('');
+        }
+    });
+    $('#txt16').blur(function () {
+        $(this).css("color", "#000000"); 
+        if ($(this).val() == '') {
+            $(this).val(placeholder);
+            $(this).css("color", "#c2c0c0"); 
+        }
+    });
+
+    $('input[type=radio][name=PruchaseType]').change(function () {
+        if (this.value == 0) {
+            PruchaseType = 0;
+            $("#divType1").show();
+            $("#divType2").hide();
+            $("#divbtn").show();
+        }
+        else if (this.value == 1) {
+            PruchaseType = 1;
+            $("#divType1").show();
+            $("#divType2").show();
+            $("#divbtn").show();
+        }
+    });
+    function check(str) {
+        var temp = "" 
+        for (var i = 0; i < str.length; i++)
+            if (str.charCodeAt(i) > 0 && str.charCodeAt(i) < 255)
+                temp += str.charAt(i);
+        return temp
+    } 
+
+    function setValue() {
+        $("#txt17").val($("#txt8").val());
+        $("#txt18").val($("#txt9").val());
+        $("#txt19").val($("#txt10").val());
+        $("#txt20").val($("#txt11").val());
+        $("#txt21").val($("#txt12").val());
+        $("#txt22").val($("#txt13").val());
+        $("#txt23").val($("#txt14").val());
+        $("#txt24").val($("#txt15").val());
+
+        if (PruchaseType == 0) {
+        }
+        else if (PruchaseType == 1) {
+            $("#txt38").val($("#txt28").val());
+            $("#txt39").val($("#txt29").val());
+            $("#txt40").val($("#txt30").val());
+            $("#txt41").val($("#txt31").val());
+            $("#txt42").val($("#txt32").val());
+
+            $("#txt38_1").val($("#txt28_1").val());
+            $("#txt39_1").val($("#txt29_1").val());
+            $("#txt40_1").val($("#txt30_1").val());
+            $("#txt41_1").val($("#txt31_1").val());
+            $("#txt42_1").val($("#txt32_1").val());
+
+        }
+    }
+
+    function setProgress() {
+        var totalCount = 0;
+        var writtenCount = 0;
+        var txtCount = 0;
+        var jobRadio = $('input[type=radio][name=jobRadio]:checked').val();
+
+        if (PruchaseType == 0) {
+            totalCount = 31;
+            txtCount = 35;
+        }
+        else if (PruchaseType == 1) {
+            totalCount = 62;
+            txtCount = 67;
+        }
+        //判斷17~23選擇哪項而增加分母數量,根據選項而判斷填寫數
+        switch (jobRadio) {
+            case "0":
+                writtenCount++;
+                totalCount = totalCount + 2;
+                if ($.trim($("#txtjobRadio_1").val()) != '')
+                    writtenCount++;
+                if ($.trim($("#txtjobRadio_2").val()) != '')
+                    writtenCount++;
+                break;
+            case "1":
+                writtenCount++;
+                totalCount = totalCount + 2;
+                if ($.trim($("#txtjobRadio_3").val()) != '')
+                    writtenCount++;
+                if ($.trim($("#txtjobRadio_4").val()) != '')
+                    writtenCount++;
+                break;
+            case "2":
+                writtenCount++;
+                totalCount = totalCount + 1;
+                if ($.trim($("#txtjobRadio_5").val()) != '')
+                    writtenCount++;
+                break;
+            case "3":
+                writtenCount++;
+                totalCount = totalCount + 1;
+                if ($.trim($("#txtjobRadio_6").val()) != '')
+                    writtenCount++;
+                break;
+            case "4":
+            case "5":
+                writtenCount++;
+                break;
+            case "6":
+                writtenCount++;
+                if ($.trim($("#txtjobRadio_7").val()) != '')
+                    writtenCount++;
+                totalCount = totalCount + 1;
+                break;
+            default:
+                break;
+        }
+
+        if ($('input[type=radio][name=purTypeRadio]:checked').val() != undefined)
+            writtenCount++;
+        //if ($('input[type=radio][name=permitRadio]:checked').val() != undefined)
+        //    writtenCount++;
+        if ($('input[type=radio][name=AmericRadio]:checked').val() != undefined)
+            writtenCount++;
+        if (PruchaseType == 1) {
+            if ($('input[type=radio][name=FATCARadio]:checked').val() != undefined)
+                writtenCount++;
+        }
+        
+        for (var i = 2; i <= txtCount; i++) {
+            if (i == 13 || i == 14 || i == 15 || i == 22 || i == 23 || i == 24 || i == 63 || i == 64)
+                continue;
+            if ($.trim($("#txt" + i).val()) != '')
+                writtenCount++;
+        }
+        console.log(writtenCount + '/' + totalCount)
+        var prog = eval(writtenCount) / eval(totalCount)*100
+        $('#logo').loadgo('setprogress', prog);
+    }
+
+    function LoginBtn_click() {
+        PdfGuid = "";
+        WordGuid = "";
+        if (chkValue() == false) {
+            //alert('尚有資料未填寫,請確認')
+            //sweetAlert("尚有資料未填寫,請確認!", "", "warning");
+            //document.getElementById("txt10").focus(); 
+            return;
+        }
+        $('#extxt3_1').val($('#txt3_1').val());
+        $('#exPruchaseType').val($('input[type=radio][name=PruchaseType]:checked').val());
+        for (var j = 1; j <= 67; j++) {
+            if (j == 16) {
+                if ($('#txt16').val() == placeholder)
+                    $('#extxt' + j).val('');
+                else
+                    $('#extxt' + j).val($('#txt' + j).val());
+            } else {
+                $('#extxt' + j).val($('#txt' + j).val());
+            }
+        }
+        $('#exjobRadio').val($('input[type=radio][name=jobRadio]:checked').val());
+        for (var j = 1; j <= 7; j++) {
+            $('#extxtjobRadio_' + j).val($('#txtjobRadio_' + j).val());
+        }
+        $('#expurTypeRadio').val($('input[type=radio][name=purTypeRadio]:checked').val());
+        $('#expermitRadio').val($('input[type=radio][name=permitRadio]:checked').val());
+        for (var j = 25; j <= 32; j++) {
+            $('#extxt' + j + '_1').val($('#txt' + j + '_1').val());
+        }
+        $('#exAmericRadio').val($('input[type=radio][name=AmericRadio]:checked').val());
+        for (var j = 38; j <= 42; j++) {
+            $('#extxt' + j + '_1').val($('#txt' + j + '_1').val());
+        }
+        $('#exFATCARadio').val($('input[type=radio][name=FATCARadio]:checked').val() == undefined ? '' : $('input[type=radio][name=FATCARadio]:checked').val());
+
+        //document.getElementById('buttonConvertUrl').click()
+        window.location='#';
+        $('#myModalForExport').modal('show');
+        //$.ajax({
+        //    type: "POST",
+        //    url: "/Export/AgreeMent2PDF",
+        //    data: {
+        //        PruchaseType: $('#exPruchaseType').val(), txt2: $('#extxt2').val(), txt3: $('#extxt3').val(), txt3_1: $('#extxt3_1').val(), txt4: $('#extxt4').val()
+        //        , txt5: $('#extxt5').val(), txt6: $('#extxt6').val(), txt7: $('#extxt7').val(), txt8: $('#extxt8').val(), txt9: $('#extxt9').val()
+        //        , txt10: $('#extxt10').val(), txt11: $('#extxt11').val(), txt12: $('#extxt12').val(), txt13: $('#extxt13').val(), txt14: $('#extxt14').val()
+        //        , txt15: $('#extxt15').val(), txt16: $('#extxt16').val(), jobRadio: $('#exjobRadio').val(), txtjobRadio_1: $('#extxtjobRadio_1').val()
+        //        , txtjobRadio_2: $('#extxtjobRadio_2').val(), txtjobRadio_3: $('#extxtjobRadio_3').val(), txtjobRadio_4: $('#extxtjobRadio_4').val()
+        //        , txtjobRadio_5: $('#extxtjobRadio_5').val(), txtjobRadio_6: $('#extxtjobRadio_6').val(), txtjobRadio_7: $('#extxtjobRadio_7').val()
+        //        , txt17: $('#extxt17').val(), txt18: $('#extxt18').val(), txt19: $('#extxt19').val(), txt20: $('#extxt20').val(), txt21: $('#extxt21').val()
+        //        , txt22: $('#extxt22').val(), txt23: $('#extxt23').val(), txt24: $('#extxt24').val(), purTypeRadio: $('#expurTypeRadio').val()
+        //        , permitRadio: $('#expermitRadio').val(), txt25: $('#extxt25').val(), txt26: $('#extxt26').val(), txt27: $('#extxt27').val()
+        //        , txt28: $('#extxt28').val(), txt29: $('#extxt29').val(), txt30: $('#extxt30').val(), txt31: $('#extxt31').val(), txt32: $('#extxt32').val()
+        //        , txt25_1: $('#extxt25_1').val(), txt26_1: $('#extxt26_1').val(), txt27_1: $('#extxt27_1').val(), txt28_1: $('#extxt28_1').val()
+        //        , txt29_1: $('#extxt29_1').val(), txt30_1: $('#extxt30_1').val(), txt31_1: $('#extxt31_1').val(), txt32_1: $('#extxt32_1').val()
+        //        , AmericRadio: $('#exAmericRadio').val(), txt33: $('#extxt33').val(), txt34: $('#extxt34').val(), txt35: $('#extxt35').val()
+        //        , txt36: $('#extxt36').val(), txt37: $('#extxt37').val(), txt38: $('#extxt38').val(), txt39: $('#extxt39').val(), txt40: $('#extxt40').val()
+        //        , txt41: $('#extxt41').val(), txt42: $('#extxt42').val(), txt38_1: $('#extxt38_1').val(), txt39_1: $('#extxt39_1').val()
+        //        , txt40_1: $('#extxt40_1').val(), txt41_1: $('#extxt41_1').val(), txt42_1: $('#extxt42_1').val(), FATCARadio: $('#exFATCARadio').val()
+        //        , txt43: $('#extxt43').val(), txt44: $('#extxt44').val(), txt45: $('#extxt45').val(), txt46: $('#extxt46').val(), txt47: $('#extxt47').val()
+        //        , txt48: $('#extxt48').val(), txt49: $('#extxt49').val(), txt50: $('#extxt50').val(), txt51: $('#extxt51').val(), txt52: $('#extxt52').val()
+        //        , txt53: $('#extxt53').val(), txt54: $('#extxt54').val(), txt55: $('#extxt55').val(), txt56: $('#extxt56').val(), txt57: $('#extxt57').val()
+        //        , txt58: $('#extxt58').val(), txt59: $('#extxt59').val(), txt60: $('#extxt60').val(), txt61: $('#extxt61').val(), txt62: $('#extxt62').val()
+        //        , txt63: $('#extxt63').val(), txt64: $('#extxt64').val(), txt65: $('#extxt65').val(), txt66: $('#extxt66').val(), txt67: $('#extxt67').val()
+        //    },
+        //    dataType: "json",
+        //    success: function (result) {
+        //        if (result == "0")
+        //            alert("系統發生錯誤")
+        //        else
+        //            window.location = '/Export/DownloadPDF?fileGuid=' + result;
+        //    },
+        //    complete: function (XMLHttpRequest, textStatus) { $('#myModalForExport').modal('hide'); }
+        //})
+        var obj = {};
+        obj.PruchaseType = $('#exPruchaseType').val(); obj.txt2 = $('#extxt2').val(); obj.txt3 = $('#extxt3').val(); obj.txt3_1 = $('#extxt3_1').val(); obj.txt4 = $('#extxt4').val();
+        obj.txt5 = $('#extxt5').val(); obj.txt6 = $('#extxt6').val(); obj.txt7 = $('#extxt7').val(); obj.txt8 = $('#extxt8').val(); obj.txt9 = $('#extxt9').val();
+        obj.txt10 = $('#extxt10').val(); obj.txt11 = $('#extxt11').val(); obj.txt12 = $('#extxt12').val(); obj.txt13 = $('#extxt13').val(); obj.txt14 = $('#extxt14').val();
+        obj.txt15 = $('#extxt15').val();
+        obj.txt16 = $('#extxt16').val();
+        obj.jobRadio = $('#exjobRadio').val(); obj.txtjobRadio_1 = $('#extxtjobRadio_1').val();
+        obj.txtjobRadio_2 = $('#extxtjobRadio_2').val(); obj.txtjobRadio_3 = $('#extxtjobRadio_3').val(); obj.txtjobRadio_4 = $('#extxtjobRadio_4').val();
+        obj.txtjobRadio_5 = $('#extxtjobRadio_5').val(); obj.txtjobRadio_6 = $('#extxtjobRadio_6').val(); obj.txtjobRadio_7 = $('#extxtjobRadio_7').val();
+        obj.txt17 = $('#extxt17').val(); obj.txt18 = $('#extxt18').val(); obj.txt19 = $('#extxt19').val(); obj.txt20 = $('#extxt20').val(); obj.txt21 = $('#extxt21').val();
+        obj.txt22 = $('#extxt22').val(); obj.txt23 = $('#extxt23').val(); obj.txt24 = $('#extxt24').val(); obj.purTypeRadio = $('#expurTypeRadio').val();
+        obj.permitRadio = $('#expermitRadio').val(); obj.txt25 = $('#extxt25').val(); obj.txt26 = $('#extxt26').val(); obj.txt27 = $('#extxt27').val();
+        obj.txt28 = $('#extxt28').val(); obj.txt29 = $('#extxt29').val(); obj.txt30 = $('#extxt30').val(); obj.txt31 = $('#extxt31').val(); obj.txt32 = $('#extxt32').val();
+        obj.txt25_1 = $('#extxt25_1').val(); obj.txt26_1 = $('#extxt26_1').val(); obj.txt27_1 = $('#extxt27_1').val(); obj.txt28_1 = $('#extxt28_1').val();
+        obj.txt29_1 = $('#extxt29_1').val(); obj.txt30_1 = $('#extxt30_1').val(); obj.txt31_1 = $('#extxt31_1').val(); obj.txt32_1 = $('#extxt32_1').val();
+        obj.AmericRadio = $('#exAmericRadio').val(); obj.txt33 = $('#extxt33').val(); obj.txt34 = $('#extxt34').val(); obj.txt35 = $('#extxt35').val();
+        obj.txt36 = $('#extxt36').val(); obj.txt37 = $('#extxt37').val(); obj.txt38 = $('#extxt38').val(); obj.txt39 = $('#extxt39').val(); obj.txt40 = $('#extxt40').val();
+        obj.txt41 = $('#extxt41').val(); obj.txt42 = $('#extxt42').val(); obj.txt38_1 = $('#extxt38_1').val(); obj.txt39_1 = $('#extxt39_1').val();
+        obj.txt40_1 = $('#extxt40_1').val(); obj.txt41_1 = $('#extxt41_1').val(); obj.txt42_1 = $('#extxt42_1').val(); obj.FATCARadio = $('#exFATCARadio').val();
+        obj.txt43 = $('#extxt43').val(); obj.txt44 = $('#extxt44').val(); obj.txt45 = $('#extxt45').val(); obj.txt46 = $('#extxt46').val(); obj.txt47 = $('#extxt47').val();
+        obj.txt48 = $('#extxt48').val(); obj.txt49 = $('#extxt49').val(); obj.txt50 = $('#extxt50').val(); obj.txt51 = $('#extxt51').val(); obj.txt52 = $('#extxt52').val();
+        obj.txt53 = $('#extxt53').val(); obj.txt54 = $('#extxt54').val(); obj.txt55 = $('#extxt55').val(); obj.txt56 = $('#extxt56').val(); obj.txt57 = $('#extxt57').val();
+        obj.txt58 = $('#extxt58').val(); obj.txt59 = $('#extxt59').val(); obj.txt60 = $('#extxt60').val(); obj.txt61 = $('#extxt61').val(); obj.txt62 = $('#extxt62').val();
+        obj.txt63 = $('#extxt63').val(); obj.txt64 = $('#extxt64').val(); obj.txt65 = $('#extxt65').val(); obj.txt66 = $('#extxt66').val(); obj.txt67 = $('#extxt67').val()
+        var options = {};
+        options.url = "/Export/AgreeMent2PDF";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "json";
+        options.success = function (data) {
+            $('#myModalForExport').modal('hide');
+            if (data.errorMsg != "") {
+                //alert("系統發生錯誤")
+                sweetAlert("系統發生錯誤!", data.errorMsg, "error");
+            }
+            else {
+                //window.location = '/Export/DownloadPDF?fileGuid=' + data;
+                $('#myModalForExport').modal('hide');
+                $('#myModalForExportFile').modal('show');
+                //downloadPDF(data.PDFGuid)
+                //downloadWord(data.WordGuid)
+                PdfGuid = data.PDFGuid;
+                WordGuid = data.WordGuid;
+            }       
+        };
+        options.error = function () {
+            //alert('系統發生錯誤!');
+            sweetAlert("系統發生錯誤!", "", "error");
+            $('#myModalForExport').modal('hide');
+        };
+        $.ajax(options);
+    }
+    function downloadPDF() {
+        if (PdfGuid == "") {
+            sweetAlert("閒置過久資料已遺失!", "請重新匯出!", "warning");
+        } else {
+            $("#download_a").attr("href", "/Export/DownloadPDF?fileGuid=" + PdfGuid);
+            document.getElementById("download_a").click()
+        }
+    }
+    function downloadWord() {
+        if (WordGuid == "") {
+            sweetAlert("閒置過久資料已遺失!", "請重新匯出!", "warning");
+        } else {
+            $("#download_b").attr("href", "/Export/DownloadWord?fileGuid=" + WordGuid);
+            document.getElementById("download_b").click()
+        }
+    }
+    function chkValue() {
+        //檢視資料是否未填
+        var txtCount = 0;
+        var jobRadio = $('input[type=radio][name=jobRadio]:checked').val();
+        if (PruchaseType == 0) {
+            txtCount = 35;
+        }
+        else if (PruchaseType == 1) {
+            txtCount = 67;
+        }
+        for (var i = 2; i <= txtCount; i++) {
+            if (i == 13 || i == 14 || i == 15 || i == 22 || i == 23 || i == 24 || i == 63 || i == 64)
+                continue;
+            if ($.trim($("#txt" + i).val()) == '') {
+                document.getElementById("txt" + i).focus(); 
+                return false;
+            }
+        }
+        if (jobRadio == undefined) {
+            document.getElementById("jobRadio1").focus(); 
+            return false;
+        }
+
+        switch (jobRadio) {
+            case "0":
+                if ($.trim($("#txtjobRadio_1").val()) == '') {
+                    document.getElementById("txtjobRadio_1").focus(); 
+                    return false;
+                }              
+                if ($.trim($("#txtjobRadio_2").val()) == '') {
+                    document.getElementById("txtjobRadio_2").focus(); 
+                    return false;
+                }
+                break;
+            case "1":
+                if ($.trim($("#txtjobRadio_3").val()) == '') {
+                    document.getElementById("txtjobRadio_3").focus(); 
+                    return false;
+                }     
+                if ($.trim($("#txtjobRadio_4").val()) == '') {
+                    document.getElementById("txtjobRadio_4").focus(); 
+                    return false;
+                }              
+                break;
+            case "2":
+                if ($.trim($("#txtjobRadio_5").val()) == '') {
+                    document.getElementById("txtjobRadio_5").focus(); 
+                    return false;
+                }
+                break;
+            case "3":
+                if ($.trim($("#txtjobRadio_6").val()) == '') {
+                    document.getElementById("txtjobRadio_6").focus(); 
+                    return false;
+                }        
+                break;
+            case "6":
+                if ($.trim($("#txtjobRadio_7").val()) == '') {
+                    document.getElementById("txtjobRadio_7").focus(); 
+                    return false;
+                }    
+                break;
+            default:
+                break;
+        }
+
+        if ($('input[type=radio][name=purTypeRadio]:checked').val() == undefined) {
+            document.getElementById("purTypeRadi1").focus(); 
+            return false;
+        }       
+        //if ($('input[type=radio][name=permitRadio]:checked').val() == undefined)
+        //    return false;
+        if ($('input[type=radio][name=AmericRadio]:checked').val() == undefined) {
+            document.getElementById("AmericRadio1").focus();
+            return false;
+        }
+        if (PruchaseType == 1) {
+            if ($('input[type=radio][name=FATCARadio]:checked').val() == undefined) {
+                document.getElementById("FATCARadio1").focus();
+                return false;
+            }  
+        }
+        //---------------
+    }
+
+</script>

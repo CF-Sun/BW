@@ -1,0 +1,587 @@
+﻿@{
+     Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">系統管理</li>
+        <li class="breadcrumb-item active">
+            <a href="#">公告管理</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">公告管理</h4>
+            <div class="row">
+                <div class="col-lg-7">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="" class="col-md-3 col-form-label">日期區間</label>
+                            <div class="col-md-4 col-6 select-wrapper underline2">
+                                <input type="text" id="txtStartDate" name="txtStartDate">
+                            </div>
+                            <div class="offset-md-1 col-md-4 col-6 select-wrapper">
+                                <input type="text" id="txtEndDate" name="txtEndDate">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoAdd()" value="新增">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="announcementTitle">
+                        新增公告
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtSubject" class="col-3 col-form-label">主旨</label>
+                            <div class="col-9">
+                                <input type="text" id="txtSubject" name="txtSubject" required
+                                       data-error="請填主旨">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="sele_EmailTo" class="col-3 col-form-label">公告對象</label>
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_EmailTo" id="sele_EmailTo" class="br-cus" required>
+                                    <option value="0">顧問</option>
+                                    <option value="1">客戶</option>
+                                    <option value="2">顧問+客戶</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtContent" class="col-3 col-form-label">公告內容</label>
+                            <div class="col-9">
+                                <textarea rows="10" id="txtContent" name="txtContent"></textarea>
+                                <span style="color:red">換行: &lt;br/&gt; 半形空格: &amp;ensp; 全形空格: &amp;emsp;</span>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <div class="col-9" id="divfile"></div>
+                        </div>
+                        <br />
+                        <div class="form-group au-form row">
+                            <label for="fileUpload1" class="col-3 col-form-label">檔案1</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload1">
+                                        <label class="custom-file-label" for="fileUpload1" id="fileUploadName1">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="fileUpload2" class="col-3 col-form-label">檔案2</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload2">
+                                        <label class="custom-file-label" for="fileUpload2" id="fileUploadName2">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="fileUpload3" class="col-3 col-form-label">檔案3</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload3">
+                                        <label class="custom-file-label" for="fileUpload3" id="fileUploadName3">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSendMail" class="btn btn-sm btn-primary" onclick="SendEmail()" value="發送Email">
+                    <input type="button" id="btnUploadFile" class="btn btn-sm btn-primary" onclick="Submit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+   
+</div>
+<script>
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else {
+        $('#maindiv').hide();
+    }
+
+
+    //初始化
+    var FileName1 = "";
+    var FileName2 = "";
+    var FileName3 = "";
+    var IsAddNew = false;
+    var Announcement_NO = "";
+    $('#txtStartDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+    $('#txtEndDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    //查詢
+    function clicktoSearch() {
+
+        startDate = $('#txtStartDate').val()
+        endDate = $('#txtEndDate').val()
+
+        if (startDate != "" && endDate != "") {
+            //起日大於迄日的話則return
+            if (startDate > endDate) {
+                //alert('開始日期不能大於結束日期')
+                sweetAlert("查詢失敗!", "開始日期不能大於結束日期", "warning");
+                return;
+            }
+        }
+
+        $('#maindiv').jqLoading();
+        loadData(startDate, endDate);
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData(startDate, endDate) {
+        var apiURL = "/Announcement/GetAnnouncement/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                //按鈕控制
+                if (field == "edit") {
+                    Announcement_NO = row.Announcement_NO
+                    $('#divfile').html('');
+                    IsAddNew = false;
+                    $('#announcementTitle').html('編輯公告')
+                    FileName1 = '';
+                    FileName2 = '';
+                    FileName3 = '';
+                    $('#txtSubject').val(row.Announcement_Subject)
+                    $('#txtContent').val(row.Announcement_Content)
+                    $('#fileUpload1').val('')
+                    $('#fileUpload2').val('')
+                    $('#fileUpload3').val('')
+                    $('#sele_EmailTo').val(row.Announcement_Object)
+                    $('#fileUploadName1').html('選擇檔案上傳')
+                    $('#fileUploadName2').html('選擇檔案上傳')
+                    $('#fileUploadName3').html('選擇檔案上傳')
+
+                    var value = "";
+                    if (row.FileName1 != null || $.trim(row.FileName1) != "")
+                        value += '<a href="/Announcement/Open?FileName=' + $.trim(row.FileName1) + '&Announcement_NO=' + $.trim(row.Announcement_NO) + '">' + $.trim(row.FileName1) + '</a>    ';
+                    if (row.FileName2 != null || $.trim(row.FileName2) != "")
+                        value += '<a href="/Announcement/Open?FileName=' + $.trim(row.FileName2) + '&Announcement_NO=' + $.trim(row.Announcement_NO) + '">' + $.trim(row.FileName2) + '</a>    ';
+                    if (row.FileName3 != null || $.trim(row.FileName3) != "")
+                        value += '<a href="/Announcement/Open?FileName=' + $.trim(row.FileName3) + '&Announcement_NO=' + $.trim(row.Announcement_NO) + '">' + $.trim(row.FileName3) + '</a>';
+                    $('#divfile').html(value);
+
+                    $('#myModal').modal('show');
+                };
+            },
+            columns: [
+                { field: 'Announcement_NO', title: '公告編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CREATE_DATE', title: '時間', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Announcement_Subject', title: '主旨', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'AnnounceObject', title: '公告對象', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        var value = '<ul class="actions"><li><a class="btn btn-light" >編輯</a></li></ul>'
+
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { startDate: startDate, endDate: endDate },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function clicktoAdd() {
+        IsAddNew = true;
+        $('#announcementTitle').html('新增公告')
+        FileName1 = '';
+        FileName2 = '';
+        FileName3 = '';
+        $('#txtSubject').val('')
+        $('#txtContent').val('')
+        $('#divfile').html('');
+        $('#fileUpload1').val('')
+        $('#fileUpload2').val('')
+        $('#fileUpload3').val('')
+        $('#sele_EmailTo').val("0")
+        $('#fileUploadName1').html('選擇檔案上傳')
+        $('#fileUploadName2').html('選擇檔案上傳')
+        $('#fileUploadName3').html('選擇檔案上傳')
+        $('#myModal').modal('show');
+    }
+
+    //發送email
+    function SendEmail() {
+        if ($('#txtSubject').val() == '' || $('#txtContent').val() == '') {
+            //alert('主旨或公告內容未填寫')
+            sweetAlert("主旨或公告內容未填寫", "", "warning");
+            return;
+        }
+        $('#maindiv').jqLoading();
+        SaveAnnounce();
+        //$('#myModalForSendEmail').modal('show');
+    }
+    function SubmitForSend(data) {
+        var obj = {};
+        obj.Announcement_NO = data;
+        obj.Subject = $('#txtSubject').val();
+        obj.ReplyContent = $('#txtContent').val();
+        obj.EmailTo = $('#sele_EmailTo').val();
+        var options = {};
+        options.url = "/Announcement/SendAnnouncement";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //alert('發送成功!');
+                swal("發送成功!", "", "success")
+            } else {
+                //alert('發送失敗!');
+                sweetAlert("發送失敗!", "", "error");
+            }
+            //$('#myModalForSendEmail').modal('hide');
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('發送失敗!');
+            sweetAlert("發送失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    //公告送出
+    function Submit() {
+        if (IsAddNew == true) {
+            var obj = {};
+            obj.Subject = $('#txtSubject').val();
+            obj.ReplyContent = $('#txtContent').val();
+            obj.EmailTo = $('#sele_EmailTo').val();
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.LoginACCOUNT = userAccount;
+            $('#maindiv').jqLoading();
+            var options = {};
+            options.url = "/Announcement/AddNewAnnouncement";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data != "0") {
+                    if ($.trim(FileName1) != "")
+                        fileupload('fileUpload1', data)
+                    if ($.trim(FileName2) != "")
+                        fileupload('fileUpload2', data)
+                    if ($.trim(FileName3) != "")
+                        fileupload('fileUpload3', data)
+                    clicktoSearch()
+                    //alert('新增成功!');
+                    swal("新增成功!", "", "success")
+                    $('#myModal').modal('hide');
+                } else {
+                    clicktoSearch()
+                    //alert('新增失敗!');
+                    sweetAlert("新增失敗!", "", "error");
+                }
+                $('#maindiv').jqLoading("destroy");
+            };
+            options.error = function () {
+                clicktoSearch()
+                //alert('新增失敗!');
+                sweetAlert("新增失敗!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        } else {
+            var obj = {};
+            obj.Announcement_NO = Announcement_NO;
+            obj.Subject = $('#txtSubject').val();
+            obj.ReplyContent = $('#txtContent').val();
+            obj.EmailTo = $('#sele_EmailTo').val();
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.LoginACCOUNT = userAccount;
+            $('#maindiv').jqLoading();
+            var options = {};
+            options.url = "/Announcement/EditAnnouncement";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data != "0") {
+                    if ($.trim(FileName1) != "")
+                        fileupload('fileUpload1', data)
+                    if ($.trim(FileName2) != "")
+                        fileupload('fileUpload2', data)
+                    if ($.trim(FileName3) != "")
+                        fileupload('fileUpload3', data)
+                    clicktoSearch()
+                    //alert('修改成功!');
+                    swal("修改成功!", "", "success")
+                    $('#myModal').modal('hide');
+                } else {
+                    clicktoSearch()
+                    sweetAlert("修改失敗!", "", "error");
+                    //alert('修改失敗!');
+                }
+                $('#maindiv').jqLoading("destroy");
+            };
+            options.error = function () {
+                clicktoSearch()
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        }
+        
+    }
+
+    function SaveAnnounce() {
+        if (IsAddNew == true) {
+            var obj = {};
+            obj.Subject = $('#txtSubject').val();
+            obj.ReplyContent = $('#txtContent').val();
+            obj.EmailTo = $('#sele_EmailTo').val();
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.LoginACCOUNT = userAccount;            
+            var options = {};
+            options.url = "/Announcement/AddNewAnnouncement";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data != "0") {
+                    if ($.trim(FileName1) != "")
+                        fileupload('fileUpload1', data)
+                    if ($.trim(FileName2) != "")
+                        fileupload('fileUpload2', data)
+                    if ($.trim(FileName3) != "")
+                        fileupload('fileUpload3', data)
+                    SubmitForSend(data);
+                } else {
+                    //alert('系統發生錯誤!');
+                    sweetAlert("系統發生錯誤!", "", "error");
+                    $('#maindiv').jqLoading("destroy");
+                }
+            };
+            options.error = function () {
+                //alert('系統發生錯誤!');
+                sweetAlert("系統發生錯誤!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        } else {
+            var obj = {};
+            obj.Announcement_NO = Announcement_NO;
+            obj.Subject = $('#txtSubject').val();
+            obj.ReplyContent = $('#txtContent').val();
+            obj.EmailTo = $('#sele_EmailTo').val();
+            obj.FileName1 = FileName1;
+            obj.FileName2 = FileName2;
+            obj.FileName3 = FileName3;
+            obj.LoginACCOUNT = userAccount;
+            $('#maindiv').jqLoading();
+            var options = {};
+            options.url = "/Announcement/EditAnnouncement";
+            options.type = "POST";
+            options.data = JSON.stringify(obj);
+            options.contentType = "application/json";
+            options.dataType = "html";
+            options.success = function (data) {
+                if (data != "0") {
+                    if ($.trim(FileName1) != "")
+                        fileupload('fileUpload1', data)
+                    if ($.trim(FileName2) != "")
+                        fileupload('fileUpload2', data)
+                    if ($.trim(FileName3) != "")
+                        fileupload('fileUpload3', data)
+                    SubmitForSend(data);
+                } else {
+                    sweetAlert("系統發生錯誤!", "", "error");
+                    //alert('系統發生錯誤!');
+                    $('#maindiv').jqLoading("destroy");
+                }
+            };
+            options.error = function () {
+                //alert('系統發生錯誤!');
+                sweetAlert("系統發生錯誤!", "", "error");
+                $('#maindiv').jqLoading("destroy");
+            };
+            $.ajax(options);
+        }
+
+    }
+
+    //## 按下上傳按鈕觸發
+    $('#fileUpload1').on('change', function (e) {
+        chkfile('fileUpload1','fileUploadName1')
+    });
+    $('#fileUpload2').on('change', function (e) {
+        chkfile('fileUpload2','fileUploadName2')
+    });
+    $('#fileUpload3').on('change', function (e) {
+        chkfile('fileUpload3','fileUploadName3')
+    });
+    function chkfile(s,f) {
+
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Announcement/chkFile",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            if (s == "fileUpload1")
+                                FileName1 = data.filename
+                            if (s == "fileUpload2")
+                                FileName2 = data.filename
+                            if (s == "fileUpload3")
+                                FileName3 = data.filename
+                        } else {
+                            $('#' + s).val('')
+                            $('#' + f).html('選擇檔案上傳')
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        $('#' + s).val('')
+                        $('#' + f).html('選擇檔案上傳')
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    }
+
+    function fileupload(s, announsID) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Announcement/UploadFile?ID=" + announsID,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳檔案" + f + "發生錯誤", "", "error");
+                    });
+            }
+        }
+    }
+</script>

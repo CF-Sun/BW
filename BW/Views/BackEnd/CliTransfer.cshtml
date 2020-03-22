@@ -1,0 +1,316 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶</li>
+        <li class="breadcrumb-item">查詢功能</li>
+        <li class="breadcrumb-item active">
+            <a href="#">變更所屬顧問</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">變更所屬顧問</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCli_NO" class="col-md-3 col-form-label">客戶編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCli_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Name" class="col-md-3 col-form-label">客戶姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCli_Name">
+                            </div>
+                        </div>
+                        <ul class="actions">
+                            <li><input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢"></li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    <section id="form">
+        <div id="divTransferRecord" style="display:none">
+            <h3>異動紀錄</h3>
+            <div class="overflow">
+                <table class="table table-bordered table-hover" id="theTableTransferRecord"></table>
+            </div>
+        </div>
+    </section>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        變更所屬顧問
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txt_Parent" class="col-2 col-form-label">顧問</label>
+                            <div class="col-6">
+                                <input type="text" id="txt_Parent" name="txt_Parent" required
+                                       data-error="請填寫顧問編號" onblur="getConName()">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                            <label class="col-4 col-form-label" id="lblConName"></label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" class="btn btn-sm btn-primary" id="btnSubmit" onclick="SubmitEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+
+    var Cli_ID = "";
+    var Con_ID = "";
+    //查詢
+    function clicktoSearch() {
+        $('#maindiv').jqLoading();
+        loadData();
+        loadTransferRecord();
+        $('#divTransferRecord').show();
+        $('#maindiv').jqLoading("destroy");
+    }
+    function loadData() {
+        var apiURL = "/CliInfo/GetCliInfo/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                if (field == "edit") {
+                    Cli_ID = $.trim(row.Cli_ID)
+                    Con_ID = $.trim(row.Con_ID)
+                    $('#txt_Parent').val($.trim(row.Con_ID))
+                    $('#lblConName').html($.trim(row.ConChiName))
+                    //getPartent(row.Con_ID)
+                    $('#myModal').modal('show');
+                }
+            },
+            columns: [
+                { field: 'Cli_ID', title: '編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'EngNAME', title: '英文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Con_ID', title: '所屬顧問', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConChiName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+                        value = '<ul class="actions"><li><a class="btn btn-light" >修改所屬顧問</a></li></ul>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { CliID: $('#txtCli_NO').val(), CliName: $('#txtCli_Name').val() },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function loadTransferRecord() {
+        var apiURL = "/TransferRecord/GetTransferRecord/";
+        $("#theTableTransferRecord").bootstrapTable('destroy');
+        $("#theTableTransferRecord").bootstrapTable({
+            columns: [
+                { field: 'ConIDOrCliID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName1', title: '中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'OriginParentConID', title: '原所屬顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName2', title: '原所屬顧問中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'NewParentConID', title: '新所屬顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ChiName3', title: '新所屬顧問中文名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CREATE_DATE', title: '異動時間', align: 'center', halign: 'center', visible: true, sortable: true }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ID: $('#txtCli_NO').val(), Name: $('#txtCli_Name').val(), Type: '2' },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    //function getPartent(Con_ID) {
+    //    var obj =
+    //    {
+    //        ConID: $.trim(Con_ID)
+    //    }
+    //    $.getJSON("/CliInfo/GetParentCon", obj).done(function (data) {
+    //        $("#sele_Parent").empty();
+    //        $("#sele_Parent").append($("<option>").val(0).text('請選擇'))
+
+    //        $.each(data, function (i, item) { $("#sele_Parent").append($("<option>").val($.trim(item.Con_ID)).text($.trim(item.Name) + '(' + $.trim(item.Con_ID) + ')')) });
+    //        $("#sele_Parent").val($.trim(Con_ID));
+    //    })
+    //}
+    //更新所屬顧問
+    function SubmitEdit() {
+        
+        if ($("#txt_Parent").val() == '') {
+            //alert('請輸入正確顧問編號')
+            sweetAlert("請輸入正確顧問編號!", "", "warning");
+            return;
+        }
+            
+        var obj =
+        {
+            ConID: $.trim($('#txt_Parent').val()),
+            OriConID: $.trim(Con_ID)
+        }
+        $.getJSON("/ConInfo/GetParentCon", obj).done(function (data) {
+            if (data.length > 0) {
+                $('#lblConName').html($.trim(data[0].Name));
+                submit();
+            }
+            else {
+                $('#lblConName').html('無此顧問');
+            }
+        })
+        
+    }
+    function submit() {
+        var obj = {};
+        obj.Cli_ID = Cli_ID;
+        obj.Con_ID = $("#txt_Parent").val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/CliInfo/ChangeParentCon";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData();
+                loadTransferRecord();
+                //alert('修改成功!');
+                swal("修改成功!", "", "success")
+                $('#myModal').modal('hide');
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //取得顧問名
+    function getConName() {
+        $('#lblConName').html('');
+        if ($.trim($('#txt_Parent').val()) == "")
+            return;
+        var obj =
+        {
+            ConID: $.trim($('#txt_Parent').val()),
+            OriConID: $.trim(Con_ID)
+        }
+        $.getJSON("/ConInfo/GetParentCon", obj).done(function (data) {
+            if (data.length > 0)
+                $('#lblConName').html($.trim(data[0].Name));
+            else
+                $('#lblConName').html('無此顧問');
+        })
+        return;
+    }
+</script>

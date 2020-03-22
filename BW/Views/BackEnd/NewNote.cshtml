@@ -1,0 +1,520 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">照會</li>
+        <li class="breadcrumb-item active">
+            <a href="#">新進照會</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">新進照會</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog m">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        照會內容
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div>
+                            <div id="divfile"></div>
+                        </div>
+
+                        <hr>
+                        <h6>回覆內容</h6>
+                        <div class="form-group au-form">
+                            <textarea rows="6" placeholder="回覆內容" id="txtReply" name="reply" required
+                                      data-error="請填寫回覆內容"></textarea>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="fileUpload1" class="col-3 col-form-label">檔案1</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload1">
+                                        <label class="custom-file-label" for="fileUpload1" id="fileUploadName1">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="fileUpload2" class="col-3 col-form-label">檔案2</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload2">
+                                        <label class="custom-file-label" for="fileUpload2" id="fileUploadName2">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="fileUpload3" class="col-3 col-form-label">檔案3</label>
+                            <div class="col-9">
+                                <div class="file-wrapper">
+                                    <div class="custom-file">
+                                        <input type="file" name="upload" class="custom-file-input" id="fileUpload3">
+                                        <label class="custom-file-label" for="fileUpload3" id="fileUploadName3">選擇檔案上傳</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSendMail" class="btn btn-sm btn-primary" onclick="SendEmail()" value="發送Email">
+                    <input type="button" id="btnUploadFile" class="btn btn-sm btn-primary" onclick="Submit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    @*<div id="maindiv">
+            <div>
+                <h2>新進照會</h2>
+            </div>
+            <div class="table-responsive table-result">
+                <table id="theTable" class="table table-bordered" data-editable="true"></table>
+            </div>
+            <div id="myModal" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog" style="width:50%">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div>
+                                <div id="divfile"></div>
+                            </div>
+                            <br /><br /><br /><br />
+                            <div>
+                                <hr />
+                                <h3 class="modal-title">回覆內容</h3>
+                                <textarea id="txtReply" rows="6" class="form-control"></textarea>
+                                <input id="fileUpload1" type="file" />
+                                <input id="fileUpload2" type="file" />
+                                <input id="fileUpload3" type="file" />
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" id="btnUploadFile" onclick="Submit()">確認</button>
+                            <button type="button" class="btn btn-primary" onclick="SendEmail()">發送Email</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_19 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        //設定bootstrapTable起始的高度
+        //$('#theTable').bootstrapTable({ height: $(window).height() - 120 });
+        //當表格內容的高度小於外面容器的高度，容器的高度設定為內容的高度，相反時容器設定為視窗的高度-160
+        if ($(".fixed-table-body table").height() < $(".fixed-table-container").height()) {
+            $(".fixed-table-container").css({ "padding-bottom": "0px", height: $(".fixed-table-body table").height() + 20 });
+            // 是當內容少時，使用搜索功能高度保持不變
+            $('#theTable').bootstrapTable('resetView', { height: "auto" });
+        } else {
+            //$(".fixed-table-container").css({ height: $(window).height() - 160 });
+            $(".fixed-table-container").css({ height: 600 });
+        }
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    var Note_NO;
+    var Note_Seq = 0;;
+    var FileName1 = "";
+    var FileName2 = "";
+    var FileName3 = "";
+    function loadData() {
+        var apiURL = "/NoteRecord/GetNoteRecord/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                //按鈕控制
+                if (field == "view") {
+                    Note_NO = $.trim(row.Note_NO)
+
+                    GetNoteRecordDetail(Note_NO);
+                    ////組檔案下載btn
+                    //var value = "";
+                    //if (row.Note_FileName1 != null || $.trim(row.Note_FileName1) != "")
+                    //    value += '<a href="/NoteRecord/Open?FileName=' + $.trim(row.Note_FileName1) + '&Note_ID=' + $.trim(row.ID) + '">' + $.trim(row.Note_FileName1) + '</a></br>';
+                    //if (row.Note_FileName2 != null || $.trim(row.Note_FileName2) != "")
+                    //    value += '<a href="/NoteRecord/Open?FileName=' + $.trim(row.Note_FileName2) + '&Note_ID=' + $.trim(row.ID) + '">' + $.trim(row.Note_FileName2) + '</a></br>';
+                    //if (row.Note_FileName3 != null || $.trim(row.Note_FileName3) != "")
+                    //    value += '<a href="/NoteRecord/Open?FileName=' + $.trim(row.Note_FileName3) + '&Note_ID=' + $.trim(row.ID) + '">' + $.trim(row.Note_FileName3) + '</a>';
+                    //$('#divfile').html(value);
+                    $('#fileUpload1').val('');
+                    $('#fileUpload2').val('');
+                    $('#fileUpload3').val('');
+                    $('#fileUploadName1').html('選擇檔案上傳')
+                    $('#fileUploadName2').html('選擇檔案上傳')
+                    $('#fileUploadName3').html('選擇檔案上傳')
+                    $('#myModal').modal('show');
+                };
+            },
+            columns: [
+                { field: 'Note_NO', title: '照會編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Source_Role',
+                    title: '照會來源',
+                    halign: 'center',
+                    formatter: function (value, row, index) {
+                        var value = "";
+
+                        switch (row.Source_Role) {
+                            case '0':
+                                value = "客戶";
+                                break;
+                            case '1':
+                                value = "顧問";
+                                break;
+                        }
+                        return value
+                    },
+                    align: 'center',
+                    visible: true, sortable: true
+                },
+                { field: 'Source_ID', title: '顧問/客戶編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Name', title: '姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'Note_Subject', title: '主旨', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'CREATE_DATE', title: '新增日期', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'view',
+                    title: '照會內容',
+                    formatter: function (value, row, index) {
+                        //var value = '<button type = "button"  class="btn btn-default btnDelay">檢視內容</button >';
+                        var value = '<ul class="actions"><li><a class="btn btn-light" >檢視內容並回覆</a></li></ul>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            //classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            //showColumns: true,
+            //showToggle: true,
+            //showPaginationSwitch: true,
+            //showRefresh: true,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+
+        });
+    }
+    function GetNoteRecordDetail(Note_NO) {
+        Note_Seq = 0;
+        var obj =
+        {
+            Note_NO: $.trim(Note_NO)
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/NoteRecord/GetNoteRecordDetail", obj).done(function (data) {
+            var htmlString = "<table width='100%'>";
+            for (var i = 0; i < data.length; i++) {
+                if (data[i].IsAdminReply == "True") {
+                    htmlString += '<tr><td width="50%"></td><td width="50%"><div><h4 class="modal-title">回覆內容</h4>'
+                } else if (data[i].IsAdminReply == "False") {
+                    htmlString += '<tr><td width="50%"><div><h4 class="modal-title">內容</h4>'
+                } else {
+                    continue;
+                }
+                htmlString += '<label class="control-label">日期時間:' + data[i].CREATE_DATE + '</label></br>'
+                htmlString += '<textarea readonly>' + data[i].Note_Content + '</textarea>'
+                if (data[i].Note_FileName1 != null && $.trim(data[i].Note_FileName1) != "")
+                    htmlString += '<a style="color:cornflowerblue" href="/NoteRecord/Open?FileName=' + $.trim(data[i].Note_FileName1) + '&Note_NO=' + $.trim(data[i].Note_NO) + '&SeqNo=' + $.trim(data[i].SeqNo) + '">' + $.trim(data[i].Note_FileName1) + '</a></br>';
+                if (data[i].Note_FileName2 != null && $.trim(data[i].Note_FileName2) != "")
+                    htmlString += '<a style="color:cornflowerblue" href="/NoteRecord/Open?FileName=' + $.trim(data[i].Note_FileName2) + '&Note_NO=' + $.trim(data[i].Note_NO) + '&SeqNo=' + $.trim(data[i].SeqNo) + '">' + $.trim(data[i].Note_FileName2) + '</a></br>';
+                if (data[i].Note_FileName3 != null && $.trim(data[i].Note_FileName3) != "")
+                    htmlString += '<a style="color:cornflowerblue" href="/NoteRecord/Open?FileName=' + $.trim(data[i].Note_FileName3) + '&Note_NO=' + $.trim(data[i].Note_NO) + '&SeqNo=' + $.trim(data[i].SeqNo) + '">' + $.trim(data[i].Note_FileName3) + '</a></br>';
+
+                if (data[i].IsAdminReply == "True") {
+                    htmlString += '</br></br></div></td></tr>'
+                } else if (data[i].IsAdminReply == "False") {
+                    htmlString += '</br></br></div></td><td width="50%"></td></tr>'
+                }
+                Note_Seq = data[i].SeqNo;
+            }
+            htmlString += '</table>'
+
+            Note_Seq = eval(Note_Seq) + 1;
+            FileName1 = '';
+            FileName2 = '';
+            FileName3 = '';
+            $('#txtReply').val('');
+            $('#fileUpload1').val('');
+            $('#fileUpload2').val('');
+            $('#fileUpload3').val('');
+            $('#fileUploadName1').html('選擇檔案上傳')
+            $('#fileUploadName2').html('選擇檔案上傳')
+            $('#fileUploadName3').html('選擇檔案上傳')
+            $('#divfile').html(htmlString);
+
+            $('#maindiv').jqLoading("destroy");
+        })
+    }
+    function Submit() {
+        var obj = {};
+        obj.Note_NO = Note_NO
+        obj.ReplyContent = $('#txtReply').val();
+        obj.FileName1 = FileName1;
+        obj.FileName2 = FileName2;
+        obj.FileName3 = FileName3;
+        obj.newNote_Seq = Note_Seq;
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/NoteRecord/SaveNoteReply";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                GetNoteRecordDetail(Note_NO);//更新照會
+                //alert('內容儲存成功!');
+                swal("內容儲存成功!", "", "success")
+            } else {
+                loadData()
+                GetNoteRecordDetail(Note_NO);//更新照會
+                //alert('內容儲存失敗!');
+                sweetAlert("內容儲存失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            loadData()
+            GetNoteRecordDetail(Note_NO);//更新照會
+            //alert('內容儲存失敗!');
+            sweetAlert("內容儲存失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    //## 按下上傳按鈕觸發
+    $('#fileUpload1').on('change', function (e) {
+        var files = e.target.files;
+        //var myID = 3; //uncomment this to make sure the ajax URL works
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/NoteRecord/UploadFile?Note_NO=" + Note_NO + "&Note_Seq=" + Note_Seq,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            FileName1 = data.filename
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    });
+    $('#fileUpload2').on('change', function (e) {
+        var files = e.target.files;
+        //var myID = 3; //uncomment this to make sure the ajax URL works
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/NoteRecord/UploadFile?Note_NO=" + Note_NO + "&Note_Seq=" + Note_Seq,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            FileName2 = data.filename
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    });
+    $('#fileUpload3').on('change', function (e) {
+        var files = e.target.files;
+        //var myID = 3; //uncomment this to make sure the ajax URL works
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/NoteRecord/UploadFile?Note_NO=" + Note_NO + "&Note_Seq=" + Note_Seq,
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            FileName3 = data.filename
+                            //alert(data.result)
+                            swal("上傳成功!", "", "success")
+                        } else {
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    });
+
+    function SendEmail() {
+        var obj = {};
+        obj.Note_NO = Note_NO
+        obj.ReplyContent = $('#txtReply').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/NoteRecord/SendNoteReply";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (JSON.parse(data).result) {
+                loadData();
+            }
+            //alert(JSON.parse(data).message);
+            swal(JSON.parse(data).message)
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('發送失敗!');
+            sweetAlert("發送失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+</script>

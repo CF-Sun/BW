@@ -1,0 +1,66 @@
+﻿@{
+    Layout = "~/Views/Shared/BWLayout.cshtml";
+}
+<div id="maindiv">
+    <div id="div" class="col-lg-12">
+        <div>
+            <h2>匯出PDF</h2>
+        </div>
+        <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問編號：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_NO">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label">顧問姓名：</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="txtCon_Name">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row" style="margin-top:20px;">
+                    <div class="col-lg-6">
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                <div class="col-sm-offset-1 col-sm-10">
+                                    <div class="form-check-inline" id="funButton">
+                                        <button type="button" class="btn btn-success" onclick="document.getElementById('buttonConvertUrl').click()">匯出</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display:none">
+                    <form action="/Export/AgreeMent2PDF" method="post" target="HideProgressBar();">
+                        <input type="hidden" id="ReportMasterID" name="ReportMasterID" />
+                        <input type="hidden" id="Report_Con_ID" name="Report_Con_ID" />
+                        <input type="hidden" id="ReportType" name="ReportType" value="Individual" />
+                        <input type="submit" name="buttonConvertUrl" id="buttonConvertUrl" value="Convert URL to PDF">
+                    </form>
+                    <iframe id="myIframe" name="myIframe"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function clicktoSearch() {
+        $.getJSON("/Export/AgreeMent2PDF").done(function (data) {
+        })
+    }
+</script>

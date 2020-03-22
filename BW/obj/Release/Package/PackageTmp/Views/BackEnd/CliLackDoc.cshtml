@@ -1,0 +1,168 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">客戶</li>
+        <li class="breadcrumb-item active">
+            <a href="#">缺件一覽表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">缺件一覽表</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+</div>
+@*<div id="maindiv">
+    <div>
+        <h2>缺件一覽表</h2>
+    </div>
+    <table id="theTable" class="table table-bordered" data-editable="true"></table>
+</div>*@
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_7 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/LackDoc/GetCliLackDoc/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                Cli_ID = $.trim(row.Cli_ID)
+            },
+            columns: [
+                {
+                    field: 'Cli_ID',
+                    title: '客戶編號',
+                    formatter: function (value, row, index) {
+                        //var value = '<button type = "button" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')"  class="btn btn-default btnDelay">' + $.trim(row.Cli_ID) + '</button >';
+                        var value = '<ul class="actions"><li><a class="btn btn-light" onclick="redir(\'' + $.trim(row.Cli_ID) + '\')" >' + $.trim(row.Cli_ID) + '</a></li></ul>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CliName', title: '客戶名', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'items',
+                    title: '缺件項目',
+                    formatter: function (value, row, index) {
+                        value = "";
+                        if ($.trim(row.Cli_Role) == "Individual") {
+                            if (row.Isfile1 != "True")
+                                value += "護照正面,"
+                            if (row.Isfile2 != "True")
+                                value += "護照反面,"
+                            if (row.Isfile3 != "True")
+                                value += "護照公證副本,"
+                            if (row.Isfile4 != "True")
+                                value += "三個月內居住證明,"
+                            if (row.Isfile5 != "True")
+                                value += "收息/出金銀行存簿,"
+                            if (row.Isfile6 != "True")
+                                value += "同意書,"
+                        } else if ($.trim(row.Cli_Role) == "Corporate") {
+                            if (row.Isfile1 != "True")
+                                value += "公司註冊證書or商業登記證的公證副本,"
+                            if (row.Isfile2 != "True")
+                                value += "所有董事的公證名單,"
+                            if (row.Isfile3 != "True")
+                                value += "股東登記冊公證副本,"
+                            if (row.Isfile4 != "True")
+                                value += "任何持有10％或以上權益或對公司資產擁有主要控制權的人,"
+                            if (row.Isfile5 != "True")
+                                value += "公司備忘錄和章程的公證副本 (如有),"
+                            if (row.Isfile6 != "True")
+                                value += "住址和永久住址的認證證明,"
+                            if (row.Isfile7 != "True")
+                                value += "持有照片和簽名,"
+                            if (row.Isfile8 != "True")
+                                value += "收息/出金銀行存簿,"
+                            if (row.Isfile9 != "True")
+                                value += "同意書,"
+                        }
+                        if (value.length > 0)
+                            return value.substr(0, value.length - 1)
+                        else
+                            return ''
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: 600,
+            search: true,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function redir(Cli_ID) {
+        sessionStorage["Cli_ID"] = Cli_ID;
+        window.location.href = "/BackEnd/CliInfo";
+    }
+</script>

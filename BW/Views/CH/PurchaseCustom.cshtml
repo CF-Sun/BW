@@ -1,0 +1,78 @@
+﻿@{
+    Layout = "~/Views/Shared/PurchaseLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">立即申購</li>
+        <li class="breadcrumb-item active">
+            <a href="/CH/PurchaseCustom">製作我的申購書</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set text-center">
+            <h4 class="title">申購應備文件</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="pur_text" class="" action="" method="POST" name="">
+                    @*<h4 class="mb-4">製作我的申購書</h4>*@
+                    <h6>個人戶</h6>
+                    <ul class="pl-4">
+                        <li>申購書正本</li>
+                        <li>身份證明文件(護照)公證副本</li>
+                        <li>地址證明正本 或 公證副本</li>
+                    </ul>
+                    <hr>
+                    <h6>法人戶</h6>
+                    <p>
+                        申購書正本
+                        <br>以下資料要提供「公證」的認證副本
+                        <br>
+                        <ul class="pl-4">
+                            <li>公司註冊證書，或商業登記證及（如適用）更改公司名稱的證明書</li>
+                            <li>所有董事名單</li>
+                            <li>股東登記冊，或由律師/會計師/公司秘書發出的函件確認主要實益擁有人（任何持有10％或以上權益或對公司資產擁有主要控制權的人）</li>
+                            <li>公司備忘錄和章程(如有)</li>
+                            <li>
+                                所有董事，股東(10％或以上) ，所有授權簽署人
+                                <br>
+                                <ul class="">
+                                    <li>住址和永久住址證明，例如最近3個月內公用事業賬單或銀行對賬單</li>
+                                    <li>持有照片和簽名，姓名，出生日期和國籍的護照或官方身份證明文件</li>
+                                </ul>
+                            </li>
+                            <li>
+                                完好存續證明certificate of good standing
+                                <br>
+                                <ul class="">
+                                    <li>董事會授權的投資決議以及授權給予投資指示的簽署文件</li>
+                                    <li>授權簽署者清單與簽名範本</li>
+                                    <li>來自政府機構能證明公司運作狀態的文件或近期被審查過的財務報表</li>
+                                    <li>
+                                        該投資項目是使用在公司自己的帳戶而非代表其他方和資金來源的證明書
+                                        <br>(申購表上的聲明或是一封簽署過的信件方可證明)
+                                    </li>
+                                    <li>能夠顯示該電匯是從申購書上的銀行帳戶所轉出的付款紀錄（例：電匯紀錄/SWIFT副本）</li>
+                                    <li>當該公司具有多層持有者結構時，請遵照持有鏈提供文件</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </p>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="redir()" value="製作我的申購書">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</div>
+<script>
+    function redir() {
+        window.location.href = "/CH/PurchasePDF";
+    }
+</script>

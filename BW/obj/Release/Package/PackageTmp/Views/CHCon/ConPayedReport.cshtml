@@ -1,0 +1,413 @@
+﻿@{
+    Layout = "~/Views/Shared/ConLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="#">佣金報表</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">佣金報表</h4>
+        </div>
+    </section>
+    <section id="form">
+        <div class="overflow">
+            <table class="table table-bordered table-hover" id="theTable"></table>
+        </div>
+    </section>
+    
+</div>
+<script>
+    //權限設定
+    var conRole = readCookie('conRole');
+    var conAccount = readCookie('conAccount');
+
+    $(document).ready(function () {
+        $('#maindiv').jqLoading();
+        loadData();
+        $('#maindiv').jqLoading("destroy");
+    });
+    function loadData() {
+        var apiURL = "/PayedRecord/GetReportDataById_Con/";
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            onClickRow: function (row, $data, field) {
+                ConID = $.trim(row.Report_Con_ID);
+                ReportID = $.trim(row.Report_ID);
+                if (field == "Report") {
+                    $('#maindiv').jqLoading();
+                    ReportSum(row.ID, row.Report_Con_ID);
+                    ExtensionReport(row.ID, row.Report_Con_ID);
+                    $('#myModalForReport').modal('show');
+                    $('#maindiv').jqLoading("destroy");
+                }
+            },
+            columns: [
+                {
+                    field: 'Report',
+                    title: '發佣報表',
+                    formatter: function (value, row, index) {
+                        var date = '';
+                        switch (row.Calculate_Quarterly) {
+                            case '1':
+                                date = row.Calculate_Year + '/04/15';
+                                break;
+                            case '2':
+                                date = row.Calculate_Year + '/07/15';
+                                break;
+                            case '3':
+                                date = row.Calculate_Year + '/10/15';
+                                break;
+                            case '4':
+                                date = eval(row.Calculate_Year) + 1 + '/01/15';
+                                break;
+                        }
+                        value = '<ul class="actions"><li><a class="btn btn-light" >' + date + '</a></li></ul>';
+                        //var value = '<button type = "button"  class="btn btn-default btnDelay">' + date + '</button >';
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Bonus',
+                    title: '本期發佣金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ConID: conAccount },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    function ReportSum(ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/GetReportSumById/";
+        $("#theTableforReportSum").bootstrapTable('destroy');
+        $("#theTableforReportSum").bootstrapTable({
+            columns: [
+                {
+                    field: 'Type1Bouns', title: '差階獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type2Bouns', title: '輔導獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type3Bouns', title: '體系獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                },
+                {
+                    field: 'Type4Bouns', title: '未撥獎金', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: false, sortable: true
+                },
+                {
+                    field: 'TotalBouns', title: '合計', formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    }, align: 'center', halign: 'center', visible: true, sortable: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { ID: ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: "auto",
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+                if (data[0].Con_ROLE == "SHA")
+                    $("#theTableforReportSum").bootstrapTable('showColumn', 'Type4Bouns');
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+
+    function ExtensionReport(ID, Report_Con_ID) {
+        $("#ReportMasterID").val($.trim(ID));
+        $("#Report_Con_ID").val($.trim(Report_Con_ID));
+
+        var obj =
+        {
+            ID: $.trim(ID),
+            Report_Con_ID: $.trim(Report_Con_ID)
+        }
+        $.getJSON("/PayedRecord/GetReportViewByID", obj).done(function (data) {
+            $("#divExtensionReport").html('');
+
+            var objstring1 = "";
+            var objstring2 = "";
+            var objstring3 = "";
+            $("#Month1").hide();
+            $("#Month2").hide();
+            $("#Month3").hide();
+
+            //動態產生報表table
+            $.each(data, function (i, item) {
+                switch (item.MonNo) {
+                    case '1':
+                        objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '2':
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                    case '3':
+                        objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
+                        break;
+                }
+            });
+            $("#divExtension1").html(objstring1);
+            $("#divExtension2").html(objstring2);
+            $("#divExtension3").html(objstring3);
+
+            if (objstring1 != "")
+                $("#Month1").show();
+            if (objstring2 != "")
+                $("#Month2").show();
+            if (objstring3 != "")
+                $("#Month3").show();
+
+            //依序抓取每個table的資料
+            $.each(data, function (i, item) {
+                TableReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+                TableDetailReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+            });
+        });
+    }
+
+    function TableReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/TableReportIndivi/";
+        $("#Table_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+            columns: [
+                { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ConName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Total_Amount',
+                    title: '存量金額',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Bonus',
+                    title: '獎金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: false,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: 100,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function TableDetailReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
+        var apiURL = "/PayedRecord/TableDetailReportIndivi/";
+        $("#TableDetail_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+            columns: [
+                {
+                    field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true,
+                    footerFormatter: function (value) {
+                        return '合計';
+                    }
+                },
+                { field: 'CliName', title: '客戶姓名', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Deposit_Amount',
+                    title: '入金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Withdrawal_Amount',
+                    title: '出金',
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'Total_Amount',
+                    title: '金額',
+                    formatter: function (value, row, index) {
+                        if (row.Bonus_Type == '1' || row.Bonus_Type == '2' || row.Bonus_Type == '3')
+                            return toThousands(eval(value).toFixed(2));
+                        else
+                            return 0
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                { field: 'CODE_DESC', title: '佣金項目', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'BonusType_Rate', title: '比率', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'DepositType_Rate', title: '案別比率', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'Bonus', title: '獎金', align: 'center', halign: 'center', visible: true, sortable: true,
+                    formatter: function (value, row, index) {
+                        return toThousands(eval(value).toFixed(2));
+                    },
+                    footerFormatter: function (value) {
+
+                        var count = 0;
+                        for (var i in value) {
+                            count += eval(value[i].Bonus);
+                        }
+                        return toThousands(eval(count).toFixed(2));
+                    }
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            url: apiURL,
+            method: "Get",
+            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            //toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: false,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            height: "auto",
+            showFooter: true,
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+</script>

@@ -1,0 +1,231 @@
+﻿@{
+    Layout = "~/Views/Shared/BackEndLayout.cshtml";
+}
+<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">顧問</li>
+        <li class="breadcrumb-item active">
+            <a href="#">組織樹</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set">
+            <h4 class="title">組織樹</h4>
+            <div class="row">
+                <div class="col-lg-6 col-md-8">
+                    <form id="" class="search_form">
+                        <div class="form-group au-form row">
+                            <label for="txtCli_NO" class="col-md-3 col-form-label">顧問編號</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_NO">
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtCli_Name" class="col-md-3 col-form-label">顧問姓名</label>
+                            <div class="col-md-9">
+                                <input type="text" class="" id="txtCon_Name">
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="form">
+        <div id="divTree" style="display:none">
+            <select style="padding: 10px;width: 100px;z-index:2;" id="selectTemplate">
+                <option>luba</option>
+                <option>olivia</option>
+                <option>derek</option>
+                <option>diva</option>
+                <option>mila</option>
+                <option>polina</option>
+                <option>mery</option>
+                <option>rony</option>
+                <option>belinda</option>
+                <option>ula</option>
+                <option>ana</option>
+                <option>isla</option>
+            </select>
+            <div id="tree"></div>
+        </div>
+    </section>
+
+</div>
+@*<div id="maindiv" class="col-lg-12">
+    <div>
+        <h2>組織樹</h2>
+    </div>
+    <div class="panel panel-default" id="simpleSearch" style="padding:10px;">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">顧問編號：</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="txtCon_NO">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">顧問姓名：</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="txtCon_Name">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top:20px;">
+                <div class="col-lg-6">
+                    <div class="form-horizontal">
+                        <div class="form-group">
+                            <div class="col-sm-offset-1 col-sm-10">
+                                <div class="form-check-inline" id="funButton">
+                                    <button type="button" class="btn btn-success" onclick="clicktoSearch()">查詢</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divTree" style="display:none">
+        <select style="color: #7a7a7a;font-size: 14px;padding: 10px;background-color: #F57C00;color: #ffffff;width: 100px;z-index:2;" id="selectTemplate">
+            <option>luba</option>
+            <option>olivia</option>
+            <option>derek</option>
+            <option>diva</option>
+            <option>mila</option>
+            <option>polina</option>
+            <option>mery</option>
+            <option>rony</option>
+            <option>belinda</option>
+            <option>ula</option>
+            <option>ana</option>
+            <option>isla</option>
+        </select>
+        <div id="tree"></div>
+    </div>
+</div>*@
+
+
+
+<script>
+    //權限設定
+    var userRole = readCookie('userRole');
+    var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_18 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
+
+
+    function clicktoSearch() {
+        var obj =
+        {
+            ConID: $('#txtCon_NO').val(),
+            ConName: $('#txtCon_Name').val()
+        }
+        $('#maindiv').jqLoading();
+        $.getJSON("/ConInfo/GetConOrgTree", obj).done(function (data) {
+            if (data.length == 0) {
+                //alert('查無資料')
+                sweetAlert("查無資料!", "", "warning");
+                $('#maindiv').jqLoading("destroy");
+                return;
+            }
+            $('#divTree').show();
+
+            var nodes = new Array();
+            for (var i = 0; i < data.length; i++) {
+
+                //表示公司
+                if ($.trim(data[i].Parent_Con_ID) == '000')
+                    nodes.push({ id: '000', NAME: '公司' });
+
+                //if (i > 0 || $.trim(data[i].Parent_Con_ID) == '000') {
+                //    var arr = new Array();
+                //    arr.push($.trim(data[i].Parent_Con_ID), $.trim(data[i].Con_ID));
+                //    fromTo.push(arr);
+                //}
+                //nodes.push({ id: $.trim(data[i].Con_ID), title: $.trim(data[i].Con_ID), name: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
+                console.log(data[i].Con_ID + '/' + data[i].Parent_Con_ID)
+                nodes.push({ id: $.trim(data[i].Con_ID), pid: $.trim(data[i].Parent_Con_ID), UID: $.trim(data[i].Con_ID), NAME: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
+            }
+
+            var chart = new OrgChart(document.getElementById("tree"), {
+                template: "polina",
+                layout: OrgChart.mixed,
+                nodeBinding: {
+                    field_0: "NAME",
+                    field_1: "UID",
+                },
+                nodes: nodes
+            });
+            document.getElementById("selectTemplate").addEventListener("change", function () {
+                chart.config.template = this.value;
+                chart.draw();
+            });
+
+            //Highcharts.chart('container', {
+
+            //    chart: {
+            //        height: 600,
+            //        inverted: true
+            //    },
+            //    title: { text: '' },
+            //    exporting: { enabled: false },
+            //    credits: { enabled: false },
+            //    legend: { enabled: false },
+
+            //    series: [{
+            //        type: 'organization',
+            //        name: '',
+            //        keys: ['from', 'to'],
+            //        data: fromTo,
+            //        nodes: nodes,
+            //        colorByPoint: false,
+            //        color: '#007ad0',
+            //        dataLabels: {
+            //            color: 'white'
+            //        },
+            //        borderColor: 'white',
+            //        nodeWidth: 65
+            //    }],
+            //    tooltip: {
+            //        outside: true
+            //    }
+
+            //});
+            $('#maindiv').jqLoading("destroy");
+        })
+    }
+</script>

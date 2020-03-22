@@ -1,0 +1,45 @@
+﻿@*<script src="~/Content/js/jquery-3.2.1/jquery-3.2.1.min.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<table class="table table-bordered middle input-table m100 showth">
+    <tbody>
+        <tr>
+            <td>
+                <p>查詢語法</p>
+            </td>
+            <td>
+                <p>其他語法</p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <textarea id="queryscript" rows="10"></textarea>
+            </td>
+            <td>
+                <textarea id="sqlscript" rows="10"></textarea>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <button type="submit" onclick="query()">查詢</button>
+            </td>
+            <td>
+                <button type="submit" onclick="exceut()">執行</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div id="content"></div>
+<script>
+    function query() {
+        var sqlcmd = document.getElementById("queryscript").value
+        $.get('@Url.Action("sqlcommand", "DBSCRPIT")', { sqlcmd: sqlcmd }, function (data) {
+            $("#content").html(data);
+        });
+    }
+    function exceut() {
+        var sqlcmd = document.getElementById("sqlscript").value
+        $.get('@Url.Action("sqlexecute", "DBSCRPIT")', { sqlcmd: sqlcmd }, function (data) {
+            $("#content").html(data);
+        });
+    }
+</script>

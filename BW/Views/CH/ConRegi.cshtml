@@ -1,0 +1,785 @@
+﻿@{
+    Layout = "~/Views/Shared/Contact2Layout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item active">
+            <a href="#">顧問報聘</a>
+        </li>
+    </ul>
+    <section id="login">
+        <div class="title-set text-center">
+            <h4 class="title">顧問報聘</h4>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-8" id="divLogin">
+                <div class="context-bg">
+                    <form id="login-form" class="confirm" action="" method="POST" name="login-form">
+                        <div class="form-group au-form">
+                            <label for="txtUniNo" class="control-label">報聘單位代號</label>
+                            <input id="txtUniNo" type="text" name="txtUniNo" placeholder="*三個大寫英文單字" required />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="bd" class="col-form-label">報聘人手機號碼</label>
+                            <div class="row">
+                                <div class="col-3 select-wrapper">
+                                    <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                    <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" required>
+                                        <option value="0" disabled selected>請選擇</option>
+                                        <option value="TW">台灣</option>
+                                        <option value="CHN">中國</option>
+                                        <option value="HK">香港</option>
+                                        <option value="MO">澳門</option>
+                                        <option value="JP">日本</option>
+                                    </select>
+                                </div>
+                                <div class="col-4 underline">
+                                    <input type="text" id="txtPhone_site" name="txtPhone_site" readonly style="background-color:lightgray">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                                <div class="col-5">
+                                    <input type="text" id="txtPhone" name="txtPhone"
+                                           required data-error="請填寫手機號碼">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="txtConNo" class="control-label">推薦人顧問編號</label>
+                            <input id="txtConNo" type="text" name="txtConNo" placeholder="*顧問編號" />
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group au-form veri-code">
+                                    <input type="text" id="validate" placeholder="*驗證碼" required data-error="請填寫驗證碼" autocomplete="off">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="form-group au-form veri-code">
+                                    <img id="code" src="/Login/GetValidateCode/" />
+                                    <span class="iconify" data-icon="ion:refresh" data-inline="false"
+                                          title="更新驗證碼" onclick="refreshCodeImg();"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="w100" id="lab" style="display:none; color:red"></p>
+                        <ul class="act-btns">
+                            <li>
+                                <input type="button" class="btn btn-sm btn-primary w-100" value="確認送出"
+                                       onclick="LoginBtn_click()" />
+                            </li>
+                        </ul>
+                    </form>
+                    @*<form id="login-form" class="confirm" action="" method="POST" name="login-form">
+                        <div class="form-group au-form">
+                            <label for="txtUniNo" class="control-label">報聘單位代號</label>
+                            <input id="txtUniNo" type="text" name="txtUniNo" placeholder="三個大寫英文字" required data-error="請輸入報聘單位代號" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="account" class="control-label">報聘人手機號碼</label>
+                        </div>
+                        <div class="form-group au-form row">
+                            <div class="col-9 select-wrapper">
+                                <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                                <select name="sele_Census_Country" id="sele_Census_Country" class="br-cus" required>
+                                    <option value="0" disabled selected>請選擇</option>
+                                    <option value="TW">台灣</option>
+                                    <option value="CHN">中國</option>
+                                    <option value="HK">香港</option>
+                                    <option value="MO">澳門</option>
+                                    <option value="JP">日本</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <div class="col-4 underline">
+                                <input type="text" id="txtPhone_site" name="txtPhone_site" readonly>
+                            </div>
+                            <div class="col-5">
+                                <input type="text" id="txtPhone" name="txtPhone"
+                                       required data-error="請填寫手機號碼">
+                            </div>
+                        </div>
+                        <div class="form-group au-form">
+                            <label for="txtConNo" class="control-label">推薦人顧問編號</label>
+                            <input id="txtConNo" type="text" name="txtConNo" placeholder="顧問編號" required data-error="請輸入推薦人顧問編號" />
+                            <div class="help-block with-errors"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group au-form veri-code">
+                                    <input type="text" id="validate" placeholder="*驗證碼" required data-error="請填寫驗證碼" autocomplete="off">
+                                    <div class="help-block with-errors"></div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="form-group au-form veri-code">
+                                    <img id="code" src="/Login/GetValidateCode/" />
+                                    <span class="iconify" data-icon="ion:refresh" data-inline="false" tilte="更新驗證碼" onclick="refreshCodeImg();"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="w100" id="lab" style="display:none; color:red"></p>
+                        <ul class="act-btns">
+                            <li>
+                                <input type="button" class="btn btn-sm btn-primary w-100" value="確認送出"
+                                       onclick="LoginBtn_click()" />
+                            </li>
+                        </ul>
+                    </form>*@
+                </div>
+            </div>
+            <div class="col-lg-7 col-md-9" id="divConDetail" style="display:none">
+                <form id="" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtCon_ChiName_Last" class="col-3 col-form-label">中文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_ChiName_Last" name="txtCon_ChiName_Last" required
+                                   data-error="請填寫中文姓">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_ChiName_First" class="col-3 col-form-label">中文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_ChiName_First" name="txtCon_ChiName_First" required
+                                   data-error="請填寫中文名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_EngName_Last" class="col-3 col-form-label">英文姓</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_EngName_Last" name="txtCon_EngName_Last" required
+                                   data-error="請填寫英文姓">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_EngName_First" class="col-3 col-form-label">英文名</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_EngName_First" name="txtCon_EngName_First"
+                                   required data-error="請填寫英文名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Gender" class="col-3 col-form-label">性別</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Gender" id="sele_Gender" class="br-cus" required>
+                                <option value="0">請選擇</option>
+                                <option value="M">男</option>
+                                <option value="F">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_ID_Num" class="col-3 col-form-label">身份ID</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_ID_Num" name="txtCon_ID_Num" required
+                                   data-error="請填寫身份ID">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Passport" class="col-3 col-form-label">護照號碼</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_Passport" name="txtCon_Passport" required
+                                   data-error="請填寫護照號碼">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_BirthDay" class="col-3 col-form-label">出生日期</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_BirthDay" name="txtCon_BirthDay" required
+                                   data-error="請填寫出生日期">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="sele_Census_Country" class="col-3 col-form-label">地區</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Census_Country2" id="sele_Census_Country2" class="br-cus" disabled style="background-color:lightgray">
+                                <option value="0" disabled selected>請選擇</option>
+                                <option value="TW">台灣</option>
+                                <option value="CHN">中國</option>
+                                <option value="HK">香港</option>
+                                <option value="MO">澳門</option>
+                                <option value="JP">日本</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Phone_site" class="col-3 col-form-label">行動電話</label>
+                        <div class="col-4 underline">
+                            <input type="text" id="txtCon_Phone_site" name="txtCon_Phone_site" readonly style="background-color:lightgray">
+                        </div>
+                        <div class="col-5">
+                            <input type="text" id="txtCon_Phone" name="txtCon_Phone"
+                                   required data-error="請填寫行動電話" readonly style="background-color:lightgray">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Email" class="col-3 col-form-label">Email</label>
+                        <div class="col-9">
+                            <input type="email" id="txtCon_Email" name="txtCon_Email"
+                                   required data-error="請填寫Email">
+                        </div>
+                    </div>
+                    <hr>
+                    <h6>居住地址</h6>
+                    <div class="form-group au-form row">
+                        <label for="sele_Live_Country" class="col-3 col-form-label">地區</label>
+                        <div class="col-9 select-wrapper">
+                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+                            <select name="sele_Live_Country" id="sele_Live_Country" class="br-cus" required>
+                                <option value="0" selected disabled>請選擇居住國家</option>
+                                <option value="TW">台灣</option>
+                                <option value="CHN">中國</option>
+                                <option value="HK">香港</option>
+                                <option value="MO">澳門</option>
+                                <option value="JP">日本</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Live_Province" class="col-3 col-form-label">居住省份</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_Live_Province" name="txtCon_Live_Province" />
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Live_City" class="col-3 col-form-label">居住城市</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_Live_City" name="txtCon_Live_City" required
+                                   data-error="請填寫居住城市">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Live_Addr" class="col-3 col-form-label">居住地址</label>
+                        <div class="col-9">
+                            <textarea rows="6" id="txtCon_Live_Addr" name="txtCon_Live_Addr" required
+                                      data-error="請填寫居住地址"></textarea>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_Eng_Addr" class="col-3 col-form-label">英文居住地址</label>
+                        <div class="col-9">
+                            <textarea rows="6" id="txtCon_Eng_Addr" name="txtCon_Eng_Addr" required
+                                      data-error="請填寫英文居住地址"></textarea>
+                            <a href="https://www.post.gov.tw/post/internet/Postal/index.jsp?ID=207"
+                               class="hp-txt" target="_blank">地址翻譯連結</a>
+                            <div class="help-block with-errors mt-none"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtCon_PostalCode" class="col-3 col-form-label">郵政編號</label>
+                        <div class="col-9">
+                            <input type="text" id="txtCon_PostalCode" name="txtCon_PostalCode">
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label class="col-3 col-form-label"></label>
+                        <div class="col-9">
+                            <div class="overflow">
+                                <table class="table table-bordered table-hover" id="theTable"></table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="SubmitRegi()" value="提交">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+</div>
+
+<script>
+    Account = sessionStorage["LoginAccount"];
+    if (Account != 'ns1234') {
+        window.location.href = "/CH/ConLogin";
+    }
+
+    var inputfile = '';
+    var uploadName = '';
+    var FileName1 = "";
+    var FileName2 = "";
+    var FileName3 = "";
+    var FileName4 = "";
+
+    //刷新驗證碼
+    function refreshCodeImg() {
+        $("#code").attr("src", "/Login/GetValidateCode/" + "?t=" + new Date().getTime());//刷新驗證碼
+    }
+
+    $("#sele_Census_Country").change(function () {
+        var t = $("option:selected", this).val();
+        switch (t) {
+            case 'TW':
+                $("#txtPhone_site").val('886');
+                $("#txtCon_Phone_site").val('886');
+                $("#sele_Census_Country2").val('TW');
+                break;
+            case 'HK':
+                $("#txtPhone_site").val('852');
+                $("#txtCon_Phone_site").val('852');
+                $("#sele_Census_Country2").val('HK');
+                break;
+            case 'MO':
+                $("#txtPhone_site").val('853');
+                $("#txtCon_Phone_site").val('853');
+                $("#sele_Census_Country2").val('MO');
+                break;
+            case 'CHN':
+                $("#txtPhone_site").val('86');
+                $("#txtCon_Phone_site").val('86');
+                $("#sele_Census_Country2").val('CHN');
+                break;
+            case 'JP':
+                $("#txtPhone_site").val('81');
+                $("#txtCon_Phone_site").val('81');
+                $("#sele_Census_Country2").val('JP');
+                break;
+        }
+    });
+
+    //登入click
+    function LoginBtn_click() {
+        $("#lab").hide();
+        if (!CheckValue()) {
+            $("#lab").html('請填寫所有欄位');
+            $("#lab").show();
+            return;
+        } else {
+            chkCode();
+        }
+    }
+    //驗證是否輸入必要欄位
+    function CheckValue() {
+        if ($('#txtUniNo').val() == '' || $('#txtPhone_site').val() == '' || $('#txtPhone').val() == '' || $('#txtConNo').val() == '') {
+            return false;
+        }
+        return true;
+    }
+
+    //驗證碼
+    function chkCode() {
+        $('#maindiv').jqLoading();
+        $.ajax({
+            url: '/Login/chkConRegi',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                Code: $('#validate').val(),
+                UniNo: $('#txtUniNo').val(),
+                Phone_site: $('#txtPhone_site').val(),
+                Phone: $('#txtPhone').val(),
+                ConNo: $('#txtConNo').val()
+            },
+            cache: false,
+            error:function(jqXHR, textStatus, errorThrown) {
+                //alert('發生錯誤,請稍後重新登入')
+                sweetAlert("登入失敗!", "發生錯誤,請稍後重新登入", "warning");
+                window.location.href = "/CH/ConLogin";
+            },
+            success: function (result) {
+                if (!result) {
+                    $("#lab").html('驗證碼錯誤');
+                    $("#lab").show();
+                } else {
+                    if (result == "2") {
+                        $("#lab").html('無此單位代號');
+                        $("#lab").show();
+                    }else if (result == "3") {
+                        $("#lab").html('該報聘單位下已報聘該手機號碼');
+                        $("#lab").show();
+                    }else if (result == "4") {
+                        $("#lab").html('無此推薦人顧問編號');
+                        $("#lab").show();
+                    } else if (result == "5") {
+                        $("#txtCon_Phone").val($("#txtPhone").val());
+                        loadDetailData()
+                        $("#divLogin").hide();
+                        $("#divConDetail").show();
+                    }
+                }
+                refreshCodeImg();//刷新驗證碼
+                $('#maindiv').jqLoading("destroy");
+                return;
+            }
+        });
+    }
+
+    //基本資料-----------------
+    $('#txtCon_BirthDay').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    function loadDetailData() {
+        $("#theTable").bootstrapTable('destroy');
+        $("#theTable").bootstrapTable({
+            columns: [
+                { field: 'Name', title: '證件', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'IsHave',
+                    title: '缺件狀態',
+                    formatter: function (value, row, index) {
+                        if (value == "True")
+                            value = "V";
+                        else
+                            value = "X";
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                },
+                {
+                    field: 'edit',
+                    title: '動作',
+                    formatter: function (value, row, index) {
+
+                        var value = '<a class="btn btn-light" id="ulUpload_' + row.ID + '" onclick="upload(\'' + $.trim(row.ID) + '\')">上傳</a>'
+                        value += '<label class="col-form-label" id="lblUpload_' + row.ID + '" style="display:none">已上傳</label>'
+                        return value
+                    },
+                    halign: 'center',
+                    align: 'center',
+                    visible: true
+                }
+            ],
+            classes: 'table table-striped table-hover ',
+            //url: apiURL,
+            method: "Get",
+            //queryParams: { CliID: CliID, CliROLE: CliROLE },
+            data: getCredentialData(),
+            dataType: "json",
+            contentType: 'application/json,charset=utf-8',
+            toolbar: "#toolbar",
+            uniqueId: 'ID',
+            //sortName:'id',
+            //height: 520,
+            pagination: true,
+            ajaxOptions: "ajaxOptions",
+            inlineEditing: true,
+            virtualScroll: true,
+            height: "auto",
+            search: false,
+
+            clickToSelect: true,
+            singleSelect: true,
+            onPageChange: function (currentPage, pageSize) {
+                console.log("目前頁數:" + currentPage + ",一頁顯示:" + pageSize + "筆");
+            },
+            pageSize: 10,
+            pageList: [10, 20, 50, 100],
+            onLoadSuccess: function (data) {
+            },
+            onLoadError: function (res) {
+            },
+            formatRecordsPerPage: function (pageSize) {
+                //return '&nbsp;&nbsp;每頁顯示' + pageSize + '筆';
+            },
+            formatShowingRows: function (fromIndex, toIndex, totalSize) {
+                var currentPage = Math.ceil(fromIndex / this.pageSize);
+                var totalPageCount = Math.ceil(totalSize / this.pageSize);
+                //return '第' + currentPage + '頁&nbsp;&nbsp;共' + totalPageCount + '頁' + '總共' + totalSize + '筆資料';
+            }
+        });
+    }
+    function getCredentialData() {
+        var data = [];
+        data.push({ ID: '1', Name: '護照正面', IsHave: false });
+        data.push({ ID: '2', Name: '護照反面', IsHave: false });
+        data.push({ ID: '3', Name: '居住證明', IsHave: false });
+        data.push({ ID: '4', Name: '制度職級表', IsHave: false });
+        return data;
+    }
+
+    function upload(ID) {
+        $("#divFile1").hide();
+        $("#divFile2").hide();
+        $("#divFile3").hide();
+        $("#divFile4").hide(); 
+
+        inputfile = '';
+        uploadName = '';
+        $("#divFile" + ID).show();
+        $('#myModalForUpload').modal('show');
+    }
+    function chkfile(s, f) {
+        inputfile = s;
+        uploadName = f;
+    }
+
+    function SubmitUpload(s, f) {
+        if (s == '') {
+            //alert('請選擇上傳檔案')
+            sweetAlert("請選擇上傳檔案!", "", "warning");
+            return;
+        }
+        s = inputfile;
+        f = uploadName;
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                $('#maindiv').jqLoading();
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    url: "/Announcement/chkFile",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                        if (data.isUploaded) {
+                            if (s == "fileUpload1") {
+                                FileName1 = data.filename
+                                $('#ulUpload_1').hide();
+                                $('#lblUpload_1').show();
+                            }
+                            if (s == "fileUpload2") {
+                                FileName2 = data.filename
+                                $('#ulUpload_2').hide();
+                                $('#lblUpload_2').show();
+                            }
+                            if (s == "fileUpload3") {
+                                FileName3 = data.filename
+                                $('#ulUpload_3').hide();
+                                $('#lblUpload_3').show();
+                            }
+                            if (s == "fileUpload4") {
+                                FileName4 = data.filename
+                                $('#ulUpload_4').hide();
+                                $('#lblUpload_4').show();
+                            }
+                            $('#myModalForUpload').modal('hide');
+                        } else {
+                            $('#' + s).val('')
+                            $('#' + f).html('選擇檔案上傳')
+                            //alert(data.result)
+                            sweetAlert("上傳失敗!", data.result, "error");
+                        }
+                        $('#maindiv').jqLoading("destroy");
+                    })
+                    .fail(function () {
+                        $('#' + s).val('')
+                        $('#' + f).html('選擇檔案上傳')
+                        //alert("系統發生錯誤");
+                        sweetAlert("系統發生錯誤!", "", "error");
+                        $('#maindiv').jqLoading("destroy");
+                    });
+            }
+        }
+    }
+    //建檔
+    function SubmitRegi() {
+        if (!checkDetailValue())
+            return;
+        var obj = {};
+        obj.Con_ChiNAME_Last = $('#txtCon_ChiName_Last').val();
+        obj.Con_ChiNAME_First = $('#txtCon_ChiName_First').val();
+        obj.Con_EngNAME_Last = $('#txtCon_EngName_Last').val();
+        obj.Con_EngNAME_First = $('#txtCon_EngName_First').val();
+        obj.Con_Gender = $('#sele_Gender').val();
+        obj.Con_ID_Num = $('#txtCon_ID_Num').val();
+        obj.Con_Passport = $('#txtCon_Passport').val();
+        obj.Con_BirthDay = $('#txtCon_BirthDay').val();
+        obj.Con_Census_Country = $('#sele_Census_Country2').val();
+        obj.Con_Phone_site = $('#txtCon_Phone_site').val();
+        obj.Con_Phone = $('#txtCon_Phone').val();
+        obj.Con_Email = $('#txtCon_Email').val();
+        obj.Con_Live_Country = $('#sele_Live_Country').val();
+        obj.Con_Live_Province = $('#txtCon_Live_Province').val();
+        obj.Con_Live_City = $('#txtCon_Live_City').val();
+        obj.Con_Live_Address = $('#txtCon_Live_Addr').val();
+        obj.Con_Eng_Address = $('#txtCon_Eng_Addr').val();
+        obj.Con_PostalCode = $('#txtCon_PostalCode').val();
+        obj.FileName1 = FileName1;
+        obj.FileName2 = FileName2;
+        obj.FileName3 = FileName3;
+        obj.FileName4 = FileName4;
+        obj.UniNo = $('#txtUniNo').val();
+        obj.LoginACCOUNT = $('#txtConNo').val();
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/ConInfo/AddCon";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == "1") {
+                //alert('該手機號碼在此顧問下已重複報聘');
+                sweetAlert("該手機號碼在此顧問下已重複報聘!", "", "warning");
+            } else if (data == "2") {
+                //alert('有問題的身份ID');
+                sweetAlert("有問題的身份ID!", "", "warning");
+            } else if (data != "0") {
+                if ($.trim(FileName1) != "")
+                    fileuploadforAddNew('fileUpload1', data, 1)
+                if ($.trim(FileName2) != "")
+                    fileuploadforAddNew('fileUpload2', data, 2)
+                if ($.trim(FileName3) != "")
+                    fileuploadforAddNew('fileUpload3', data, 3)
+                if ($.trim(FileName4) != "")
+                    fileuploadforAddNew('fileUpload4', data, 4)
+
+                $('#myModalForLogout').modal('show');
+                StartThisSessionTimer();
+
+            } else {
+                //alert('建檔失敗!');
+                sweetAlert("建檔失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('建檔失敗!');
+            sweetAlert("建檔失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+
+    function fileuploadforAddNew(s, Con_ID, fileNo) {
+        var files = document.getElementById(s).files;
+        if (files.length > 0) {
+            if (window.FormData !== undefined) {
+                var data = new FormData();
+                for (var x = 0; x < files.length; x++) {
+                    data.append("UploadFile", files[x]);
+                }
+                //## 透過ajax方式Post 至Action
+                var ajaxRequest = $.ajax({
+                    type: "POST",
+                    //url: "/ConInfo/UploadNewFile?Con_ID=" + Con_ID + "&CredentialID=" + fileNo + "&LoginACCOUNT=" + conAccount,
+                    url: "/ConInfo/UploadFile?Con_ID=" + Con_ID + "&CredentialID=" + fileNo + "&OriFileName=&LoginACCOUNT=",
+                    contentType: false,         // 告诉jQuery不要去這置Content-Type
+                    processData: false,         // 告诉jQuery不要去處理發送的數據
+                    dataType: "json",
+                    data: data
+                })
+                    .done(function (data) {
+                    })
+                    .fail(function () {
+                        //alert("上傳檔案" + f + "發生錯誤");
+                        sweetAlert("上傳檔案" + f + "發生錯誤", "", "error");
+                    });
+            }
+        }
+    }
+    function checkDetailValue() {
+        if ($('#txtCon_ChiName_Last').val() == '') {
+            //alert('請輸入中文姓')
+            sweetAlert("請輸入中文姓!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_ChiName_First').val() == '') {
+            //alert('請輸入中文名')
+            sweetAlert("請輸入中文名!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_EngName_Last').val() == '') {
+            //alert('請輸入英文姓')
+            sweetAlert("請輸入英文姓!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_EngName_First').val() == '') {
+            //alert('請輸入英文名')
+            sweetAlert("請輸入英文名!", "", "warning");
+            return false;
+        }
+        if ($('#sele_Gender').val() == '0') {
+            //alert('請選擇性別')
+            sweetAlert("請選擇性別!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_ID_Num').val() == '') {
+            //alert('請輸入身份ID')
+            sweetAlert("請輸入身份ID!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_PassPort').val() == '') {
+            //alert('請輸入護照號')
+            sweetAlert("請輸入護照號!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_BirthDay').val() == '') {
+            //alert('請選擇出生日期')
+            sweetAlert("請選擇出生日期!", "", "warning");
+            return false;
+        }
+        if ($('#sele_Census_Country2').val() == '0') {
+            //alert('請選擇國籍')
+            sweetAlert("請選擇國籍!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_Phone').val() == '') {
+            //alert('請輸入行動電話')
+            sweetAlert("請輸入行動電話!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_Email').val() == '') {
+            //alert('請輸入Email')
+            sweetAlert("請輸入Email!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_Live_Addr').val() == '') {
+            //alert('請輸入居住地址')
+            sweetAlert("請輸入居住地址!", "", "warning");
+            return false;
+        }
+        if ($('#txtCon_Eng_Addr').val() == '') {
+            //alert('請輸入英文居住地址')
+            sweetAlert("請輸入英文居住地址!", "", "warning");
+            return false;
+        }
+        if ($.trim(FileName1) == "" || $.trim(FileName2) == "" || $.trim(FileName3) == "" || $.trim(FileName4) == "") {
+            //alert('尚有證件未上傳')
+            sweetAlert("尚有證件未上傳!", "", "warning");
+            return false;
+        }
+        return true;
+    }
+
+
+    var timeInSecondsAfterSessionOut = 20; // change this to change session time out (in seconds). 1200
+    var secondTick = 0;
+    function StartThisSessionTimer() {
+        secondTick++;
+        var timeLeft = ((timeInSecondsAfterSessionOut - secondTick) / 60).toFixed(0); // in minutes
+        timeLeft = timeInSecondsAfterSessionOut - secondTick;
+
+        if (secondTick > timeInSecondsAfterSessionOut) {
+            BackToIndex();
+        }
+        tick = setTimeout("StartThisSessionTimer()", 1000);
+    }
+    function BackToIndex() {
+        window.location.href = "/CH/Index";
+    }
+</script>

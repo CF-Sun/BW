@@ -1,0 +1,24 @@
+﻿@{
+    Layout = "~/Views/Shared/LoginLayout.cshtml";
+}
+<script>
+    var IsLogin = readCookie('IsLogin');
+
+    var url = unescape(window.location.href); //獲得URL
+    try {
+        var Account = url.split("?")[1].split('&')[0].split('=')[1];
+    } catch (e) { Account = undefined; }
+    try {
+        var Role = url.split("?")[1].split('&')[1].split('=')[1];
+    } catch (e) { Role = undefined; }
+
+    if (Account == null || Account == '' || Account == undefined || IsLogin != 1) {
+        delCookie("IsLogin");
+        window.location.href = "/CH/ConLogin";
+    }
+    else {
+        delCookie("IsLogin");
+        window.location.href = "/CHCon/ConVerifi?" + escape("Account=" + Account + "&Role=" + Role);
+    }
+
+</script>

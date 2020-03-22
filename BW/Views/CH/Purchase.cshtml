@@ -1,0 +1,271 @@
+﻿@{
+    Layout = "~/Views/Shared/PurchaseLayout.cshtml";
+}
+<div id="maindiv" class="container">
+    <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a href="/CH/index">首頁</a>
+        </li>
+        <li class="breadcrumb-item">立即申購</li>
+        <li class="breadcrumb-item active">
+            <a href="/CH/Purchase">我要申購</a>
+        </li>
+    </ul>
+    <section id="title">
+        <div class="title-set text-center">
+            <h4 class="title">我要申購</h4>
+            <p>有意投資客戶請填下表，告知預計投資金額及按別，基金將依照填表順序，依序通知客戶準備申購文件。</p>
+        </div>
+    </section>
+    <section id="form">
+        <div class="row justify-content-md-center">
+            <div class="col-lg-7 col-md-9">
+                <form id="purchase" class="confirm" action="" method="POST" name="">
+                    <div class="form-group au-form row">
+                        <label for="txtname" class="col-2 col-form-label">姓名</label>
+                        <div class="col-10">
+                            <input type="text" id="txtname" name="txtname" required
+                                   data-error="請填寫姓名">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtmobile" class="col-2 col-form-label">手機</label>
+                        <div class="col-10">
+                            <input type="text" id="txtmobile" name="txtmobile" required
+                                   data-error="請填寫手機">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group au-form row">
+                        <label for="txtmail" class="col-2 col-form-label">Email</label>
+                        <div class="col-10">
+                            <input type="email" id="txtmail" name="txtmail" required
+                                   data-error="請填寫Email">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <br>
+                    <p>預計投資金額（<label id="lblTypeDescribe"></label>）</p>
+                    <div id="divType"></div>
+                    @*<div class="form-group au-form row pl-3">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio1" name="customRadio" class="custom-control-input" value="1">
+                <label class="custom-control-label" for="customRadio1">
+                    一按<input type="text" id="txtType1Amount" name="txtType1Amount" onkeyup="value=accounting.formatNumber(value.replace(/[^\d.,]/g,''))">HKD
+                </label>
+            </div>
+        </div>
+        <div class="form-group au-form row pl-3">
+            <div class="custom-control custom-radio">
+                <input type="radio" id="customRadio2" name="customRadio" class="custom-control-input" value="2">
+                <label class="custom-control-label" for="customRadio2">
+                    二按<input type="text" id="txtType2Amount" name="txtType2Amount" onkeyup="value=accounting.formatNumber(value.replace(/[^\d.,]/g,''))">HKD
+                </label>
+            </div>
+        </div>*@
+                    <div class="form-group au-form row">
+                        <label for="txtstaff" class="col-3 col-form-label">對口人員編號</label>
+                        <div class="col-9">
+                            <input type="text" id="txtstaff" name="txtstaff" required
+                                   data-error="請填寫對口人員編號">
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <input type="button" class="btn btn-sm btn-primary" onclick="submitApply()" value="確認送出">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+    
+</div>
+@*<div class="modal fade" id="success" role="dialog">
+    <div class="modal-dialog sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    提交成功
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                    <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5>您已提交成功，請靜候通知。</h5>
+                <p>
+                    當您接到可以入金的通知後，請於10天內將<a href="/CH/PurchaseCustom">申購文件</a>備齊，
+                    <br>並將電子檔傳給您的對口人員，
+                    <br>同時 email 至 <a href="mailto:service@newsafety.hk">service@newsafety.hk</a>
+                </p>
+            </div>
+            <div class="modal-footer justify-content-center">
+                <input type="button" id="close" class="btn btn-sm btn-primary" data-dismiss="modal" value="關閉視窗">
+            </div>
+        </div>
+    </div>
+</div>*@
+<script>
+    var TypeCount = 0;
+    //$("#txtType1Amount").attr('disabled', true);
+    //$("#txtType2Amount").attr('disabled', true);
+
+    //$('input[type=radio][name=customRadio]').change(function () {
+    //    if (this.value == '1') {
+    //        $("#txtType1Amount").attr('disabled', false);
+    //        $("#txtType2Amount").attr('disabled', true);
+    //        $("#txtType2Amount").val('');
+    //    }
+    //    else if (this.value == '2') {
+    //        $("#txtType1Amount").attr('disabled', true);
+    //        $("#txtType2Amount").attr('disabled', false);
+    //        $("#txtType1Amount").val('');
+    //    }
+    //});
+    //取得目前設定可投資的案件
+    $('#maindiv').jqLoading();
+    $.getJSON("/DepositeType/GetEnableDepositeType").done(function (data) {
+        var TypeDescribeString = "";
+        var TypeString = "";
+        for (var i = 0; i < data.length; i++) {
+            //if (data[i].Type_Status == "True") {
+                if (TypeDescribeString.length > 0)
+                    TypeDescribeString += '；' + data[i].Type_NAME + '最低' + parseFloat(toThousands(eval(data[i].Type_MinAmount).toFixed(4))) + '萬HKD';
+                else
+                    TypeDescribeString += data[i].Type_NAME + '最低' + parseFloat(toThousands(eval(data[i].Type_MinAmount).toFixed(4))) + '萬HKD';
+
+                TypeString += '<div class="form-group au-form row pl-3">'
+                TypeString +=    '<div class="custom-control custom-radio">'
+                TypeString += '<input type="radio" id="customRadio' + data[i].Type_NO + '" name="customRadio" class="custom-control-input" value="' + data[i].Type_NO +'">'
+                TypeString += '<label class="custom-control-label" for="customRadio' + data[i].Type_NO +'">'
+                TypeString += data[i].Type_NAME + '<input type="text" id="txtType' + data[i].Type_NO + 'Amount" name="txtType' + data[i].Type_NO +'Amount" onkeyup="value=accounting.formatNumber(value.replace(/[^\\d.,]/g,\'\'))">HKD  ' 
+                TypeString += '</label><label id="lblMinAmount' + data[i].Type_NO + '" style="display:none">' + data[i].Type_MinAmount + '</label>'
+                TypeString += '<label id="lblType_NAME' + data[i].Type_NO + '" style="display:none">' + data[i].Type_NAME + '</label></div></div>'
+            //}
+        }
+        $('#lblTypeDescribe').html(TypeDescribeString);
+        $('#divType').html(TypeString);
+        TypeCount = data.length;
+        //setdisable(data.length)
+        $('#maindiv').jqLoading("destroy");
+    })
+    //function setdisable(count){
+    //    for (var i = 0; i < count; i++) {
+    //        $("#txtType" + i + "Amount").attr('disabled', true);
+    //    }
+    //}
+
+
+    function submitApply() {
+        if (!checkValue())
+            return;
+
+        var TypeValue = $("input[name='customRadio']:checked").val();
+
+        var obj = {};
+        obj.Name = $('#txtname').val();
+        obj.Phone = $('#txtmobile').val();
+        obj.Email = $('#txtmail').val();
+        obj.DepositType = TypeValue;
+        obj.Amount = $('#txtType' + TypeValue + 'Amount').val();
+        //if ($("input[name='customRadio']:checked").val() == "1") {
+        //    obj.Amount = $('#txtType1Amount').val();
+        //} else if ($("input[name='customRadio']:checked").val() == "2") {
+        //    obj.Amount = $('#txtType2Amount').val();
+        //}
+  
+        obj.ConID = $('#txtstaff').val();
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Purchase/PurchaseApply";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                //$('#txtname').val(''); $('#txtmobile').val(''); 
+                //$('#txtmail').val(''); $('#txtstaff').val('');
+
+                //for (var i = 0; i < TypeCount; i++) {
+                //    $('#txtType' + TypeCount + 'Amount').val('');;
+                //}
+                
+                $('#success').modal('show');
+                location.reload();//畫面重整
+            } else {
+                //alert('申購失敗!');
+                sweetAlert("申購失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            //alert('申購失敗!');
+            sweetAlert("申購失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+
+    }
+
+    function checkValue() {
+        if ($('#txtname').val() == '') {
+            //alert('請輸入姓名')
+            sweetAlert("請輸入姓名!", "", "warning");
+            return false;
+        }
+        if ($('#txtmobile').val() == '') {
+            //alert('請輸入手機')
+            sweetAlert("請輸入手機!", "", "warning");
+            return false;
+        }
+        if ($('#txtmail').val() == '') {
+            //alert('請輸入Email')
+            sweetAlert("請輸入Email!", "", "warning");
+            return false;
+        }
+        if ($("input[name='customRadio']:checked").val() == undefined) {
+            //alert('請選擇按別')
+            sweetAlert("請選擇按別!", "", "warning");
+            return false;
+        }
+        var Type = $("input[name='customRadio']:checked").val();
+        if ($('#txtType' + Type + 'Amount').val() == '') {
+            //alert('請輸入預計投資金額')
+            sweetAlert("請輸入預計投資金額!", "", "warning");
+            return false;
+        }
+        if (eval($('#txtType' + Type + 'Amount').val().replace(/,/g, '')) < eval($('#lblMinAmount' + Type).html())*10000) {
+            //alert($('#lblType_NAME' + Type).html() + '投資金額不能低於' + parseFloat(toThousands(eval($('#lblMinAmount' + Type).html()).toFixed(4))) + '萬')
+            var alertstr = $('#lblType_NAME' + Type).html() + '投資金額不能低於' + parseFloat(toThousands(eval($('#lblMinAmount' + Type).html()).toFixed(4))) + '萬'
+            sweetAlert("金額錯誤!", alertstr, "warning");
+            return false;
+        } 
+        //if ($("input[name='customRadio']:checked").val() == "1") {
+        //    if ($('#txtType1Amount').val() == '') {
+        //        alert('請輸入預計投資金額')
+        //        return false;
+        //    }
+        //    if (eval($('#txtType1Amount').val().replace(',','')) < 400000) {
+        //        alert('一按投資金額不能低於40萬')
+        //        return false;
+        //    }
+        //} else if ($("input[name='customRadio']:checked").val() == "2") {
+        //    if ($('#txtType2Amount').val() == '') {
+        //        alert('請輸入預計投資金額')
+        //        return false;
+        //    }
+        //    if (eval($('#txtType2Amount').val().replace(',', '')) < 800000) {
+        //        alert('二按投資金額不能低於80萬')
+        //        return false;
+        //    }
+        //}
+        if ($('#txtstaff').val() == '') {
+            //alert('請輸入對口人員編號')
+            sweetAlert("請輸入對口人員編號!", "", "warning");
+            return false;
+        }
+        return true;
+    }
+</script>
