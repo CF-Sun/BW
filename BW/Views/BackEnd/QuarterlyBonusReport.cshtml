@@ -40,7 +40,6 @@
     try {
         var ReportMasterID = url.split("?")[1].split('&')[0].split('=')[1];
     } catch (e) { ReportMasterID = undefined; }
-    console.log(ReportMasterID)
     if (ReportMasterID != undefined) {
         ReportSum(ReportMasterID);
         ExtensionReport(ReportMasterID);

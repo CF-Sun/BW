@@ -63,7 +63,6 @@
             pageSize: 20,
             pageList: [10, 20, 50, 100],
             onLoadSuccess: function (data) {
-                console.log(data);
                 //displayMsg("lblMsg", "讀取完畢!", "label label-success");
             },
             onLoadError: function (res) {
@@ -100,7 +99,6 @@
         options.contentType = "application/json";
         options.dataType = "html";
         options.success = function (data) {
-            console.log(data)
             if (data) {
                 //alert('刪除成功!');
                 swal("刪除成功!", "", "success")

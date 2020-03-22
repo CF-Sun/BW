@@ -382,7 +382,6 @@
             pageSize: 10,
             pageList: [10, 20, 50, 100],
             onLoadSuccess: function (data) {
-                console.log(data)
             },
             onLoadError: function (res) {
             },
@@ -414,7 +413,6 @@
             data.push({ ID: '4', Name: '三個月內居住證明', IsHave: false });
             data.push({ ID: '5', Name: '收息/出金銀行存簿', IsHave: false });
             data.push({ ID: '6', Name: '申購書', IsHave: false });
-            console.log(data)
             return data;
         }
     }
@@ -510,7 +508,6 @@
             }
             $.getJSON("/CliInfo/GetCredentialsByTempID", obj).done(function (data) {
 
-                console.log(data)
                 return data;
             })
         } else {
@@ -828,7 +825,6 @@
         options.contentType = "application/json";
         options.dataType = "html";
         options.success = function (data) {
-            console.log()
             if (data != "") {
                 SMSCode = data;
                 $('#CliData').hide();
@@ -863,7 +859,6 @@
         options.contentType = "application/json";
         options.dataType = "html";
         options.success = function (data) {
-            console.log()
             if (data != "") {
                 SMSCode = data;
 
