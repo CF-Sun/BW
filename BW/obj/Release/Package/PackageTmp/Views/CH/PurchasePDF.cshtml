@@ -1781,7 +1781,6 @@
             if ($.trim($("#txt" + i).val()) != '')
                 writtenCount++;
         }
-        console.log(writtenCount + '/' + totalCount)
         var prog = eval(writtenCount) / eval(totalCount)*100
         $('#logo').loadgo('setprogress', prog);
     }

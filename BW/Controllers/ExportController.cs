@@ -100,7 +100,7 @@ namespace BW.Controllers
                 // Load a document intoDocumentCore.
                 DocumentCore dc = DocumentCore.Load(loadPath);
                 #region txt2
-                string txt1_1 = txt2.ToLower();
+                string txt1_1 = txt2;
                 string txt1_2 = "";
 
                 Regex regex = new Regex(@"Rreplace1_________________________________________11R", RegexOptions.IgnoreCase);
@@ -109,8 +109,8 @@ namespace BW.Controllers
 
                 if (txt2.Length > 50)
                 {
-                    txt1_1 = txt2.ToLower().Substring(0, 50);
-                    txt1_2 = txt2.ToLower().Substring(50);
+                    txt1_1 = txt2.Substring(0, 50);
+                    txt1_2 = txt2.Substring(50);
                 }
                 regex = new Regex(@"Rreplace1_1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
@@ -122,26 +122,26 @@ namespace BW.Controllers
                 #endregion
 
                 #region txt3
-                string newtxt3_1 = txt3.ToLower();
+                string newtxt3_1 = txt3;
                 string txt3_2 = "";
                 string txt3_3 = "";
                 string txt3_4 = "";
                 if (txt3.Length > 150)
                 {
-                    newtxt3_1 = txt3.ToLower().Substring(0, 50);
-                    txt3_2 = txt3.ToLower().Substring(50,50);
-                    txt3_3 = txt3.ToLower().Substring(100,50);
-                    txt3_4 = txt3.ToLower().Substring(150);
+                    newtxt3_1 = txt3.Substring(0, 50);
+                    txt3_2 = txt3.Substring(50,50);
+                    txt3_3 = txt3.Substring(100,50);
+                    txt3_4 = txt3.Substring(150);
                 }else if (txt3.Length > 100)
                 {
-                    newtxt3_1 = txt3.ToLower().Substring(0, 50);
-                    txt3_2 = txt3.ToLower().Substring(50, 50);
-                    txt3_3 = txt3.ToLower().Substring(100);
+                    newtxt3_1 = txt3.Substring(0, 50);
+                    txt3_2 = txt3.Substring(50, 50);
+                    txt3_3 = txt3.Substring(100);
                 }
                 else if (txt3.Length > 50)
                 {
-                    newtxt3_1 = txt3.ToLower().Substring(0, 50);
-                    txt3_2 = txt3.ToLower().Substring(50);
+                    newtxt3_1 = txt3.Substring(0, 50);
+                    txt3_2 = txt3.Substring(50);
                 }
                 regex = new Regex(@"Rreplace2_1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
@@ -165,27 +165,27 @@ namespace BW.Controllers
 
                 if (!String.IsNullOrEmpty(txt3_1))
                 {
-                    txt3_1_1 = txt3_1.ToLower();
+                    txt3_1_1 = txt3_1;
                     txt3_1_2 = "";
                     txt3_1_3 = "";
                     txt3_1_4 = "";
                     if (txt3_1.Length > 150)
                     {
-                        txt3_1_1 = txt3_1.ToLower().Substring(0, 50);
-                        txt3_1_2 = txt3_1.ToLower().Substring(50, 50);
-                        txt3_1_3 = txt3_1.ToLower().Substring(100, 50);
-                        txt3_1_4 = txt3_1.ToLower().Substring(150);
+                        txt3_1_1 = txt3_1.Substring(0, 50);
+                        txt3_1_2 = txt3_1.Substring(50, 50);
+                        txt3_1_3 = txt3_1.Substring(100, 50);
+                        txt3_1_4 = txt3_1.Substring(150);
                     }
                     else if (txt3_1.Length > 100)
                     {
-                        txt3_1_1 = txt3_1.ToLower().Substring(0, 50);
-                        txt3_1_2 = txt3_1.ToLower().Substring(50, 50);
-                        txt3_1_3 = txt3_1.ToLower().Substring(100);
+                        txt3_1_1 = txt3_1.Substring(0, 50);
+                        txt3_1_2 = txt3_1.Substring(50, 50);
+                        txt3_1_3 = txt3_1.Substring(100);
                     }
                     else if (txt3_1.Length > 50)
                     {
-                        txt3_1_1 = txt3_1.ToLower().Substring(0, 50);
-                        txt3_1_2 = txt3_1.ToLower().Substring(50);
+                        txt3_1_1 = txt3_1.Substring(0, 50);
+                        txt3_1_2 = txt3_1.Substring(50);
                     }
                 }
                 regex = new Regex(@"Rreplace3_1R", RegexOptions.IgnoreCase);
@@ -206,81 +206,81 @@ namespace BW.Controllers
                 #region txt4~txt15, txt17~24
                 regex = new Regex(@"Rreplace4R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt4.ToLower());
+                    item.Replace(txt4);
                 regex = new Regex(@"Rreplace5R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt5.ToLower());
+                    item.Replace(txt5);
                 regex = new Regex(@"Rreplace6R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt6.ToLower());
+                    item.Replace(txt6);
                 regex = new Regex(@"Rreplace7R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt7.ToLower());
+                    item.Replace(txt7);
                 regex = new Regex(@"Rreplace8R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt8.ToLower());
+                    item.Replace(txt8);
                 regex = new Regex(@"Rreplace9R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt9.ToLower());
+                    item.Replace(txt9);
                 regex = new Regex(@"Rreplace10R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt10.ToLower());
+                    item.Replace(txt10);
                 regex = new Regex(@"Rreplace11R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt11.ToLower());
+                    item.Replace(txt11);
                 regex = new Regex(@"Rreplace12R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt12.ToLower());
+                    item.Replace(txt12);
                 regex = new Regex(@"Rreplace13R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt13.ToLower());
+                    item.Replace(txt13);
                 regex = new Regex(@"Rreplace14R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt14.ToLower());
+                    item.Replace(txt14);
                 regex = new Regex(@"Rreplace15R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt15.ToLower());
+                    item.Replace(txt15);
                 regex = new Regex(@"Rreplace17R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt17.ToLower());
+                    item.Replace(txt17);
                 regex = new Regex(@"Rreplace18R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt18.ToLower());
-                regex = new Regex(@"Rreplace19____________________________________R", RegexOptions.IgnoreCase);
+                    item.Replace(txt18);
+                regex = new Regex(@"Rreplace19_____________________________________________R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt19.ToLower());
+                    item.Replace(txt19);
                 regex = new Regex(@"Rreplace20R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt20.ToLower());
+                    item.Replace(txt20);
                 regex = new Regex(@"Rreplace21R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt21.ToLower());
+                    item.Replace(txt21);
                 regex = new Regex(@"Rreplace22R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt22.ToLower());
+                    item.Replace(txt22);
                 regex = new Regex(@"Rreplace23R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt23.ToLower());
+                    item.Replace(txt23);
                 regex = new Regex(@"Rreplace24R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt24.ToLower());
+                    item.Replace(txt24);
                 #endregion
 
                 #region txt16
                 string newtxt16 = txt16.Replace("\n", " ");
-                string txt16_1 = newtxt16.ToLower();
+                string txt16_1 = newtxt16;
                 string txt16_2 = "";
                 string txt16_3 = "";
                 if (newtxt16.Length > 140)
                 {
-                    txt16_1 = newtxt16.ToLower().Substring(0, 70);
-                    txt16_2 = newtxt16.ToLower().Substring(70, 70);
-                    txt16_3 = newtxt16.ToLower().Substring(140);
+                    txt16_1 = newtxt16.Substring(0, 70);
+                    txt16_2 = newtxt16.Substring(70, 70);
+                    txt16_3 = newtxt16.Substring(140);
                 }
                 else if (newtxt16.Length > 70)
                 {
-                    txt16_1 = newtxt16.ToLower().Substring(0, 70);
-                    txt16_2 = newtxt16.ToLower().Substring(70);
+                    txt16_1 = newtxt16.Substring(0, 70);
+                    txt16_2 = newtxt16.Substring(70);
                 }
                 regex = new Regex(@"Rreplace16_1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
@@ -635,104 +635,104 @@ namespace BW.Controllers
                 #endregion
 
                 #region txt28~32  txt28_1~txt32_1
-                regex = new Regex(@"Rreplace27_1R", RegexOptions.IgnoreCase);
+                regex = new Regex(@"Rreplace27________________________________________________1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt28.ToLower());
+                    item.Replace(txt28);
                 regex = new Regex(@"Rreplace27_2R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt29.ToLower());
-                regex = new Regex(@"Rreplace27_3R", RegexOptions.IgnoreCase);
+                    item.Replace(txt29);
+                regex = new Regex(@"Rreplace27______________________________3R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt30.ToLower());
+                    item.Replace(txt30);
                 regex = new Regex(@"Rreplace27______4R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt31.ToLower());
+                    item.Replace(txt31);
                 regex = new Regex(@"Rreplace27_______________5R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt32.ToLower());
+                    item.Replace(txt32);
                 regex = new Regex(@"Rreplace28_________________________________________________1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt28_1.ToLower());
+                    item.Replace(txt28_1);
                 regex = new Regex(@"Rreplace28________________2R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt29_1.ToLower());
+                    item.Replace(txt29_1);
                 regex = new Regex(@"Rreplace28____________________________3R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt30_1.ToLower());
+                    item.Replace(txt30_1);
                 regex = new Regex(@"Rreplace28_______4R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt31_1.ToLower());
+                    item.Replace(txt31_1);
                 regex = new Regex(@"Rreplace28________________5R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt32_1.ToLower());
+                    item.Replace(txt32_1);
                 #endregion
 
 
                 #region txt33~35 
                 regex = new Regex(@"Rreplace29R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt33.ToLower());
+                    item.Replace(txt33);
                 regex = new Regex(@"Rreplace30R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt34.ToLower());
+                    item.Replace(txt34);
                 regex = new Regex(@"Rreplace31R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt35.ToLower());
+                    item.Replace(txt35);
                 #endregion
 
                 #region txt36~42  txt38_1~txt42_1  
                 regex = new Regex(@"Rreplace32_____________________________________________________R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt36.ToLower());
+                    item.Replace(txt36);
                 regex = new Regex(@"Rreplace33__________________R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt37.ToLower());
-                regex = new Regex(@"Rreplace36_1R", RegexOptions.IgnoreCase);
+                    item.Replace(txt37);
+                regex = new Regex(@"Rreplace36____________________________________________________1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt38.ToLower());
+                    item.Replace(txt38);
                 regex = new Regex(@"Rreplace36_2R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt39.ToLower());
-                regex = new Regex(@"Rreplace36_3R", RegexOptions.IgnoreCase);
+                    item.Replace(txt39);
+                regex = new Regex(@"Rreplace36____________________________3R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt40.ToLower());
+                    item.Replace(txt40);
                 regex = new Regex(@"Rreplace36_4R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt41.ToLower());
+                    item.Replace(txt41);
                 regex = new Regex(@"Rreplace36_5R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt42.ToLower());
-                regex = new Regex(@"Rreplace37_1R", RegexOptions.IgnoreCase);
+                    item.Replace(txt42);
+                regex = new Regex(@"Rreplace37_____________________________________________________1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt38_1.ToLower());
+                    item.Replace(txt38_1);
                 regex = new Regex(@"Rreplace37_2R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt39_1.ToLower());
-                regex = new Regex(@"Rreplace37_3R", RegexOptions.IgnoreCase);
+                    item.Replace(txt39_1);
+                regex = new Regex(@"Rreplace37____________________________3R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt40_1.ToLower());
+                    item.Replace(txt40_1);
                 regex = new Regex(@"Rreplace37_4R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt41_1.ToLower());
+                    item.Replace(txt41_1);
                 regex = new Regex(@"Rreplace37_5R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt42_1.ToLower());
+                    item.Replace(txt42_1);
                 #endregion
 
                 #region txt43
-                string txt43_1 = txt43.ToLower();
+                string txt43_1 = txt43;
                 string txt43_2 = "";
                 string txt43_3 = "";
                 if (txt43.Length > 110)
                 {
-                    txt43_1 = txt43.ToLower().Substring(0, 55);
-                    txt43_2 = txt43.ToLower().Substring(55, 55);
-                    txt43_3 = txt43.ToLower().Substring(110);
+                    txt43_1 = txt43.Substring(0, 55);
+                    txt43_2 = txt43.Substring(55, 55);
+                    txt43_3 = txt43.Substring(110);
                 }
                 else if (txt43.Length > 55)
                 {
-                    txt43_1 = txt43.ToLower().Substring(0, 55);
-                    txt43_2 = txt43.ToLower().Substring(55);
+                    txt43_1 = txt43.Substring(0, 55);
+                    txt43_2 = txt43.Substring(55);
                 }
                 regex = new Regex(@"Rreplace38_1R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
@@ -752,70 +752,70 @@ namespace BW.Controllers
                 #region txt44~67  
                 regex = new Regex(@"Rreplace39R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt44.ToLower());
+                    item.Replace(txt44);
                 regex = new Regex(@"Rreplace40R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt45.ToLower());
+                    item.Replace(txt45);
                 regex = new Regex(@"Rreplace41R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt46.ToLower()); 
+                    item.Replace(txt46); 
                 regex = new Regex(@"Rreplace42R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt47.ToLower());
+                    item.Replace(txt47);
                 regex = new Regex(@"Rreplace43R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt48.ToLower());
+                    item.Replace(txt48);
                 regex = new Regex(@"Rreplace44R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt49.ToLower());
+                    item.Replace(txt49);
                 regex = new Regex(@"Rreplace45R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt50.ToLower());
+                    item.Replace(txt50);
                 regex = new Regex(@"Rreplace46R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt51.ToLower());
+                    item.Replace(txt51);
                 regex = new Regex(@"Rreplace47R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt52.ToLower());
+                    item.Replace(txt52);
                 regex = new Regex(@"Rreplace48R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt53.ToLower());
+                    item.Replace(txt53);
                 regex = new Regex(@"Rreplace49R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt54.ToLower());
+                    item.Replace(txt54);
                 regex = new Regex(@"Rreplace50R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt55.ToLower());
+                    item.Replace(txt55);
                 regex = new Regex(@"Rreplace51R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt56.ToLower());
+                    item.Replace(txt56);
                 regex = new Regex(@"Rreplace52R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
                     item.Replace(txt57 + "/" + txt58 + "/" + txt59);
                 regex = new Regex(@"Rreplace53R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt60.ToLower());
+                    item.Replace(txt60);
                 regex = new Regex(@"Rreplace54R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt61.ToLower());
+                    item.Replace(txt61);
                 regex = new Regex(@"Rreplace55R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt62.ToLower());
+                    item.Replace(txt62);
                 regex = new Regex(@"Rreplace56R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt63.ToLower());
+                    item.Replace(txt63);
                 regex = new Regex(@"Rreplace57R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt64.ToLower());
+                    item.Replace(txt64);
                 regex = new Regex(@"Rreplace58R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt65.ToLower());
+                    item.Replace(txt65);
                 regex = new Regex(@"Rreplace59R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt66.ToLower());
+                    item.Replace(txt66);
                 regex = new Regex(@"Rreplace60R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt67.ToLower());
+                    item.Replace(txt67);
                 #endregion
                 //不儲存到實體目錄 直接存在fileStream後下載
                 string pdfG = Guid.NewGuid().ToString();

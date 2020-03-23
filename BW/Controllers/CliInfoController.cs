@@ -762,9 +762,24 @@ namespace BW.Controllers
                 int count = Convert.ToInt16(sqlcommand.ExecuteScalar());
 
                 if (count > 0)
+                {
                     return "1";
+                }
                 else
-                    return "0";
+                {
+                    //檢查Cli_ID是否重複
+                    sqlcommandstring = @" select count(*) from CliInfoDetail where Cli_ID=@Cli_ID";
+                    sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                                new SqlParameter("@Cli_ID", Cli_ID)
+                            });
+                    count = Convert.ToInt16(sqlcommand.ExecuteScalar());
+
+                    if (count > 0)
+                        return "1";
+                    else
+                        return "0";
+                }
             }
         }
         [HttpPost]
