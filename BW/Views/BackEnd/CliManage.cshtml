@@ -215,7 +215,15 @@
                     field: 'NetDeposit',
                     title: '淨入金',
                     formatter: function (value, row, index) {
-                        return toThousands(eval(value).toFixed(2));
+                        var ArrNetDeposit = row.ArrNetDeposit.split(',');
+                        var ArrDepositType = row.CODE_DESC.split(',');
+                        var tableStr = '<table>'
+                        for (var i = 0; i < ArrDepositType.length; i++) {
+                            tableStr += '<tr><td style="border-right: 1px solid">' + ArrDepositType[i] + '</td><td>' + toThousands(eval(ArrNetDeposit[i]).toFixed(2)) +'</td></tr>'
+                        }
+                        tableStr += '</table>'
+                        return tableStr;
+                        //return toThousands(eval(value).toFixed(2));
                     },
                     halign: 'center',
                     align: 'center',

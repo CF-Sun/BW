@@ -394,23 +394,24 @@ namespace BW.Controllers
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
                 sqlconnection.Open();
-                string sqlcommandstring = @" select CL.Cli_ID, CL.Con_ID,(Con.Con_ChiNAME_Last+Con.Con_ChiNAME_First)as ConChiName,
-                                            (CLD.Cli_ChiNAME_Last+CLD.Cli_ChiNAME_First)as ChiName,CLD.Cli_EngNAME_Last, CLD.Cli_EngNAME_First,
+                string sqlcommandstring = @" select CL.Cli_ID, CL.Con_ID,(Con.Con_ChiNAME_Last + Con.Con_ChiNAME_First) as ConChiName,
+                                            (CLD.Cli_ChiNAME_Last + CLD.Cli_ChiNAME_First) as ChiName,CLD.Cli_EngNAME_Last, CLD.Cli_EngNAME_First,
                                             CLD.Cli_Gender,CLD.Cli_Phone_site, CLD.Cli_Phone, CLD.Cli_Email, CL.IsBuyCerti, 
-                                            ISNULL(NetDeposit.NetDeposit,0)NetDeposit
-                                            from CliInfo CL
-                                            left join CliInfoDetail CLD on CL.Cli_ID=CLD.Cli_ID
-                                            left join ConInfoDetail Con on CL.Con_ID=Con.Con_ID
-                                            left join (select Cli_ID, SUM(Deposit_Amount)-SUM(ISNULL(Withdrawal_Amount,0)) as NetDeposit
-                                                                                    from DepositList A 
-                                                                                    left join
-                                                                                    (select Deposit_ID, SUM(Withdrawal_Amount)as Withdrawal_Amount from WithdrawalList
-		                                                                                    where  Status=2
-		                                                                                    group by Deposit_ID) B on A.Deposit_ID=B.Deposit_ID
-                                                                                    where A.Status=2 
-                                                                                    group by Cli_ID) NetDeposit on NetDeposit.Cli_ID=CL.Cli_ID
-                                            
-                                            where 1=1 ";
+                                            ISNULL(NetDeposit.NetDeposit, 0)NetDeposit, NetDeposit.Deposit_Type,C.CODE_DESC
+                                             from CliInfo CL
+                                            left join CliInfoDetail CLD on CL.Cli_ID = CLD.Cli_ID
+                                            left join ConInfoDetail Con on CL.Con_ID = Con.Con_ID
+                                            left join(select Cli_ID, Deposit_Type, SUM(Deposit_Amount)-SUM(ISNULL(Withdrawal_Amount, 0)) as NetDeposit
+                                                        from DepositList A
+                                                        left join
+															(select Deposit_ID, SUM(Withdrawal_Amount) as Withdrawal_Amount from WithdrawalList
+																	where Status = 2  group by Deposit_ID) B on A.Deposit_ID = B.Deposit_ID
+                                                                            where A.Status = 2
+                                                                             group by Cli_ID, Deposit_Type) NetDeposit on NetDeposit.Cli_ID = CL.Cli_ID
+											left join (select CODE_NO, CODE_DESC from CodeList 
+			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) C on NetDeposit.Deposit_Type=C.CODE_NO
+                                            where 1 = 1  ";
+
                 //string sqlcommandstring = @" select CL.Cli_ID, CL.Con_ID,(Con.Con_ChiNAME_Last+Con.Con_ChiNAME_First)as ConChiName,
                 //                            (CLD.Cli_ChiNAME_Last+CLD.Cli_ChiNAME_First)as ChiName,CLD.Cli_EngNAME_Last, CLD.Cli_EngNAME_First,
                 //                            CLD.Cli_Gender,CLD.Cli_Phone_site, CLD.Cli_Phone, CLD.Cli_Email, CL.IsBuyCerti, 
@@ -452,10 +453,85 @@ namespace BW.Controllers
                 if (ConName.Trim() != "")
                     sqlcommandstring += " and Con.Con_ChiNAME_Last+Con.Con_ChiNAME_First=N'" + ConName.Trim() + "'";
 
+                sqlcommandstring += " order by CL.Cli_ID, NetDeposit.Deposit_Type";
+
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
-                return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
+
+                DataTable dtResult = dt.Clone();
+                DataRow row;
+                dtResult.Columns.Add("ArrNetDeposit", typeof(string));
+
+                string dt_ConID = "";
+                string dt_NetDeposit = "";
+                string dt_Deposit_Typ = "";
+
+                for (int i = 0; i < dt.Rows.Count; i++)
+                {
+                    if (dt_ConID == "")
+                    {
+                        dt_ConID = dt.Rows[i]["Cli_ID"].ToString().Trim();
+                        dt_NetDeposit = dt.Rows[i]["NetDeposit"].ToString().Trim();
+                        dt_Deposit_Typ = dt.Rows[i]["CODE_DESC"].ToString().Trim();
+                    }
+                    else
+                    {
+                        if (dt_ConID == dt.Rows[i]["Cli_ID"].ToString().Trim())
+                        {
+                            dt_NetDeposit += "," + dt.Rows[i]["NetDeposit"].ToString().Trim();
+                            dt_Deposit_Typ += "," + dt.Rows[i]["CODE_DESC"].ToString().Trim();
+                        }
+                        else
+                        {
+                            row = dtResult.NewRow();
+                            row["Cli_ID"] = dt.Rows[i - 1]["Cli_ID"].ToString().Trim();
+                            row["Con_ID"] = dt.Rows[i - 1]["Con_ID"].ToString().Trim();
+                            row["ConChiName"] = dt.Rows[i - 1]["ConChiName"].ToString().Trim();
+                            row["ChiName"] = dt.Rows[i - 1]["ChiName"].ToString().Trim();
+                            row["Cli_EngNAME_Last"] = dt.Rows[i - 1]["Cli_EngNAME_Last"].ToString().Trim();
+                            row["Cli_EngNAME_First"] = dt.Rows[i - 1]["Cli_EngNAME_First"].ToString().Trim();
+                            row["Cli_Gender"] = dt.Rows[i - 1]["Cli_Gender"].ToString().Trim();
+                            row["Cli_Phone_site"] = dt.Rows[i - 1]["Cli_Phone_site"].ToString().Trim();
+                            row["Cli_Phone"] = dt.Rows[i - 1]["Cli_Phone"].ToString().Trim();
+                            row["Cli_Email"] = dt.Rows[i - 1]["Cli_Email"].ToString().Trim();
+                            row["IsBuyCerti"] = dt.Rows[i - 1]["IsBuyCerti"].ToString().Trim();
+                            row["ArrNetDeposit"] = dt_NetDeposit;
+                            row["Deposit_Type"] = dt.Rows[i - 1]["Deposit_Type"].ToString().Trim();
+                            row["CODE_DESC"] = dt_Deposit_Typ;
+                            dtResult.Rows.Add(row);
+
+                            dt_ConID = dt.Rows[i]["Cli_ID"].ToString().Trim();
+                            dt_NetDeposit = dt.Rows[i]["NetDeposit"].ToString().Trim();
+                            dt_Deposit_Typ = dt.Rows[i]["CODE_DESC"].ToString().Trim();
+                        }
+                    }
+
+                    //最後一比
+                    if (i == dt.Rows.Count - 1)
+                    {
+                        row = dtResult.NewRow();
+                        row["Cli_ID"] = dt.Rows[i]["Cli_ID"].ToString().Trim();
+                        row["Con_ID"] = dt.Rows[i]["Con_ID"].ToString().Trim();
+                        row["ConChiName"] = dt.Rows[i]["ConChiName"].ToString().Trim();
+                        row["ChiName"] = dt.Rows[i]["ChiName"].ToString().Trim();
+                        row["Cli_EngNAME_Last"] = dt.Rows[i]["Cli_EngNAME_Last"].ToString().Trim();
+                        row["Cli_EngNAME_First"] = dt.Rows[i]["Cli_EngNAME_First"].ToString().Trim();
+                        row["Cli_Gender"] = dt.Rows[i]["Cli_Gender"].ToString().Trim();
+                        row["Cli_Phone_site"] = dt.Rows[i]["Cli_Phone_site"].ToString().Trim();
+                        row["Cli_Phone"] = dt.Rows[i]["Cli_Phone"].ToString().Trim();
+                        row["Cli_Email"] = dt.Rows[i]["Cli_Email"].ToString().Trim();
+                        row["IsBuyCerti"] = dt.Rows[i]["IsBuyCerti"];
+                        row["ArrNetDeposit"] = dt_NetDeposit;
+                        row["Deposit_Type"] = dt.Rows[i]["Deposit_Type"].ToString().Trim();
+                        row["CODE_DESC"] = dt_Deposit_Typ;
+                        dtResult.Rows.Add(row);
+
+                    }
+
+                }
+
+                return Json(dtResult.ToJson(), JsonRequestBehavior.AllowGet);
             }
         }
         [HttpGet]
