@@ -44,6 +44,7 @@ namespace BW.Controllers
         public ActionResult GetCliDepositeStatus(string CliID)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -54,7 +55,7 @@ namespace BW.Controllers
                                         from DepositList A 
                                         left join
                                         (select Deposit_ID, SUM(Withdrawal_Amount)as Withdrawal_Amount from WithdrawalList
-		                                        where Cli_ID=@CliID and Status=2
+		                                        where Cli_ID=@CliID and Status !=0 and ExpectDate<=@ExpectDate
 		                                        group by Deposit_ID) B on A.Deposit_ID=B.Deposit_ID
                                         left join (select CODE_NO, CODE_DESC from CodeList 
 			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) C on A.Deposit_Type=C.CODE_NO
@@ -64,7 +65,8 @@ namespace BW.Controllers
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 sqlcommand.Parameters.AddRange(new SqlParameter[] {
 
-                    new SqlParameter("@CliID", CliID.Trim())
+                    new SqlParameter("@CliID", CliID.Trim()),
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
                     });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
@@ -321,6 +323,8 @@ namespace BW.Controllers
         public ActionResult GetIndividualDataTotal(string Con_NO, string Con_Name, string startDate, string endDate)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -352,7 +356,7 @@ namespace BW.Controllers
                                                 from WithdrawalList WL
                                                 left join ConInfoDetail CD on WL.Con_ID=CD.Con_ID
 												left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
-                                                where WL.Status=2 ";
+                                                where WL.Status !=0 and ExpectDate<=@ExpectDate ";
                 //where Status=2 and WL.Con_ID like '%" + Con_NO.Trim() + "%' and CD.Con_ChiNAME_Last+CD.Con_ChiNAME_First like N'%" + Con_Name.Trim() + @"%'";
                 if (Con_NO.Trim() != "")
                     sqlcommandstring += " and WL.Con_ID = '" + Con_NO.Trim() + "' ";
@@ -368,6 +372,9 @@ namespace BW.Controllers
                                         ) main group by CODE_DESC, Deposit_Type order by Deposit_Type";
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
                 return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
@@ -377,6 +384,8 @@ namespace BW.Controllers
         public ActionResult GetConIndividualPerform(string Con_NO, string Con_Name, string startDate, string endDate)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -406,7 +415,7 @@ namespace BW.Controllers
                                                 from WithdrawalList WL
                                                 left join ConInfoDetail CD on WL.Con_ID=CD.Con_ID
 												left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
-                                                where WL.Status=2 ";
+                                                where WL.Status !=0 and ExpectDate<=@ExpectDate ";
                 //where Status=2 and WL.Con_ID like '%" + Con_NO.Trim() + "%' and CD.Con_ChiNAME_Last+CD.Con_ChiNAME_First like N'%" + Con_Name.Trim() + @"%'";
                 if (Con_NO.Trim() != "")
                     sqlcommandstring += " and WL.Con_ID = '" + Con_NO.Trim() + "' ";
@@ -423,6 +432,9 @@ namespace BW.Controllers
                                         order by Cli_ID asc ";
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
                 return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
@@ -433,6 +445,8 @@ namespace BW.Controllers
         {
             DataTable dt = new DataTable();
             DataTable dtResult = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -462,7 +476,7 @@ namespace BW.Controllers
                                                 from WithdrawalList WL
                                                 left join ConInfoDetail CD on WL.Con_ID=CD.Con_ID
 												left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
-                                                where WL.Status=2  ";
+                                                where WL.Status !=0 and ExpectDate<=@ExpectDate  ";
                 //if (Con_NO.Trim() != "")
                 //    sqlcommandstring += " and WL.Con_ID = '" + Con_NO.Trim() + "' ";
                 //if (Con_Name.Trim() != "")
@@ -476,6 +490,9 @@ namespace BW.Controllers
 										left join CodeList CL on CL.CODE_NO=A.Deposit_Type and CL.CODE_TYPE='Deposit_Type' and CL.CODE_Status=1
                                         order by Con_ID asc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
 
@@ -531,6 +548,8 @@ namespace BW.Controllers
         {
             DataTable dt = new DataTable();
             DataTable dtResult = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -560,7 +579,7 @@ namespace BW.Controllers
                                                 from WithdrawalList WL
                                                 left join ConInfoDetail CD on WL.Con_ID=CD.Con_ID
 												left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
-                                                where WL.Status=2  ";
+                                                where WL.Status !=0 and ExpectDate<=@ExpectDate  ";
                 //if (Con_NO.Trim() != "")
                 //    sqlcommandstring += " and WL.Con_ID = '" + Con_NO.Trim() + "' ";
                 //if (Con_Name.Trim() != "")
@@ -575,6 +594,9 @@ namespace BW.Controllers
 										left join CodeList CL on CL.CODE_NO=A.Deposit_Type and CL.CODE_TYPE='Deposit_Type' and CL.CODE_Status=1
                                         order by Con_ID asc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
 
@@ -603,6 +625,8 @@ namespace BW.Controllers
         public ActionResult GetConTotalData(string startDate, string endDate)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -625,7 +649,7 @@ namespace BW.Controllers
                                                 (select DL.Deposit_Type, sum(Withdrawal_Amount) as Withdrawal_Amount
                                                 from WithdrawalList WL
 												left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
-                                                where WL.Status=2   ";
+                                                where WL.Status !=0 and ExpectDate<=@ExpectDate   ";
                 if (startDate != "")
                     sqlcommandstring += " and WL.Arrival_DATE >= '" + startDate + "' ";
                 if (endDate != "")
@@ -635,6 +659,9 @@ namespace BW.Controllers
 										left join CodeList CL on CL.CODE_NO=A.Deposit_Type and CL.CODE_TYPE='Deposit_Type' and CL.CODE_Status=1
                                         order by A.Deposit_Type asc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
              

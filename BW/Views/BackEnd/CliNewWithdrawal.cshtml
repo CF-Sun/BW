@@ -42,7 +42,7 @@
                                 <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
                                 <select name="sele_Status" id="sele_Status" class="br-cus" required>
                                     <option value="0">新登記</option>
-                                    <option value="1">未匯出</option>
+                                    <option value="1">出帳中</option>
                                     <option value="2">已匯出</option>
                                 </select>
                             </div>
@@ -278,7 +278,18 @@
                     visible: true
                 },
                 { field: 'CREATE_DATE', title: '申請日期', align: 'center', halign: 'center', visible: true, sortable: true },
-                { field: 'ExpectMonth', title: '預計出金年月', align: 'center', halign: 'center', visible: true, sortable: true },
+                {
+                    field: 'ExpectDate', title: '贖回日',
+                    formatter: function (value, row, index) {
+                        if (row.StatusCode == '0')
+                            value = "<input type='text' style='width: 110px;' id='ExpectDATE_" + index + "' onchange=\"ExpectUpadte('" + index + "','" + row.Withdrawal_ID + "')\" readonly>"
+                        else
+                            value = "<label id='lblExpectDATE_" + index + "'></label>"
+
+                        return value
+                    },
+                    align: 'center', halign: 'center', visible: true, sortable: true
+                },
                 { field: 'Remark', title: '出金附言', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'Status', title: '狀態', align: 'center', halign: 'center', visible: true, sortable: true },
                 {
@@ -295,6 +306,7 @@
                             value += '<a class="dropdown-item" onclick="downloadss(\'' + $.trim(row.Withdrawal_ID) + '\',\'' + $.trim(row.WithdrawalListFileName) + '\')" >檢視匯出記錄檔</a>'
 
                         value += '<a class="dropdown-item"  onclick="AmountEdit()" >修改金額</a>'
+                        value += '<a class="dropdown-item"  onclick="Delete()" >刪除</a>'
                         value += '</div></div>'
 
                         return value
@@ -343,6 +355,7 @@
             pageSize: 10,
             pageList: [10, 20, 50, 100],
             onLoadSuccess: function (data) {
+                setDetailDateValue();
             },
             onLoadError: function (res) {
             },
@@ -380,6 +393,7 @@
         options.success = function (data) {
             if (data == 1) {
                 loadData();
+                $('#myModal').modal('hide');
             } else {
                 //alert('修改失敗!');
                 sweetAlert("修改失敗!", "", "error");
@@ -494,6 +508,87 @@
             //alert('修改失敗!');
             sweetAlert("修改失敗!", "", "error");
             $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
+    //刪除
+    function Delete() {
+        swal({
+            title: "確定刪除？",
+            text: "",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "確定",
+            cancelButtonText: "取消",
+            closeOnConfirm: false
+        },
+            function () {
+                var obj = {};
+                obj.Withdrawal_ID = Withdrawal_ID;
+                obj.LoginACCOUNT = userAccount;
+                $('#maindiv').jqLoading();
+                var options = {};
+                options.url = "/Withdrawal/DelWithdrawal";
+                options.type = "POST";
+                options.data = JSON.stringify(obj);
+                options.contentType = "application/json";
+                options.dataType = "html";
+                options.success = function (data) {
+                    if (data == 1) {
+                        loadData()
+                        swal("刪除成功!", "", "success")
+                    }
+                    else {
+                        sweetAlert("刪除失敗!", "", "error");
+                    }
+                    $('#maindiv').jqLoading("destroy");
+                };
+                options.error = function () {
+                    sweetAlert("刪除失敗!", "", "error");
+                    $('#maindiv').jqLoading("destroy");
+                };
+                $.ajax(options);
+            });
+    }
+    //設定贖回日
+    function setDetailDateValue() {
+        var DetailList = $("#theTable").bootstrapTable('getData');
+        for (var i = 0; i < DetailList.length; i++) {
+            $('#ExpectDATE_' + i).datepicker({
+                format: "yyyy/mm/dd",
+                autoclose: true,
+                //startDate: "today",
+                todayHighlight: true,
+                language: 'zh-TW',
+            });
+            $('#ExpectDATE_' + i).datepicker("setDate", DetailList[i]['ExpectDate'])
+            $('#lblExpectDATE_' + i).html(DetailList[i]['ExpectDate'])
+        }
+    }
+    //更改贖回日
+    function ExpectUpadte(index, Withdrawal_ID) {
+        var obj = {};
+        obj.Withdrawal_ID = Withdrawal_ID;
+        obj.Date = $('#ExpectDATE_' + index).val();
+        obj.LoginACCOUNT = userAccount;
+        var options = {};
+        options.url = "/Withdrawal/UpdateExpectDate";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                return;
+            } else {
+                //alert('修改失敗!');
+                sweetAlert("修改失敗!", "", "error");
+            }
+        };
+        options.error = function () {
+            //alert('修改失敗!');
+            sweetAlert("修改失敗!", "", "error");
         };
         $.ajax(options);
     }

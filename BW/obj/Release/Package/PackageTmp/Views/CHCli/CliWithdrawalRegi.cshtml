@@ -51,30 +51,33 @@
                         </div>
                     </div>
                     <div class="form-group au-form row">
-                        <label class="col-3 col-form-label">預計出金年月</label>
-                        <div class="col-3 select-wrapper">
-                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
-                            <select name="sele_Year" id="sele_Year" class="br-cus" required></select>
+                        <label class="col-3 col-form-label">預計出金日</label>
+                        <div class="col-7">
+                            <input type="text" id="txtExpectDate" name="txtApplyDate" readonly>
                         </div>
-                        <span class="col-1">/</span>
-                        <div class="col-3 select-wrapper">
-                            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
-                            <select name="sele_Month" id="sele_Month" class="br-cus" required>
-                                <option value=0>請選擇</option>
-                                <option value=1>1月</option>
-                                <option value=2>2月</option>
-                                <option value=3>3月</option>
-                                <option value=4>4月</option>
-                                <option value=5>5月</option>
-                                <option value=6>6月</option>
-                                <option value=7>7月</option>
-                                <option value=8>8月</option>
-                                <option value=9>9月</option>
-                                <option value=10>10月</option>
-                                <option value=11>11月</option>
-                                <option value=12>12月</option>
-                            </select>
-                        </div>
+                        @*<div class="col-3 select-wrapper">
+            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+            <select name="sele_Year" id="sele_Year" class="br-cus" required></select>
+        </div>
+        <span class="col-1">/</span>
+        <div class="col-3 select-wrapper">
+            <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
+            <select name="sele_Month" id="sele_Month" class="br-cus" required>
+                <option value=0>請選擇</option>
+                <option value=1>1月</option>
+                <option value=2>2月</option>
+                <option value=3>3月</option>
+                <option value=4>4月</option>
+                <option value=5>5月</option>
+                <option value=6>6月</option>
+                <option value=7>7月</option>
+                <option value=8>8月</option>
+                <option value=9>9月</option>
+                <option value=10>10月</option>
+                <option value=11>11月</option>
+                <option value=12>12月</option>
+            </select>
+        </div>*@
                     </div>
                     <div class="form-group au-form row">
                         <label for="txtRemark" class="col-3 col-form-label">出金附言</label>
@@ -107,11 +110,19 @@
     var Day = Today.getDate();
     $("#txtApplyDate").val(Year + '/' + Month + '/' + Day)
 
-    //設定出金年下拉 10年
-    $("#sele_Year").empty();
-    $("#sele_Year").append($("<option>").val(0).text('請選擇'))
-    for (var i = Year; i < Year + 11; i++)
-        $("#sele_Year").append($("<option>").val(i).text(i+'年'))
+    $('#txtExpectDate').datepicker({
+        format: "yyyy/mm/dd",
+        autoclose: true,
+        //startDate: "today",
+        todayHighlight: true,
+        language: 'zh-TW'
+    });
+
+    ////設定出金年下拉 10年
+    //$("#sele_Year").empty();
+    //$("#sele_Year").append($("<option>").val(0).text('請選擇'))
+    //for (var i = Year; i < Year + 11; i++)
+    //    $("#sele_Year").append($("<option>").val(i).text(i+'年'))
 
     $(document).ready(function () {
         $('#maindiv').jqLoading();
@@ -177,7 +188,7 @@
                 },
                 { field: 'Deposit_ID', title: '出金來源編號', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'CREATE_DATE', title: '出金登記時間', align: 'center', halign: 'center', visible: true, sortable: true },
-                { field: 'ExpectMonth', title: '預計出金年月', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ExpectDate', title: '預計出金年日', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'Arrival_DATE', title: '匯出日期', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'Status', title: '處理狀態', align: 'center', halign: 'center', visible: true, sortable: true }
             ],
@@ -230,24 +241,25 @@
             sweetAlert("請選擇出金來源!", "", "warning");
             return;
         }
-        if ($("#sele_Year").val() == 0) {
+        if ($("#txtExpectDate").val() == "") {
             //alert('請選擇預計出金年')
-            sweetAlert("請選擇預計出金年!", "", "warning");
+            sweetAlert("請選擇預計出金日!", "", "warning");
             return;
         }
-        if ($("#sele_Month").val() == 0) {
-            //alert('請選擇預計出金月')
-            sweetAlert("請選擇預計出金月!", "", "warning");
-            return;
-        }
+        //if ($("#sele_Month").val() == 0) {
+        //    //alert('請選擇預計出金月')
+        //    sweetAlert("請選擇預計出金月!", "", "warning");
+        //    return;
+        //}
         var obj = {};
         obj.CliNo = cliAccount;
         obj.ConNo = '';
         obj.WithdrawalAmount = $("#txtWithdrawalAmount").val()
         obj.sele_From = $("#sele_From").val()
         obj.ApplyDate = $("#txtApplyDate").val()
-        obj.ExpectYear = $("#sele_Year").val()
-        obj.ExpectMonth = $("#sele_Month").val()
+        obj.ExpectDate = $("#txtExpectDate").val()
+        //obj.ExpectYear = $("#sele_Year").val()
+        //obj.ExpectMonth = $("#sele_Month").val()
         obj.Remark = $("#txtRemark").val()
         obj.LoginACCOUNT = cliAccount;
         $('#maindiv').jqLoading();

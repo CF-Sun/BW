@@ -390,6 +390,7 @@ namespace BW.Controllers
         public ActionResult GetCliList(string ConID, string ConName)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -405,7 +406,7 @@ namespace BW.Controllers
                                                         from DepositList A
                                                         left join
 															(select Deposit_ID, SUM(Withdrawal_Amount) as Withdrawal_Amount from WithdrawalList
-																	where Status = 2  group by Deposit_ID) B on A.Deposit_ID = B.Deposit_ID
+																	where Status != 0 and ExpectDate<=@ExpectDate group by Deposit_ID) B on A.Deposit_ID = B.Deposit_ID
                                                                             where A.Status = 2
                                                                              group by Cli_ID, Deposit_Type) NetDeposit on NetDeposit.Cli_ID = CL.Cli_ID
 											left join (select CODE_NO, CODE_DESC from CodeList 
@@ -456,6 +457,9 @@ namespace BW.Controllers
                 sqlcommandstring += " order by CL.Cli_ID, NetDeposit.Deposit_Type";
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                            });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
 

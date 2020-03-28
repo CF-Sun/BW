@@ -136,7 +136,7 @@ namespace BW.Controllers
             year = "";//年
             mon = "";//上個月月份
             quarterly = "";
-
+            dtime = dtime.AddDays(-dtime.Day);
             try
             {
                 DataRow dr;
@@ -317,18 +317,28 @@ namespace BW.Controllers
                         }
                         #endregion
                         //取出顧問資料表,及總存款
+                        //sqlcommandstring = @" Select CoI.*, ISNULL(DD.Deposit_Amount,0)-ISNULL(WA.Withdrawal_Amount,0) Amount,
+                        //                        CH.Con_Hiera, EffectiveStartDate,EffectiveEndDate
+                        //                        from ConInfo CoI
+                        //                        left join (select Con_ID, sum(Deposit_Amount)as Deposit_Amount 
+                        //                        from DepositList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID) DD on CoI.Con_ID=DD.Con_ID
+                        //                        left join (select Con_ID, sum(Withdrawal_Amount)as Withdrawal_Amount 
+                        //                        from WithdrawalList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID) WA  on CoI.Con_ID=WA.Con_ID
+                        //                        left join ConHieraSetting CH on CoI.Con_ID=CH.Con_ID
+                        //                        where CoI.Con_ID != '000' order by CoI.Con_LEVEL asc "; //排除公司
                         sqlcommandstring = @" Select CoI.*, ISNULL(DD.Deposit_Amount,0)-ISNULL(WA.Withdrawal_Amount,0) Amount,
                                                 CH.Con_Hiera, EffectiveStartDate,EffectiveEndDate
                                                 from ConInfo CoI
                                                 left join (select Con_ID, sum(Deposit_Amount)as Deposit_Amount 
                                                 from DepositList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID) DD on CoI.Con_ID=DD.Con_ID
                                                 left join (select Con_ID, sum(Withdrawal_Amount)as Withdrawal_Amount 
-                                                from WithdrawalList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID) WA  on CoI.Con_ID=WA.Con_ID
+                                                from WithdrawalList where Status !=0 and ExpectDate<=@ExpectDate group by Con_ID) WA  on CoI.Con_ID=WA.Con_ID
                                                 left join ConHieraSetting CH on CoI.Con_ID=CH.Con_ID
                                                 where CoI.Con_ID != '000' order by CoI.Con_LEVEL asc "; //排除公司
                         sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                         sqlcommand.Parameters.AddRange(new SqlParameter[] {
-                            new SqlParameter("@Arrival_DATE", dtime.AddMonths(-2).AddDays(-dtime.Day).AddDays(23).ToString("yyyy/MM/dd"))
+                            new SqlParameter("@Arrival_DATE", dtime.AddMonths(-2).AddDays(-dtime.Day).AddDays(23).ToString("yyyy/MM/dd")),
+                            new SqlParameter("@ExpectDate", dtime.AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
                             });
                         SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                         da.Fill(dtConInfo);
@@ -347,13 +357,14 @@ namespace BW.Controllers
                                             DT.Type_RATE
                                             from DepositList DL
                                             left join (select Con_ID, Deposit_ID, sum(Withdrawal_Amount)as Withdrawal_Amount 
-			                                            from WithdrawalList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID,Deposit_ID) WL
+			                                            from WithdrawalList where Status !=0 and ExpectDate<=@ExpectDate group by Con_ID,Deposit_ID) WL
 			                                            on DL.Con_ID=WL.Con_ID and DL.Deposit_ID=WL.Deposit_ID
                                             left join DepositType DT on DL.Deposit_Type=DT.Type_NO
                                             where DL.Status=2  ";
                         sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                         sqlcommand.Parameters.AddRange(new SqlParameter[] {
-                            new SqlParameter("@Arrival_DATE", dtime.AddMonths(-2).AddDays(-dtime.Day).AddDays(23).ToString("yyyy/MM/dd"))
+                            new SqlParameter("@Arrival_DATE", dtime.AddMonths(-2).AddDays(-dtime.Day).AddDays(23).ToString("yyyy/MM/dd")),
+                            new SqlParameter("@ExpectDate", dtime.AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
                             });
                         da = new SqlDataAdapter(sqlcommand);
                         da.Fill(dtDepositDetail);

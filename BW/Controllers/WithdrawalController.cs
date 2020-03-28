@@ -25,17 +25,30 @@ namespace BW.Controllers
             {
                 sqlconnection.Open();
 
-                string sqlcommandstring = @"  select A.Withdrawal_ID, A.Cli_ID, A.Withdrawal_Amount,A.Status as StatusCode, CL.CODE_DESC as Status, A.CREATE_DATE,
+                //string sqlcommandstring = @"  select A.Withdrawal_ID, A.Cli_ID, A.Withdrawal_Amount,A.Status as StatusCode, CL.CODE_DESC as Status, A.CREATE_DATE,
+                //                                convert(varchar, A.Arrival_DATE, 111) as Arrival_DATE, WithdrawalListFileName, Isfile,
+                //                                (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName,
+                //                                (C.Con_ChiNAME_Last+C.Con_ChiNAME_First)as ConName,
+                //                                (A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth, Remark
+                //                                from WithdrawalList A
+                //                                join CliInfoDetail B on A.Cli_ID=B.Cli_ID
+                //                                join ConInfoDetail C on A.Con_ID=C.Con_ID
+                //                                left join (select CODE_NO, CODE_DESC from CodeList 
+			             //                                   where CODE_TYPE='Withdrawal_Status')CL on A.Status=CL.CODE_NO
+                //                                where A.Status=0 and DATEDIFF(day,A.CREATE_DATE,'" + convertTime.UStoTW(DateTime.Now).ToString("yyyy/MM/dd hh:mm:ss") + @"')<=31
+                //                                order by A.CREATE_DATE desc ";
+                string sqlcommandstring = @"  select A.Withdrawal_ID, A.Cli_ID, A.Withdrawal_Amount,A.Status as StatusCode, CL.CODE_DESC as Status,
                                                 convert(varchar, A.Arrival_DATE, 111) as Arrival_DATE, WithdrawalListFileName, Isfile,
                                                 (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName,
                                                 (C.Con_ChiNAME_Last+C.Con_ChiNAME_First)as ConName,
-                                                (A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth, Remark
-                                                from WithdrawalList A
+                                                convert(varchar, ExpectDate, 111) as ExpectDate, Remark,
+                                                convert(varchar, A.CREATE_DATE, 111) as CREATE_DATE
+                                                from WithdrawalList A 
                                                 join CliInfoDetail B on A.Cli_ID=B.Cli_ID
                                                 join ConInfoDetail C on A.Con_ID=C.Con_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                                where CODE_TYPE='Withdrawal_Status')CL on A.Status=CL.CODE_NO
-                                                where A.Status=0 and DATEDIFF(day,A.CREATE_DATE,'" + convertTime.UStoTW(DateTime.Now).ToString("yyyy/MM/dd hh:mm:ss") + @"')<=31
+                                                where A.Status !=2 
                                                 order by A.CREATE_DATE desc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
@@ -47,6 +60,8 @@ namespace BW.Controllers
         public ActionResult GetWithdrawalDataTotal(string startDate, string endDate)
         {
             DataTable dt = new DataTable();
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
+
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
             {
@@ -57,7 +72,7 @@ namespace BW.Controllers
 												left join DepositList D on A.Deposit_ID=D.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) CL on D.Deposit_Type=CL.CODE_NO
-												where A.Status=2 ";
+												where A.Status !=0 and ExpectDate<=@ExpectDate ";
                 if (startDate != "")
                 {
                     sqlcommandstring += "and A.Arrival_DATE >= '" + startDate + "' ";
@@ -68,6 +83,9 @@ namespace BW.Controllers
                 }
                 sqlcommandstring += " group by CL.CODE_DESC,D.Deposit_Type order by D.Deposit_Type asc  ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
                 return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
@@ -76,6 +94,7 @@ namespace BW.Controllers
         [HttpGet]
         public ActionResult GetWithdrawalData(string startDate, string endDate)
         {
+            DateTime dtime = convertTime.UStoTW(DateTime.Now);
             DataTable dt = new DataTable();
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
             using (SqlConnection sqlconnection = new SqlConnection(conn))
@@ -92,7 +111,7 @@ namespace BW.Controllers
 												left join DepositList D on A.Deposit_ID=D.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) CL on D.Deposit_Type=CL.CODE_NO
-												where A.Status=2 ";
+												where A.Status !=0 and ExpectDate<=@ExpectDate ";
                 if (startDate != "")
                 {
                     sqlcommandstring += "and A.Arrival_DATE >= '" + startDate + "' ";
@@ -103,6 +122,9 @@ namespace BW.Controllers
                 }
                 sqlcommandstring += " order by A.Arrival_DATE desc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
                 return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
@@ -121,7 +143,8 @@ namespace BW.Controllers
                                                 convert(varchar, A.Arrival_DATE, 111) as Arrival_DATE,
                                                 convert(varchar, A.CREATE_DATE, 111) as CREATE_DATE,
                                                 (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName,
-												(A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth
+                                                convert(varchar, ExpectDate, 111) as ExpectDate
+												--(A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth
                                                 from WithdrawalList A
                                                 left join CliInfoDetail B on A.Cli_ID=B.Cli_ID
 												left join (select CODE_NO, CODE_DESC from CodeList 
@@ -151,7 +174,8 @@ namespace BW.Controllers
                                                 convert(varchar, A.Arrival_DATE, 111) as Arrival_DATE,
                                                 convert(varchar, A.CREATE_DATE, 111) as CREATE_DATE,
                                                 (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName,
-												(A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth
+                                                convert(varchar, ExpectDate, 111) as ExpectDate
+												--(A.ExpectYear+'/'+A.ExpectMonth)as ExpectMonth
                                                 from WithdrawalList A
                                                 left join CliInfoDetail B on A.Cli_ID=B.Cli_ID
 												left join (select CODE_NO, CODE_DESC from CodeList 
@@ -170,7 +194,7 @@ namespace BW.Controllers
         }
         [HttpPost]
         public int WithdrawalRegi(string CliNo, string ConNo,  string WithdrawalAmount, string sele_From, string ApplyDate, 
-            string ExpectYear, string ExpectMonth, string Remark, string LoginACCOUNT)
+            string ExpectDate, string Remark, string LoginACCOUNT)
         {
             try
             {
@@ -203,9 +227,9 @@ namespace BW.Controllers
                     WithdrawalAmount = WithdrawalAmount.Replace(",", "");
 
                     sqlcommandstring = @" Insert WithdrawalList (Withdrawal_ID,Cli_ID,Con_ID,Withdrawal_Amount,Deposit_ID
-                                                               ,Status,CREATE_DATE,UPDATE_DATE,ExpectYear,ExpectMonth,Remark) 
+                                                               ,Status,CREATE_DATE,UPDATE_DATE,ExpectDate,Remark) 
                                             values(@Withdrawal_ID,@Cli_ID,@ConNo,@WithdrawalAmount,@DepositID,
-                                                                0,@ApplyDate,@date,@ExpectYear,@ExpectMonth,@Remark) ";
+                                                                0,@ApplyDate,@date,@ExpectDate,@Remark) ";
                     sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                     sqlcommand.Parameters.AddRange(new SqlParameter[] {
                         new SqlParameter("@Withdrawal_ID", Withdrawal_ID),
@@ -215,8 +239,9 @@ namespace BW.Controllers
                         new SqlParameter("@DepositID", sele_From),
                         new SqlParameter("@ApplyDate", ApplyDate),
                         new SqlParameter("@date", convertTime.UStoTW(DateTime.Now)),
-                        new SqlParameter("@ExpectYear", ExpectYear),
-                        new SqlParameter("@ExpectMonth", ExpectMonth),
+                        new SqlParameter("@ExpectDate", ExpectDate),
+                        //new SqlParameter("@ExpectYear", ExpectYear),
+                        //new SqlParameter("@ExpectMonth", ExpectMonth),
                         new SqlParameter("@Remark", Remark)
                     });
                     sqlcommand.ExecuteNonQuery();
@@ -258,6 +283,66 @@ namespace BW.Controllers
             catch (Exception e)
             {
                 log.writeLogToDB(LoginACCOUNT, "Withdrawal/UpdateStatus", e.ToString());
+                return 0;
+            }
+        }
+        [HttpPost]
+        public int DelWithdrawal(string Withdrawal_ID, string LoginACCOUNT)
+        {
+            try
+            {
+                string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+                using (SqlConnection sqlconnection = new SqlConnection(conn))
+                {
+                    sqlconnection.Open();
+
+                    string sqlcommandstring = @"delete WithdrawalList  where Withdrawal_ID=@Withdrawal_ID";
+
+                    SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                        new SqlParameter("@Withdrawal_ID", Withdrawal_ID==null?"": Withdrawal_ID),
+                    });
+                    sqlcommand.ExecuteNonQuery();
+                    log.writeLogToDB(LoginACCOUNT, "Withdrawal/DelWithdrawal", "刪除出金單號為" + Withdrawal_ID );
+
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                log.writeLogToDB(LoginACCOUNT, "Withdrawal/DelWithdrawal", e.ToString());
+                return 0;
+            }
+        }
+        [HttpPost]
+        public int UpdateExpectDate(string Withdrawal_ID, string Date, string LoginACCOUNT)
+        {
+            try
+            {
+                string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+                using (SqlConnection sqlconnection = new SqlConnection(conn))
+                {
+                    sqlconnection.Open();
+                    string sqlcommandstring = "";
+                    sqlcommandstring = @"update WithdrawalList set ExpectDate=@ExpectDate, UPDATE_DATE=@date
+                                                where Withdrawal_ID=@Withdrawal_ID ";
+
+
+                    SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                        new SqlParameter("@Withdrawal_ID", Withdrawal_ID),
+                        new SqlParameter("@ExpectDate", Date==""?System.Data.SqlTypes.SqlDateTime.Null:(object)Date),
+                        new SqlParameter("@date", convertTime.UStoTW(DateTime.Now))
+                    });
+                    sqlcommand.ExecuteNonQuery();
+                    log.writeLogToDB(LoginACCOUNT, "Withdrawal/UpdateExpectDate", "更新出金單號:" + Withdrawal_ID + ",贖回日為" + Date);
+
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                log.writeLogToDB(LoginACCOUNT, "Deposite/UpdateArrivalDate", e.ToString());
                 return 0;
             }
         }
