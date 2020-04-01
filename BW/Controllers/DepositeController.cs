@@ -83,7 +83,7 @@ namespace BW.Controllers
                 sqlconnection.Open();
                 string sqlcommandstring = "";
                 string Deposite = @" select Deposit_ID as ID, N'入金'as Kind, Deposit_Amount as Amount, CL1.CODE_DESC as Type, convert(varchar, CREATE_DATE, 111) as CREATE_DATE , DepositListFileName as FileName, Isfile,
-                                                convert(varchar, Arrival_DATE, 111) as Arrival_DATE,N'入金單' as WithdrawalFrom, CL2.CODE_DESC as Status, DL.Status as StatusNo
+                                                convert(varchar, Arrival_DATE, 111) as Arrival_DATE,N'入金單' as WithdrawalFrom, CL2.CODE_DESC as Status, DL.Status as StatusNo,'N/A'as ExpectDate
                                                 from DepositList DL
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                                where CODE_TYPE='Deposit_Type')CL1 on DL.Deposit_Type=CL1.CODE_NO
@@ -91,7 +91,7 @@ namespace BW.Controllers
 			                                                where CODE_TYPE='Deposit_Status')CL2 on DL.Status=CL2.CODE_NO
                                                 where DL.Cli_ID=@CliID ";
                 string Withdraw= @" select Withdrawal_ID as ID, N'出金'as Kind, Withdrawal_Amount as Amount, CL1.CODE_DESC as Type, convert(varchar, WL.CREATE_DATE, 111) as CREATE_DATE , WithdrawalListFileName as FileName, WL.Isfile,
-                                                convert(varchar, WL.Arrival_DATE, 111) as Arrival_DATE, WL.Deposit_ID as WithdrawalFrom, CL2.CODE_DESC as Status, WL.Status as StatusNo
+                                                convert(varchar, WL.Arrival_DATE, 111) as Arrival_DATE, WL.Deposit_ID as WithdrawalFrom, CL2.CODE_DESC as Status, WL.Status as StatusNo, convert(varchar, WL.ExpectDate, 111) as ExpectDate
                                                 from WithdrawalList WL
                                                 left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
@@ -721,7 +721,7 @@ namespace BW.Controllers
                 string sqlcommandstring = "";
                 string Deposite = @" select Deposit_ID as ID, N'入金'as Kind, Deposit_Amount as Amount, CL1.CODE_DESC as Type, convert(varchar, DL.CREATE_DATE, 111) as CREATE_DATE , DepositListFileName as FileName, Isfile,
                                                 convert(varchar, Arrival_DATE, 111) as Arrival_DATE,N'入金單' as WithdrawalFrom, CL2.CODE_DESC as Status, DL.Status as StatusNo,
-                                                DL.Cli_ID, (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName
+                                                DL.Cli_ID, (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)as CliName,'N/A'as ExpectDate
                                                 from DepositList DL
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                                where CODE_TYPE='Deposit_Type')CL1 on DL.Deposit_Type=CL1.CODE_NO
@@ -737,7 +737,7 @@ namespace BW.Controllers
 
                 string Withdraw = @" select Withdrawal_ID as ID, N'出金'as Kind, Withdrawal_Amount as Amount, CL1.CODE_DESC as Type, convert(varchar, WL.CREATE_DATE, 111) as CREATE_DATE , WithdrawalListFileName as FileName, WL.Isfile,
                                                 convert(varchar, WL.Arrival_DATE, 111) as Arrival_DATE, WL.Deposit_ID as WithdrawalFrom, CL2.CODE_DESC as Status, WL.Status as StatusNo,
-                                                DL.Cli_ID, (C.Cli_ChiNAME_Last+C.Cli_ChiNAME_First)as CliName
+                                                DL.Cli_ID, (C.Cli_ChiNAME_Last+C.Cli_ChiNAME_First)as CliName, convert(varchar, WL.ExpectDate, 111) as ExpectDate
                                                 from WithdrawalList WL
                                                 left join DepositList DL on WL.Deposit_ID=DL.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 

@@ -51,7 +51,10 @@
                         </div>
                     </div>
                     <div class="form-group au-form row">
-                        <label class="col-3 col-form-label">預計出金日</label>
+                        <div class="col-3">
+                            <label class="col-form-label">贖回日</label>
+                            <p class="red">*請填寫期滿日期次月的第一個工作日</p>
+                        </div>
                         <div class="col-7">
                             <input type="text" id="txtExpectDate" name="txtApplyDate" readonly>
                         </div>
@@ -188,7 +191,7 @@
                 },
                 { field: 'Deposit_ID', title: '出金來源編號', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'CREATE_DATE', title: '出金登記時間', align: 'center', halign: 'center', visible: true, sortable: true },
-                { field: 'ExpectDate', title: '預計出金年日', align: 'center', halign: 'center', visible: true, sortable: true },
+                { field: 'ExpectDate', title: '贖回日', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'Arrival_DATE', title: '匯出日期', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'Status', title: '處理狀態', align: 'center', halign: 'center', visible: true, sortable: true }
             ],
