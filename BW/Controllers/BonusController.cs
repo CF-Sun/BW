@@ -136,7 +136,7 @@ namespace BW.Controllers
             year = "";//年
             mon = "";//上個月月份
             quarterly = "";
-            dtime = dtime.AddDays(-dtime.Day);
+            //dtime = dtime.AddDays(-dtime.Day);
             try
             {
                 DataRow dr;
@@ -332,7 +332,7 @@ namespace BW.Controllers
                                                 left join (select Con_ID, sum(Deposit_Amount)as Deposit_Amount 
                                                 from DepositList where Status=2 and Arrival_DATE<=@Arrival_DATE group by Con_ID) DD on CoI.Con_ID=DD.Con_ID
                                                 left join (select Con_ID, sum(Withdrawal_Amount)as Withdrawal_Amount 
-                                                from WithdrawalList where Status !=0 and ExpectDate<=@ExpectDate group by Con_ID) WA  on CoI.Con_ID=WA.Con_ID
+                                                from WithdrawalList where ExpectDate<=@ExpectDate group by Con_ID) WA  on CoI.Con_ID=WA.Con_ID
                                                 left join ConHieraSetting CH on CoI.Con_ID=CH.Con_ID
                                                 where CoI.Con_ID != '000' order by CoI.Con_LEVEL asc "; //排除公司
                         sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
@@ -357,7 +357,7 @@ namespace BW.Controllers
                                             DT.Type_RATE
                                             from DepositList DL
                                             left join (select Con_ID, Deposit_ID, sum(Withdrawal_Amount)as Withdrawal_Amount 
-			                                            from WithdrawalList where Status !=0 and ExpectDate<=@ExpectDate group by Con_ID,Deposit_ID) WL
+			                                            from WithdrawalList where ExpectDate<=@ExpectDate group by Con_ID,Deposit_ID) WL
 			                                            on DL.Con_ID=WL.Con_ID and DL.Deposit_ID=WL.Deposit_ID
                                             left join DepositType DT on DL.Deposit_Type=DT.Type_NO
                                             where DL.Status=2  ";

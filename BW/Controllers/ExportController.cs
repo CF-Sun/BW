@@ -22,7 +22,6 @@ namespace BW.Controllers
         [ValidateInput(false)]
         public ActionResult BonusReport2Pdf(FormCollection post)
         {
-            //bool result = License.IsValidLicense("IRONPDF-10049321C2-178445-FACB89-826487FB46-8B01AAD7-UEx294DA74D37048D8-RMPCHINA.IRO190814.3891.33136.PRO.1DEV.1YR.SUPPORTED.UNTIL.14.AUG.2020");
 
             string ReportMasterID = post["ReportMasterID"];
             string Report_Con_ID = post["Report_Con_ID"];
@@ -41,6 +40,7 @@ namespace BW.Controllers
             pdfOptions.HeaderHtmlFormat = "<div style='width:100%;text-align:center'><h1>佣金報表</h1></div>";
             pdfOptions.FooterHtmlFormat = "<div style='width:100%;text-align:center'>{page_number}</div>";
             pdfOptions.PageSize = new SizeF(PdfPageSizes.A4.Height, PdfPageSizes.A4.Width);
+            pdfOptions.MinLoadWaitTime = 6000;
             //pdfOptions.OutputArea = new RectangleF(0.1f, 1f, 9f, 13f);
 
             MemoryStream fileStream = new MemoryStream();

@@ -172,3 +172,6 @@ D:\Syscom\外包\BW\git_BW\BW\BW\obj\Release\BW.csproj.CoreCompileInputs.cache
 D:\Syscom\外包\BW\git_BW\BW\BW\obj\Release\BW.csproj.CopyComplete
 D:\Syscom\外包\BW\git_BW\BW\BW\obj\Release\BW.dll
 D:\Syscom\外包\BW\git_BW\BW\BW\obj\Release\BW.pdb
+D:\Syscom\外包\BW\git_BW\BW\BW\bin\BouncyCastle.Crypto.dll
+D:\Syscom\外包\BW\git_BW\BW\BW\bin\BouncyCastle.Crypto.xml
+D:\Syscom\外包\BW\git_BW\BW\BW\bin\ICSharpCode.SharpZipLib.pdb

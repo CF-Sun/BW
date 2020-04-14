@@ -24,13 +24,13 @@
     </div>
     <br />
     <br />
-    <div id="Month2" style="display:none">
+    <div id="Month2" style="display:none;">
         <label id="lblMon2" class="col-sm-3 control-label"></label>
         <div id="divExtension2"></div>
     </div>
     <br />
     <br />
-    <div id="Month3" style="display:none">
+    <div id="Month3" style="display:none;">
         <label id="lblMon3" class="col-sm-3 control-label"></label>
         <div id="divExtension3"></div>
     </div>
@@ -82,17 +82,17 @@
                 switch (item.MonNo) {
                     case '1':
                         objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
-                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '2':
-                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
-                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; " rules="all"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '3':
                         objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
-                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table><br/>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Report_Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                 }
@@ -123,7 +123,10 @@
         }
         $.getJSON("/PayedRecord/TableReport", obj).done(function (data) {
             var TableReportString = '<font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">顧問編號</font></b></td><td><b><font color="white">顧問名</font></b></td><td><b><font color="white">存量金額</font></b></td><td><b><font color="white">獎金</font></b></td></tr></font>';
-            TableReportString += '<tr><td>' + data[0].Report_Con_ID + '</td><td>' + data[0].ConName + '</td><td>' + toThousands(eval(data[0].Total_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(data[0].Bonus).toFixed(2)) + '</td></tr>'
+            $.each(data, function (i, item) {
+                TableReportString += '<tr><td>' + item.Report_Con_ID + '</td><td>' + item.ConName + '</td><td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
+            });
+
             $("#Table_" + Con_ID + MonthlyReport_ID).html(TableReportString);
         });
     }
