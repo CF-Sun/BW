@@ -72,7 +72,7 @@ namespace BW.Controllers
 												left join DepositList D on A.Deposit_ID=D.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) CL on D.Deposit_Type=CL.CODE_NO
-												where A.Status !=0 and ExpectDate<=@ExpectDate ";
+												where ExpectDate<=@ExpectDate ";
                 if (startDate != "")
                 {
                     sqlcommandstring += "and A.Arrival_DATE >= '" + startDate + "' ";
@@ -84,7 +84,7 @@ namespace BW.Controllers
                 sqlcommandstring += " group by CL.CODE_DESC,D.Deposit_Type order by D.Deposit_Type asc  ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 sqlcommand.Parameters.AddRange(new SqlParameter[] {
-                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    new SqlParameter("@ExpectDate", dtime.ToString("yyyy/MM/dd"))
                     });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);
@@ -111,7 +111,7 @@ namespace BW.Controllers
 												left join DepositList D on A.Deposit_ID=D.Deposit_ID
                                                 left join (select CODE_NO, CODE_DESC from CodeList 
 			                                        where CODE_TYPE='Deposit_Type' and CODE_Status=1) CL on D.Deposit_Type=CL.CODE_NO
-												where A.Status !=0 and ExpectDate<=@ExpectDate ";
+												where ExpectDate<=@ExpectDate ";
                 if (startDate != "")
                 {
                     sqlcommandstring += "and A.Arrival_DATE >= '" + startDate + "' ";
@@ -123,7 +123,7 @@ namespace BW.Controllers
                 sqlcommandstring += " order by A.Arrival_DATE desc ";
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 sqlcommand.Parameters.AddRange(new SqlParameter[] {
-                    new SqlParameter("@ExpectDate", dtime.AddMonths(-1).AddDays(-dtime.Day).ToString("yyyy/MM/dd"))
+                    new SqlParameter("@ExpectDate", dtime.ToString("yyyy/MM/dd"))
                     });
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                 da.Fill(dt);

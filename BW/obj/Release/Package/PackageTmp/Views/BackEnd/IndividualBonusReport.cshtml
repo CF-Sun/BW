@@ -95,18 +95,18 @@
             $.each(data, function (i, item) {
                 switch (item.MonNo) {
                     case '1':
-                        objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; " rules="all"></table>';
-                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
+                        objstring1 = objstring1 + '<table id="Table_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; " rules="all"></table>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '2':
-                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
-                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '3':
-                        objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
-                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
+                        objstring3 = objstring3 + '<table id="Table_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center;" rules="all"></table>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(Report_Con_ID) + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true" style="text-align:center; page-break-after: always;" rules="all"></table><br/>';
                         $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                 }
@@ -147,8 +147,8 @@
         var obj =
         {
             MonthlyReport_ID: MonthlyReport_ID,
-            Con_ID: Con_ID,
-            Report_Con_ID: Report_Con_ID
+            //Con_ID: Con_ID,
+            //Report_Con_ID: Report_Con_ID
         }
         //$.post("/PayedRecord/TableReportIndivi_POST", obj)
         //    .done(function (data) {
@@ -181,27 +181,29 @@
         options.contentType = "application/json";
         options.dataType = "html";
         options.success = function (data) {
+            var tmpReport_Con_ID = '';
             var tmpCon_ID = '';
             var tmpMonthlyReport_ID = '';
             var TableReportString = '';
             var count = 0;
             data = JSON.parse(data);
             $.each(data, function (i, item) {
-                if ($.trim(item.Con_ID) == tmpCon_ID && $.trim(item.MonthlyReport_ID) == tmpMonthlyReport_ID) {
+                if ($.trim(item.Report_Con_ID) == tmpReport_Con_ID && $.trim(item.Con_ID) == tmpCon_ID && $.trim(item.MonthlyReport_ID) == tmpMonthlyReport_ID) {
                     TableReportString += '<tr><td>' + item.Con_ID + '</td><td>' + item.ConName + '</td><td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
 
                 } else {
                     if (count != 0) {
-                        $("#Table_" + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
+                        $("#Table_" + tmpReport_Con_ID + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
                     }
                     TableReportString = '<font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">顧問編號</font></b></td><td><b><font color="white">顧問名</font></b></td><td><b><font color="white">存量金額</font></b></td><td><b><font color="white">獎金</font></b></td></tr></font>';
                     TableReportString += '<tr><td>' + item.Con_ID + '</td><td>' + item.ConName + '</td><td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
+                    tmpReport_Con_ID = $.trim(item.Report_Con_ID);
                     tmpCon_ID = $.trim(item.Con_ID);
                     tmpMonthlyReport_ID = $.trim(item.MonthlyReport_ID);
                     count++;
                 }
                 if (count == data.length - 1)
-                    $("#Table_" + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
+                    $("#Table_" + tmpReport_Con_ID + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
             });
         };
         options.error = function () {
@@ -233,13 +235,14 @@
         }
         $.post("/PayedRecord/TableDetailReportIndivi_POST", obj)
             .done(function (data) {
+                var tmpReportCon_ID = '';
                 var tmpDetailCon_ID = '';
                 var tmpDetailMonthlyReport_ID = '';
                 var TableDetailString = '';
                 var count = 0;
                 var totalBonus = 0;
                 $.each(data, function (i, item) {
-                    if ($.trim(item.Con_ID) == tmpDetailCon_ID && $.trim(item.MonthlyReport_ID) == tmpDetailMonthlyReport_ID) {
+                    if ($.trim(item.Report_Con_ID) == tmpReportCon_ID && $.trim(item.Con_ID) == tmpDetailCon_ID && $.trim(item.MonthlyReport_ID) == tmpDetailMonthlyReport_ID) {
                         TableDetailString += '<tr><td>' + item.Cli_ID + '</td><td>' + item.CliName + '</td><td>' + toThousands(eval(item.Deposit_Amount).toFixed(2)) + '</td><td>' + toThousands(eval(item.Withdrawal_Amount).toFixed(2)) + '</td>'
                         TableDetailString += '<td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + item.CODE_DESC + '</td><td>' + item.BonusType_Rate + '</td><td>' + item.DepositType_Rate + '</td>'
                         TableDetailString += '<td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
@@ -247,7 +250,7 @@
                     } else {
                         if (count != 0) {
                             TableDetailReport += '<tr><td>合計</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>' + toThousands(eval(totalBonus).toFixed(2)) + '</td></tr>'
-                            $("#TableDetail_" + tmpDetailCon_ID + tmpDetailMonthlyReport_ID).html(TableDetailString);
+                            $("#TableDetail_" + tmpReportCon_ID + tmpDetailCon_ID + tmpDetailMonthlyReport_ID).html(TableDetailString);
                             totalBonus = 0; //寫入後總和歸零
                         }
                         TableDetailString = '<font size="4"><tr bgcolor="#2B415F"><td><b><font color="white">客戶編號</font></b></td><td><b><font color="white">客戶名</font></b></td><td><b><font color="white">入金</font></b></td><td><b><font color="white">出金</font></b></td><td><b><font color="white">金額</font></b></td><td><b><font color="white">佣金項目</font></b></td><td><b><font color="white">階級比率</font></b></td><td><b><font color="white">案別比率</font></b></td><td><b><font color="white">獎金</font></b></td></tr></font>';
@@ -255,13 +258,14 @@
                         TableDetailString += '<td>' + toThousands(eval(item.Total_Amount).toFixed(2)) + '</td><td>' + item.CODE_DESC + '</td><td>' + item.BonusType_Rate + '</td><td>' + item.DepositType_Rate + '</td>'
                         TableDetailString += '<td>' + toThousands(eval(item.Bonus).toFixed(2)) + '</td></tr>'
                         totalBonus = totalBonus + eval(item.Bonus)
+                        tmpReportCon_ID = $.trim(item.Report_Con_ID);
                         tmpDetailCon_ID = $.trim(item.Con_ID);
                         tmpDetailMonthlyReport_ID = $.trim(item.MonthlyReport_ID);
                         count++;
                     }
                     if (count == data.length - 1) {
                         TableDetailReport += '<tr><td>合計</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td>' + toThousands(eval(totalBonus).toFixed(2)) + '</td></tr>'
-                        $("#TableDetail_" + tmpDetailCon_ID + tmpDetailMonthlyReport_ID).html(TableDetailString);
+                        $("#TableDetail_" + tmpReportCon_ID + tmpDetailCon_ID + tmpDetailMonthlyReport_ID).html(TableDetailString);
                         totalBonus = 0;
                     }
                 });

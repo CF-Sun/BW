@@ -566,7 +566,7 @@ namespace BW.Controllers
             }
         }
         [HttpPost]
-        public ActionResult TableReportIndivi_POST(string MonthlyReport_ID, string Con_ID, string Report_Con_ID)
+        public ActionResult TableReportIndivi_POST(string MonthlyReport_ID)
         {
             DataTable dtResult = new DataTable();
             dtResult.Columns.Add("MonthlyReport_ID", typeof(string));
@@ -577,7 +577,6 @@ namespace BW.Controllers
 
 
             string[] arryMonthlyReport_ID = MonthlyReport_ID.Split(',').Distinct().ToArray();
-            string[] arryCon_ID = Con_ID.Split(',');
             string MonthlyReport_IDList = "";
             DataTable dt = new DataTable();
             
@@ -605,13 +604,13 @@ namespace BW.Controllers
             {
                 sqlconnection.Open();
 
-                string sqlcommandstring = @"  select MonthlyReport_ID, A.Con_ID, Total_Amount, sum(Bonus)Bonus,
+                string sqlcommandstring = @"  select MonthlyReport_ID, A.Report_Con_ID, A.Con_ID, Total_Amount, sum(Bonus)Bonus,
                                                 (B.Con_ChiNAME_Last+B.Con_ChiNAME_First)as ConName  
                                                 from BonusReportDetail A
                                                 left join ConInfoDetail B on A.Con_ID=B.Con_ID
-                                                where MonthlyReport_ID in ("+ MonthlyReport_ID + @") 
-                                                group by  MonthlyReport_ID, A.Con_ID, B.Con_ChiNAME_Last, B.Con_ChiNAME_First,Total_Amount
-                                                order by MonthlyReport_ID, A.Con_ID ";
+                                                where MonthlyReport_ID in (" + MonthlyReport_ID + @") 
+                                                group by  MonthlyReport_ID, A.Report_Con_ID, A.Con_ID, B.Con_ChiNAME_Last, B.Con_ChiNAME_First,Total_Amount
+                                                order by MonthlyReport_ID, A.Report_Con_ID ";
 
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
@@ -623,7 +622,7 @@ namespace BW.Controllers
             }
         }
         [HttpPost]
-        public ActionResult TableDetailReportIndivi_POST(string MonthlyReport_ID, string Con_ID, string Report_Con_ID)
+        public ActionResult TableDetailReportIndivi_POST(string MonthlyReport_ID)
         {
             DataTable dtResult = new DataTable();
             dtResult.Columns.Add("MonthlyReport_ID", typeof(string));
@@ -640,20 +639,26 @@ namespace BW.Controllers
             dtResult.Columns.Add("Bonus_Type", typeof(int));
             DataTable dt = new DataTable();
 
-            string[] arryMonthlyReport_ID = MonthlyReport_ID.Split(',');
-            string[] arryCon_ID = Con_ID.Split(',');
+            string[] arryMonthlyReport_ID = MonthlyReport_ID.Split(',').Distinct().ToArray();
+            string MonthlyReport_IDList = "";
 
-            for (int i = 0; i < arryCon_ID.Length; i++)
+            for (int i = 0; i < arryMonthlyReport_ID.Length; i++)
             {
-                dt = GetDetailReportIndivi(arryMonthlyReport_ID[i], arryCon_ID[i], Report_Con_ID);
-                foreach (DataRow dr in dt.Rows)
-                {
-                    dtResult.ImportRow(dr);
-                }
+                if (i == 0)
+                    MonthlyReport_IDList = "'" + arryMonthlyReport_ID[i] + "'";
+                else
+                    MonthlyReport_IDList += ",'" + arryMonthlyReport_ID[i] + "'";
+
+                //foreach (DataRow dr in dt.Rows)
+                //{
+                //    dtResult.ImportRow(dr);
+                //}
             }
-            return Json(dtResult.ToJson(), JsonRequestBehavior.AllowGet);
+            dt = GetDetailReportIndivi(MonthlyReport_IDList);
+
+            return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
         }
-        public DataTable GetDetailReportIndivi(string MonthlyReport_ID, string Con_ID, string Report_Con_ID)
+        public DataTable GetDetailReportIndivi(string MonthlyReport_ID)
         {
             DataTable dt = new DataTable();
             string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
@@ -661,19 +666,18 @@ namespace BW.Controllers
             {
                 sqlconnection.Open();
 
-                string sqlcommandstring = @"  select MonthlyReport_ID, A.Con_ID, A.Cli_ID, A.Deposit_Amount, A.Withdrawal_Amount, A.Total_Amount,
+                string sqlcommandstring = @"  select MonthlyReport_ID, A.Report_Con_ID, A.Con_ID, A.Cli_ID, A.Deposit_Amount, A.Withdrawal_Amount, A.Total_Amount,
                                                 C.CODE_DESC, A.BonusType_Rate, A.DepositType_Rate, A.Bonus,
                                                 (B.Cli_ChiNAME_Last+B.Cli_ChiNAME_First)  as CliName  , A.Bonus_Type
                                                 from BonusReportDetail A
                                                 left join CliInfoDetail B on A.Cli_ID=B.Cli_ID
                                                 left join CodeList C on A.Bonus_Type=C.CODE_NO and C.CODE_Status=1 and C.CODE_TYPE='Bonus_Type'
-                                                where MonthlyReport_ID=@MonthlyReport_ID and A.Con_ID=@Con_ID and A.Report_Con_ID=@Report_Con_ID  ";
+                                                where MonthlyReport_ID in (" + MonthlyReport_ID + @") 
+                                                order by MonthlyReport_ID, A.Report_Con_ID ";
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 sqlcommand.Parameters.AddRange(new SqlParameter[] {
-                        new SqlParameter("@MonthlyReport_ID", MonthlyReport_ID),
-                        new SqlParameter("@Report_Con_ID", Report_Con_ID),
-                        new SqlParameter("@Con_ID", Con_ID)
+                        new SqlParameter("@MonthlyReport_ID", MonthlyReport_ID)
                     });
 
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);

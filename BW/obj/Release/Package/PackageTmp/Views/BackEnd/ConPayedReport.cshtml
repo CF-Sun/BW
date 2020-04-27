@@ -652,23 +652,22 @@
             $("#Month1").hide();
             $("#Month2").hide();
             $("#Month3").hide();
-
             //動態產生報表table
             $.each(data, function (i, item) {
                 switch (item.MonNo) {
                     case '1':
-                        objstring1 = objstring1 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
-                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring1 = objstring1 + '<table id="Table_' + $.trim(Report_Con_ID)+$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring1 = objstring1 + '<table id="TableDetail_' + $.trim(Report_Con_ID)+$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
                         $("#lblMon1").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '2':
-                        objstring2 = objstring2 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
-                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring2 = objstring2 + '<table id="Table_' + $.trim(Report_Con_ID)+$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring2 = objstring2 + '<table id="TableDetail_' + $.trim(Report_Con_ID) +$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
                         $("#lblMon2").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                     case '3':
-                        objstring3 = objstring3 + '<table id="Table_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
-                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring3 = objstring3 + '<table id="Table_' + $.trim(Report_Con_ID) +$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
+                        objstring3 = objstring3 + '<table id="TableDetail_' + $.trim(Report_Con_ID) +$.trim(item.Con_ID) + $.trim(item.MonthlyReport_ID) + '" class="table table-bordered" data-editable="true"></table>';
                         $("#lblMon3").html($.trim(item.Calculate_Year) + '/' + $.trim(item.Calculate_Month));
                         break;
                 }
@@ -684,18 +683,77 @@
             if (objstring3 != "")
                 $("#Month3").show();
 
+            var arryCon_ID = '';
+            var arryMonthlyReport_ID = '';
+
             //依序抓取每個table的資料
             $.each(data, function (i, item) {
-                TableReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
-                TableDetailReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+                if (arryCon_ID == '') {
+                    arryCon_ID = $.trim(item.Con_ID);
+                    arryMonthlyReport_ID = item.MonthlyReport_ID;
+                }
+                else {
+                    arryCon_ID = arryCon_ID + ',' + $.trim(item.Con_ID);
+                    arryMonthlyReport_ID = arryMonthlyReport_ID + ',' + item.MonthlyReport_ID;
+                }
+                //TableReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
+                //TableDetailReport($.trim(item.Con_ID), item.MonthlyReport_ID, $.trim(Report_Con_ID));
             });
+            TableReport(arryCon_ID, arryMonthlyReport_ID, $.trim(Report_Con_ID));
+            TableDetailReport(arryCon_ID, arryMonthlyReport_ID, $.trim(Report_Con_ID));
         });
     }
     //------------------------END----------------------------------
-
     function TableReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
-        var apiURL = "/PayedRecord/TableReportIndivi/";
-        $("#Table_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+
+        var obj =
+        {
+            MonthlyReport_ID: MonthlyReport_ID,
+        }
+        var options = {};
+        options.url = "/PayedRecord/TableReportIndivi_POST";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            var tmpReport_Con_ID = '';
+            var tmpCon_ID = '';
+            var tmpMonthlyReport_ID = '';
+            var TableReportArray = [];
+            var count = 0;
+            data = JSON.parse(data);
+            $.each(data, function (i, item) {
+                if ($.trim(item.Report_Con_ID) == tmpReport_Con_ID && $.trim(item.Con_ID) == tmpCon_ID && $.trim(item.MonthlyReport_ID) == tmpMonthlyReport_ID) {
+                    TableReportArray.push(item)
+                } else {
+                    if (count != 0) {
+                        //$("#Table_" + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
+                        AddTableReport(TableReportArray, tmpReport_Con_ID, tmpCon_ID, tmpMonthlyReport_ID);
+                        TableReportArray = [];
+                    }
+                    TableReportArray.push(item)
+                    tmpReport_Con_ID = $.trim(item.Report_Con_ID);
+                    tmpCon_ID = $.trim(item.Con_ID);
+                    tmpMonthlyReport_ID = $.trim(item.MonthlyReport_ID);
+                    count++;
+                }
+                if (count == data.length - 1)
+                    //$("#Table_" + tmpCon_ID + tmpMonthlyReport_ID).html(TableReportString);
+                    AddTableReport(TableReportArray, tmpReport_Con_ID, tmpCon_ID, tmpMonthlyReport_ID);
+            });
+        };
+        options.error = function () {
+        };
+        options.complete = function () {
+        };
+        $.ajax(options);
+    }
+    function AddTableReport(TableReportArray, Report_Con_ID, Con_ID, MonthlyReport_ID) {
+        //var apiURL = "/PayedRecord/TableReportIndivi/";
+        console.log(Report_Con_ID +'/'+ Con_ID +'/'+ MonthlyReport_ID)
+        $("#Table_" + Report_Con_ID + Con_ID + MonthlyReport_ID).bootstrapTable({
+            data: TableReportArray,
             columns: [
                 { field: 'Con_ID', title: '顧問編號', align: 'center', halign: 'center', visible: true, sortable: true },
                 { field: 'ConName', title: '顧問名', align: 'center', halign: 'center', visible: true, sortable: true },
@@ -721,10 +779,10 @@
                 }
             ],
             classes: 'table table-striped table-hover ',
-            url: apiURL,
-            method: "Get",
-            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
-            dataType: "json",
+            //url: apiURL,
+            //method: "Get",
+            //queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            //dataType: "json",
             contentType: 'application/json,charset=utf-8',
             toolbar: "#toolbar",
             uniqueId: 'ID',
@@ -756,8 +814,40 @@
         });
     }
     function TableDetailReport(Con_ID, MonthlyReport_ID, Report_Con_ID) {
-        var apiURL = "/PayedRecord/TableDetailReportIndivi/";
-        $("#TableDetail_" + Con_ID + MonthlyReport_ID).bootstrapTable({
+        var obj =
+        {
+            MonthlyReport_ID: MonthlyReport_ID
+        }
+        $.post("/PayedRecord/TableDetailReportIndivi_POST", obj)
+            .done(function (data) {
+                var tmpReportCon_ID = '';
+                var tmpDetailCon_ID = '';
+                var tmpDetailMonthlyReport_ID = '';
+                var TableDetailArray = [];
+                var count = 0;
+                $.each(data, function (i, item) {
+                    if ($.trim(item.Report_Con_ID) ==tmpReportCon_ID && $.trim(item.Con_ID) == tmpDetailCon_ID && $.trim(item.MonthlyReport_ID) == tmpDetailMonthlyReport_ID) {
+                        TableDetailArray.push(item)
+                    } else {
+                        if (count != 0) {
+                            AddTableDetailReport(TableDetailArray, tmpReportCon_ID, tmpDetailMonthlyReport_ID, tmpDetailCon_ID)
+                            TableDetailArray = [];
+                        }
+                        TableDetailArray.push(item)
+                        tmpReportCon_ID = $.trim(item.Report_Con_ID);
+                        tmpDetailCon_ID = $.trim(item.Con_ID);
+                        tmpDetailMonthlyReport_ID = $.trim(item.MonthlyReport_ID);
+                        count++;
+                    }
+                    if (count == data.length - 1) {
+                        AddTableDetailReport(TableDetailArray, tmpReportCon_ID, tmpDetailMonthlyReport_ID, tmpDetailCon_ID)
+                    }
+                });
+            });
+    }
+    function AddTableDetailReport(TableDetailArray, ReportCon_ID, MonthlyReport_ID, Con_ID) {
+        $("#TableDetail_" + ReportCon_ID + Con_ID + MonthlyReport_ID).bootstrapTable({
+            data: TableDetailArray,
             columns: [
                 {
                     field: 'Cli_ID', title: '客戶編號', align: 'center', halign: 'center', visible: true, sortable: true,
@@ -818,10 +908,10 @@
                 }
             ],
             classes: 'table table-striped table-hover ',
-            url: apiURL,
-            method: "Get",
-            queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
-            dataType: "json",
+            //url: apiURL,
+            //method: "Get",
+            //queryParams: { MonthlyReport_ID: MonthlyReport_ID, Con_ID: Con_ID, Report_Con_ID: Report_Con_ID },
+            //dataType: "json",
             contentType: 'application/json,charset=utf-8',
             //toolbar: "#toolbar",
             uniqueId: 'ID',
