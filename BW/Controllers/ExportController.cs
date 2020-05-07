@@ -246,7 +246,7 @@ namespace BW.Controllers
                 regex = new Regex(@"Rreplace18R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
                     item.Replace(txt18);
-                regex = new Regex(@"Rreplace19_____________________________________________R", RegexOptions.IgnoreCase);
+                regex = new Regex(@"Rreplace19___________________________________R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
                     item.Replace(txt19);
                 regex = new Regex(@"Rreplace20R", RegexOptions.IgnoreCase);
