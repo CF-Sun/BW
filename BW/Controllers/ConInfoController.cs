@@ -742,6 +742,20 @@ namespace BW.Controllers
                         if (count > 0)
                             return "1";
 
+                        //20200507 新增報聘股東時 寫入新的單位代號
+                        if(conInfo.LoginACCOUNT.Trim() == "BW")
+                        {
+                            //寫入CodeList
+                            sqlcommandstring = @" Insert CodeList (CODE_TYPE,CODE_NO,CODE_DESC,CODE_Status) 
+                                            values(@CODE_TYPE,@CODE_NO,'',1)";
+                            sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                            sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                                new SqlParameter("@CODE_TYPE", "ConUnitNo"),
+                                new SqlParameter("@CODE_NO", conInfo.UniNo)
+                            });
+                            sqlcommand.ExecuteNonQuery();
+                        }
+
                         //寫入BWAccount
                         sqlcommandstring = @" Insert BWAccount (ACCOUNT,PW,IsCon,CREATE_DATE,UPDATE_DATE,Enable,IsLock,ErrTimes,Email) 
                                             values(@ACCOUNT,@PW,1,@date,@date,1,0,0,@Email)";
@@ -756,22 +770,29 @@ namespace BW.Controllers
 
                         //取直推顧問的階層
                         string Con_PATH = "";
-                        sqlcommandstring = @" select Con_PATH from ConInfo where Con_ID=@Con_ID";
-                        sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
-                        sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                        if (conInfo.LoginACCOUNT.Trim() == "BW")
+                        {
+                            Con_PATH = "000";
+                        }
+                        else
+                        {
+                            sqlcommandstring = @" select Con_PATH from ConInfo where Con_ID=@Con_ID";
+                            sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                            sqlcommand.Parameters.AddRange(new SqlParameter[] {
                                 new SqlParameter("@Con_ID", conInfo.LoginACCOUNT)
                             });
-                        Con_PATH = Convert.ToString(sqlcommand.ExecuteScalar());
-                        if(Con_PATH.Trim()=="")
-                            return "0";
+                            Con_PATH = Convert.ToString(sqlcommand.ExecuteScalar());
+                            if (Con_PATH.Trim() == "")
+                                return "0";
+                        }
 
                         //寫入ConInfo
                         sqlcommandstring = @" Insert ConInfo values(@Con_ID, @Parent_Con_ID, @Con_ROLE,null,@Con_PATH, 0, 0, 1, @date, @date)";
                         sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                         sqlcommand.Parameters.AddRange(new SqlParameter[] {
                                 new SqlParameter("@Con_ID", Con_ID),
-                                new SqlParameter("@Parent_Con_ID", conInfo.LoginACCOUNT),
-                                new SqlParameter("@Con_ROLE", conInfo.LoginACCOUNT=="000"?"SHA":"CON"),
+                                new SqlParameter("@Parent_Con_ID", conInfo.LoginACCOUNT=="BW"?"000":conInfo.LoginACCOUNT),
+                                new SqlParameter("@Con_ROLE", conInfo.LoginACCOUNT=="BW"?"SHA":"CON"),
                                 new SqlParameter("@Con_PATH", Con_PATH+"/"+Con_ID),
                                 new SqlParameter("@date", convertTime.UStoTW(DateTime.Now))
                             });

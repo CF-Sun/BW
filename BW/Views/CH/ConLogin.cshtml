@@ -154,6 +154,14 @@
                         $('#maindiv').jqLoading("destroy");
                         return;
                     }
+                    //無角色
+                    if (result == "6") {
+                        $("#lab").html('無設定角色');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
                     if (result.length > 0) {
                         if (result[0].Enable == "False") {
                             $("#lab").html('登入帳號 ' + $('#account').val() + '已停用');

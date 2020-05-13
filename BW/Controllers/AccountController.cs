@@ -341,6 +341,35 @@ namespace BW.Controllers
             }
         }
         [HttpPost]
+        public int AddAccount(string Account, string PW, string Email, string LoginACCOUNT)
+        {
+            try
+            {
+                string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
+                using (SqlConnection sqlconnection = new SqlConnection(conn))
+                {
+                    sqlconnection.Open();
+                    string sqlcommandstring = @"insert BWAccount(ACCOUNT, PW, IsCon, CREATE_DATE, UPDATE_DATE, Enable, ErrTimes, Email)
+                                                values (@ACCOUNT, @PW, 0, @date, @date, 1, 0, @Email) ";
+                    SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                            new SqlParameter("@ACCOUNT", Account.Trim()),
+                            new SqlParameter("@PW", PW.Trim()),
+                            new SqlParameter("@Email", Email.Trim()),
+                            new SqlParameter("@date", convertTime.UStoTW(DateTime.Now))
+                        });
+                    sqlcommand.ExecuteNonQuery();
+                    log.writeLogToDB(LoginACCOUNT, "Account/AddAccount", "新增帳號:" + Account.Trim());
+                }
+                return 1;
+            }
+            catch (Exception e)
+            {
+                log.writeLogToDB(LoginACCOUNT, "Account/AddAccount", e.ToString());
+                return 0;
+            }
+        }
+        [HttpPost]
         public int unLockCliAccount(string CliID, string LoginACCOUNT)
         {
             try

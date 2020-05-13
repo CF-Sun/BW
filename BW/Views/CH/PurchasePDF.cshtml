@@ -139,7 +139,6 @@
                             </div>
                         </div>
                         <!-- 13-15 -->
-                        <h5>Part3 財富來源</h5>
                         <div class="area">
                             <p class="red">13.～15.通匯行資訊請參考附件，若下方資訊無您的銀行，請自行詢問銀行<a href="/Export/Open?FileName=台灣各家銀行HKD-通匯行.pdf" target="_blank">台灣各家銀行HKD通匯行</a></p>
                             <div class="form-group au-form row">
@@ -166,6 +165,7 @@
                         </div>
                         <!-- 13-15 -->
                         <hr />
+                        <h5>Part3 財富來源</h5>
                         <div class="form-group au-form row">
                             <label for="txt16" class="col-md-3 col-form-label">16.資金來源(請詳細說明您如何獲得此筆投資資金)</label>
                             <div class="col-md-9">
@@ -174,15 +174,15 @@
                             </div>
                         </div>
                         @*<div class="form-group au-form row">
-                                <label class="col-md-3 col-form-label"></label>
-                                <div class="col-md-9">
-                                    <p style="color:gray">
-                                        資金來源參考，例如:
-                                        存款和投資Deposits and Investments
-                                        資產出售Sale of asset
-                                    </p>
-                                </div>
-                            </div>*@
+            <label class="col-md-3 col-form-label"></label>
+            <div class="col-md-9">
+                <p style="color:gray">
+                    資金來源參考，例如:
+                    存款和投資Deposits and Investments
+                    資產出售Sale of asset
+                </p>
+            </div>
+        </div>*@
                         <!-- 17-23 -->
                         <div class="area sp">
                             <p class="red">17.～23.請擇一勾選並填寫對應內容</p>
@@ -1859,6 +1859,7 @@
         //    },
         //    complete: function (XMLHttpRequest, textStatus) { $('#myModalForExport').modal('hide'); }
         //})
+        console.log($('#extxt22').val())
         var obj = {};
         obj.PruchaseType = $('#exPruchaseType').val(); obj.txt2 = $('#extxt2').val(); obj.txt3 = $('#extxt3').val(); obj.txt3_1 = $('#extxt3_1').val(); obj.txt4 = $('#extxt4').val();
         obj.txt5 = $('#extxt5').val(); obj.txt6 = $('#extxt6').val(); obj.txt7 = $('#extxt7').val(); obj.txt8 = $('#extxt8').val(); obj.txt9 = $('#extxt9').val();

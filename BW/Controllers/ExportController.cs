@@ -92,13 +92,14 @@ namespace BW.Controllers
                 ControllerContext.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
 
                 // Path to a loadable document.
-                string loadPath = Server.MapPath("~/Content/files/AgreeMent/AgreeTemplate/Subscription Agreement.pdf");
+                string loadPath = Server.MapPath("~/Content/files/AgreeMent/AgreeTemplate/Subscription Agreement.docx");
 
                 //key
                 DocumentCore.Serial = "40028541286";
 
                 // Load a document intoDocumentCore.
                 DocumentCore dc = DocumentCore.Load(loadPath);
+                
                 #region txt2
                 string txt1_1 = txt2;
                 string txt1_2 = "";
@@ -790,8 +791,11 @@ namespace BW.Controllers
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
                     item.Replace(txt56);
                 regex = new Regex(@"Rreplace52R", RegexOptions.IgnoreCase);
-                foreach (ContentRange item in dc.Content.Find(regex).Reverse())
-                    item.Replace(txt57 + "/" + txt58 + "/" + txt59);
+                if (txt57.Trim() != "")
+                {
+                    foreach (ContentRange item in dc.Content.Find(regex).Reverse())
+                        item.Replace(txt57 + "/" + txt58 + "/" + txt59);
+                }
                 regex = new Regex(@"Rreplace53R", RegexOptions.IgnoreCase);
                 foreach (ContentRange item in dc.Content.Find(regex).Reverse())
                     item.Replace(txt60);
@@ -818,17 +822,19 @@ namespace BW.Controllers
                     item.Replace(txt67);
                 #endregion
                 //不儲存到實體目錄 直接存在fileStream後下載
-                string pdfG = Guid.NewGuid().ToString();
-                MemoryStream fileStream1 = new MemoryStream();
-                dc.Save(fileStream1, SaveOptions.PdfDefault);
-                fileStream1.Position = 0;
-                TempData[pdfG] = fileStream1.ToArray();
-
                 string wordG = Guid.NewGuid().ToString();
                 MemoryStream fileStream2 = new MemoryStream();
                 dc.Save(fileStream2, SaveOptions.DocxDefault);
                 fileStream2.Position = 0;
                 TempData[wordG] = fileStream2.ToArray();
+
+                //把替代完的word存成PDF
+                DocumentCore pdf = DocumentCore.Load(fileStream2, LoadOptions.DocxDefault);
+                string pdfG = Guid.NewGuid().ToString();
+                MemoryStream fileStream1 = new MemoryStream();
+                pdf.Save(fileStream1, SaveOptions.PdfDefault);
+                fileStream1.Position = 0;
+                TempData[pdfG] = fileStream1.ToArray();
 
                 //dc.Save(Server.MapPath("~/Content/files/ConCredential/Subscription Agreement" + convertTime.UStoTW(DateTime.Now).ToString("yyyyMMdd") + ".pdf"), SaveOptions.PdfDefault);
                 //dc.Save(Server.MapPath("~/Content/files/ConCredential/Subscription Agreement" + convertTime.UStoTW(DateTime.Now).ToString("yyyyMMdd") + ".doc"), SaveOptions.DocxDefault);

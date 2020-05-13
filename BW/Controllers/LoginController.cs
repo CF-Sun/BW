@@ -119,6 +119,13 @@ namespace BW.Controllers
                         //非顧問登入
                         if (!Convert.ToBoolean(dt.Rows[0]["IsCon"]))
                         {
+                            //判斷有無角色
+                            if (Account.Trim() != "BW")
+                            {
+                                if (dt.Rows[0]["ROLE"] == DBNull.Value || Convert.ToInt16(dt.Rows[0]["ROLE"]) < 0)
+                                    return Json(6);
+                            }
+
                             //判斷是否已停用
                             if (dt.Rows[0]["Enable"].ToString() == "True")
                             {
@@ -133,7 +140,8 @@ namespace BW.Controllers
                             {
                                 log.writeLogToDB(dt.Rows[0]["ACCOUNT"].ToString(), "Login/Login", "登入帳號停用");
                             }
-                        }else if (Convert.ToBoolean(dt.Rows[0]["IsCon"]))//顧問登入
+                        }
+                        else if (Convert.ToBoolean(dt.Rows[0]["IsCon"]))//顧問登入
                         {
                             //判斷帳號是否已鎖
                             if (dt.Rows[0]["IsLock"].ToString() == "False"|| String.IsNullOrEmpty(dt.Rows[0]["IsLock"].ToString()))
@@ -197,7 +205,6 @@ namespace BW.Controllers
                                 log.writeLogToDB(table.Rows[0]["ACCOUNT"].ToString(), "Login/Login", "密碼錯誤連續三次，帳號已鎖住");
                                 return Json(4);
                             }
-
                         }
                     }
 
@@ -360,17 +367,40 @@ namespace BW.Controllers
                 {
                     sqlconnection.Open();
 
-                    string sqlcommandstring = @" SELECT count(*) from CodeList where CODE_TYPE='ConUnitNo' and CODE_Status=1 and CODE_NO=@CODE_NO ";
-                    SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
-                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    int count = 0;
+                    string sqlcommandstring = "";
+                    SqlCommand sqlcommand;
+                    //20200507 新增股東報聘----------
+                    if (ConNo.Trim() == "BW")
+                    {
+                        //檢查輸入的單位下是否已經有股東
+                        sqlcommandstring = @" SELECT count(*) from CodeList where CODE_TYPE='ConUnitNo' and CODE_Status=1 and CODE_NO=@CODE_NO ";
+                        sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                        sqlcommand.Parameters.AddRange(new SqlParameter[] {
 
                         new SqlParameter("@CODE_NO", UniNo.Trim())
-                    });
-                    int count = Convert.ToInt16(sqlcommand.ExecuteScalar());
+                        });
+                        count = Convert.ToInt16(sqlcommand.ExecuteScalar());
+                        if (count > 0)  //表已有重複股東
+                            return Json(5);
+                    }
+                    //-------------------------------
+                    else
+                    {
+                        //非股東報聘 則為顧問報聘
+                        sqlcommandstring = @" SELECT count(*) from CodeList where CODE_TYPE='ConUnitNo' and CODE_Status=1 and CODE_NO=@CODE_NO ";
+                        sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                        sqlcommand.Parameters.AddRange(new SqlParameter[] {
 
-                    //無此單位代號
-                    if (count == 0)
-                        return Json(2);
+                        new SqlParameter("@CODE_NO", UniNo.Trim())
+                         });
+                        count = Convert.ToInt16(sqlcommand.ExecuteScalar());
+
+                        //無此單位代號
+                        if (count == 0)
+                            return Json(2);
+                    }
+
 
                     sqlcommandstring = @" SELECT count(*) from ConInfo where Con_ID=@Con_ID ";
                     sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
@@ -384,19 +414,23 @@ namespace BW.Controllers
                     if (count > 0)
                         return Json(3);
 
-                    sqlcommandstring = @" SELECT count(*) from ConInfo  where Con_ID=@Con_ID";
-                    sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
-                    sqlcommand.Parameters.AddRange(new SqlParameter[] {
+                    //股東報聘不需判斷此規則
+                    if (ConNo.Trim() != "BW")
+                    {
+                        sqlcommandstring = @" SELECT count(*) from ConInfo  where Con_ID=@Con_ID";
+                        sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
+                        sqlcommand.Parameters.AddRange(new SqlParameter[] {
 
                         new SqlParameter("@Con_ID", ConNo.Trim())
-                    });
-                    count = Convert.ToInt16(sqlcommand.ExecuteScalar());
+                        });
+                        count = Convert.ToInt16(sqlcommand.ExecuteScalar());
 
-                    //無此介紹顧問帳號
-                    if (count == 0)
-                        return Json(4);
+                        //無此介紹顧問帳號
+                        if (count == 0)
+                            return Json(4);
+                    }
 
-                    return Json(5);
+                    return Json(6);
                 }
             }
         }

@@ -23,8 +23,12 @@
                                 <input type="text" class="" id="txtAccount">
                             </div>
                         </div>
+                        @*<div class="text-right">
+            <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+        </div>*@
                         <div class="text-right">
                             <input type="button" id="submit" class="btn btn-sm btn-primary" onclick="clicktoSearch()" value="查詢">
+                            <input type="button" id="addAccount" class="btn btn-sm btn-primary" onclick="clicktoAddAccount()" value="新增帳號">
                         </div>
                     </form>
                 </div>
@@ -55,8 +59,7 @@
                             <label for="sele_Role" class="col-3 col-form-label">角色</label>
                             <div class="col-9 select-wrapper">
                                 <span class="iconify" data-icon="fa-solid:caret-down" data-inline="false"></span>
-                                <select name="sele_Role" id="sele_Role" class="br-cus" required>
-                                </select>
+                                <select name="sele_Role" id="sele_Role" class="br-cus" required></select>
                             </div>
                         </div>
                     </form>
@@ -64,6 +67,53 @@
                 <div class="modal-footer justify-content-between">
                     <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
                     <input type="button" class="btn btn-sm btn-primary" onclick="SubmitForEdit()" value="確認">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="myModalForAdd" role="dialog">
+        <div class="modal-dialog sm">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        新增帳號
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" title="關閉視窗">
+                        <span class="iconify" data-icon="ion:ios-close" data-inline="false"></span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="" class="confirm" action="" method="POST" name="">
+                        <div class="form-group au-form row">
+                            <label for="txtNewAccount" class="col-3 col-form-label">帳號</label>
+                            <div class="col-9">
+                                <input type="text" id="txtNewAccount" name="txtNewAccount" required
+                                       data-error="請填寫帳號">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtPW" class="col-3 col-form-label">密碼</label>
+                            <div class="col-9">
+                                <input type="text" id="txtPW" name="txtPW" required
+                                       data-error="請填寫密碼">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                        <div class="form-group au-form row">
+                            <label for="txtEmail" class="col-3 col-form-label">Email</label>
+                            <div class="col-9">
+                                <input type="email" id="txtEmail" name="txtEmail"
+                                       required data-error="請填寫Email">
+                                <div class="help-block with-errors"></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <input type="button" id="close" class="btn btn-sm btn-light" data-dismiss="modal" value="取消">
+                    <input type="button" id="btnSubmitAdd" class="btn btn-sm btn-primary" onclick="SubmitAdd()" value="確認新增">
                 </div>
             </div>
         </div>
@@ -199,11 +249,17 @@
         });
     }
 
-    //click eveny
+    //click event
     function Edit(ID, ROLE) {
         _ID = ID
         $('#sele_Role').val(ROLE)
         $('#myModalForEdit').modal('show');
+    }
+    function clicktoAddAccount() {
+        $('#txtNewAccount').val('')
+        $('#txtPW').val('')
+        $('#txtEmail').val('')
+        $('#myModalForAdd').modal('show');
     }
     function SubmitForEdit() {
         if ($('#sele_Role').val() == null) {
@@ -258,11 +314,11 @@
             if (data == 1) {
                 loadData()
                 if (Enable == "True")
-                    swal("停用成功!", "", "error")
+                    swal("停用成功!", "", "success")
                     //alert('停用成功!');
                 else
                     //alert('啟用成功!');
-                    swal("啟用成功!", "", "error")
+                    swal("啟用成功!", "", "success")
             }
             else {
                 if (Enable == "True")
@@ -286,4 +342,47 @@
         $.ajax(options);
     }
 
+    function SubmitAdd() {
+        if ($('#txtNewAccount').val() == '') {
+            sweetAlert("請填寫帳號", "", "warning");
+            return;
+        }
+        if ($('#txtPW').val() == '') {
+            sweetAlert("請填寫密碼", "", "warning");
+            return;
+        }
+        if ($('#txtEmail').val() == '') {
+            sweetAlert("請填寫Email", "", "warning");
+            return;
+        }
+
+        var obj = {};
+        obj.Account = $('#txtNewAccount').val();
+        obj.PW = $('#txtPW').val();
+        obj.Email = $('#txtEmail').val();
+        obj.LoginACCOUNT = userAccount;
+        $('#maindiv').jqLoading();
+        var options = {};
+        options.url = "/Account/AddAccount";
+        options.type = "POST";
+        options.data = JSON.stringify(obj);
+        options.contentType = "application/json";
+        options.dataType = "html";
+        options.success = function (data) {
+            if (data == 1) {
+                loadData()
+                $('#myModalForAdd').modal('hide');
+                swal("新增成功!", "請記得設定角色", "success")
+            }
+            else {
+                sweetAlert("新增失敗!", "", "error");
+            }
+            $('#maindiv').jqLoading("destroy");
+        };
+        options.error = function () {
+            sweetAlert("新增失敗!", "", "error");
+            $('#maindiv').jqLoading("destroy");
+        };
+        $.ajax(options);
+    }
 </script>

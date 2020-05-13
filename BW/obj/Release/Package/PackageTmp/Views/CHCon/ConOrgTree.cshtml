@@ -1,7 +1,8 @@
 ﻿@{
     Layout = "~/Views/Shared/ConLayout.cshtml";
 }
-<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>
+@*<script src="https://balkangraph.com/js/latest/OrgChart.js"></script>*@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gojs/2.0.5/go.js"></script>
 
 <div id="maindiv" class="container">
     <ul class="breadcrumb">
@@ -18,7 +19,10 @@
         </div>
     </section>
     <section id="form">
-        <div id="divTree" style="display:none" class="col-lg-12">
+        <div id="parentDiv">
+            <div id="myDiagramDiv" style="background-color: #f2f2f2; border: solid 1px black; width: 100%; height: 700px"></div>
+        </div>
+        @*<div id="divTree" style="display:none" class="col-lg-12">
             <select style="padding: 10px;width: 100px;z-index:2;" id="selectTemplate" class="col-lg-2">
                 <option>luba</option>
                 <option>olivia</option>
@@ -34,7 +38,7 @@
                 <option>isla</option>
             </select>
             <div id="tree" class="col-lg-10"></div>
-        </div>
+        </div>*@
     </section>
 </div>
 <script>
@@ -59,7 +63,7 @@
                 $('#maindiv').jqLoading("destroy");
                 return;
             }
-            $('#divTree').show();
+            //$('#myOverviewDiv').show();
 
             var nodes = new Array();
             for (var i = 0; i < data.length; i++) {
@@ -74,23 +78,151 @@
                 //    fromTo.push(arr);
                 //}
                 //nodes.push({ id: $.trim(data[i].Con_ID), title: $.trim(data[i].Con_ID), name: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
-                nodes.push({ id: $.trim(data[i].Con_ID), pid: $.trim(data[i].Parent_Con_ID), UID: $.trim(data[i].Con_ID), NAME: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
+                //nodes.push({ id: $.trim(data[i].Con_ID), pid: $.trim(data[i].Parent_Con_ID), UID: $.trim(data[i].Con_ID), NAME: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
+
+                //表示公司
+                if (data[i].Parent_Con_ID == '000' && i == 0)
+                    nodes.push({ key: '000', name: '公司' });
+                //nodes.push({ id: $.trim(data[i].Con_ID), pid: $.trim(data[i].Parent_Con_ID), UID: $.trim(data[i].Con_ID), NAME: $.trim(data[i].ChiName) + "/" + data[i].Con_Hiera });
+                nodes.push({ key: data[i].Con_ID, boss: data[i].Parent_Con_ID, name: data[i].ChiName + "/" + data[i].Con_Hiera, id: data[i].Con_ID });
+
             }
 
-            var chart = new OrgChart(document.getElementById("tree"), {
-                template: "polina",
-                layout: OrgChart.mixed,
-                nodeBinding: {
-                    field_0: "NAME",
-                    field_1: "UID",
-                },
-                nodes: nodes
-            });
-            document.getElementById("selectTemplate").addEventListener("change", function () {
-                chart.config.template = this.value;
-                chart.draw();
-            });
-            $('#maindiv').jqLoading("destroy");
+            //var chart = new OrgChart(document.getElementById("tree"), {
+            //    template: "polina",
+            //    layout: OrgChart.mixed,
+            //    nodeBinding: {
+            //        field_0: "NAME",
+            //        field_1: "UID",
+            //    },
+            //    nodes: nodes
+            //});
+            //document.getElementById("selectTemplate").addEventListener("change", function () {
+            //    chart.config.template = this.value;
+            //    chart.draw();
+            //});
+            var mygoChart = document.getElementById('myDiagramDiv');
+            var parentDiv = document.getElementById('parentDiv');
+            parentDiv.removeChild(mygoChart);
+            var div = document.createElement('div');
+            div.setAttribute('id', 'myDiagramDiv')
+            div.setAttribute('style', 'background-color: #f2f2f2; border: solid 1px black; width: 100%; height: 700px')
+            parentDiv.appendChild(div);
+
+            var $ = go.GraphObject.make;  // for conciseness in defining templates
+
+            // some constants that will be reused within templates
+            var mt8 = new go.Margin(8, 0, 0, 0);
+            var mr8 = new go.Margin(0, 8, 0, 0);
+            var ml8 = new go.Margin(0, 0, 0, 8);
+            var roundedRectangleParams = {
+                parameter1: 2,  // set the rounded corner
+                spot1: go.Spot.TopLeft, spot2: go.Spot.BottomRight  // make content go all the way to inside edges of rounded corners
+            };
+
+            myDiagram =
+                $(go.Diagram, "myDiagramDiv",  // the DIV HTML element
+                    {
+                        // Put the diagram contents at the top center of the viewport
+                        initialDocumentSpot: go.Spot.TopCenter,
+                        initialViewportSpot: go.Spot.TopCenter,
+                        // OR: Scroll to show a particular node, once the layout has determined where that node is
+                        // "InitialLayoutCompleted": function(e) {
+                        //  var node = e.diagram.findNodeForKey(28);
+                        //  if (node !== null) e.diagram.commandHandler.scrollToPart(node);
+                        // },
+                        layout:
+                            $(go.TreeLayout,  // use a TreeLayout to position all of the nodes
+                                {
+                                    isOngoing: false,  // don't relayout when expanding/collapsing panels
+                                    treeStyle: go.TreeLayout.StyleLastParents,
+                                    // properties for most of the tree:
+                                    angle: 90,
+                                    layerSpacing: 80,
+                                    // properties for the "last parents":
+                                    alternateAngle: 0,
+                                    alternateAlignment: go.TreeLayout.AlignmentStart,
+                                    alternateNodeIndent: 15,
+                                    alternateNodeIndentPastParent: 1,
+                                    alternateNodeSpacing: 15,
+                                    alternateLayerSpacing: 40,
+                                    alternateLayerSpacingParentOverlap: 1,
+                                    alternatePortSpot: new go.Spot(0.001, 1, 20, 0),
+                                    alternateChildPortSpot: go.Spot.Left
+                                })
+                    });
+
+            // This function provides a common style for most of the TextBlocks.
+            // Some of these values may be overridden in a particular TextBlock.
+            function textStyle(field) {
+                return [
+                    {
+                        font: "12px Roboto, sans-serif", stroke: "rgba(0, 0, 0, .60)",
+                        visible: false  // only show textblocks when there is corresponding data for them
+                    },
+                    new go.Binding("visible", field, function (val) { return val !== undefined; })
+                ];
+            }
+
+            myDiagram.nodeTemplate =
+                $(go.Node, "Auto",
+                    {
+                        locationSpot: go.Spot.TopCenter,
+                        isShadowed: true, shadowBlur: 1,
+                        shadowOffset: new go.Point(0, 1),
+                        shadowColor: "rgba(0, 0, 0, .14)",
+                        selectionAdornmentTemplate:  // selection adornment to match shape of nodes
+                            $(go.Adornment, "Auto",
+                                $(go.Shape, "RoundedRectangle", roundedRectangleParams,
+                                    { fill: null, stroke: "#7986cb", strokeWidth: 3 }
+                                ),
+                                $(go.Placeholder)
+                            )  // end Adornment
+                    },
+                    $(go.Shape, "RoundedRectangle", roundedRectangleParams,
+                        { name: "SHAPE", fill: "#ffffff", strokeWidth: 0 },
+                        // bluish if highlighted, white otherwise
+                        new go.Binding("fill", "isHighlighted", function (h) { return h ? "#e8eaf6" : "#ffffff"; }).ofObject()
+                    ),
+                    $(go.Panel, "Vertical",
+                        $(go.Panel, "Horizontal",
+                            { margin: 26 },
+                            $(go.Panel, "Table",
+                                $(go.TextBlock,
+                                    {
+                                        row: 0, alignment: go.Spot.Left,
+                                        font: "18px Roboto, sans-serif",
+                                        stroke: "rgba(0, 0, 0, .87)",
+                                        maxSize: new go.Size(160, NaN)
+                                    },
+                                    new go.Binding("text", "name")
+                                ),
+                                $(go.TextBlock, textStyle("id"),
+                                    {
+                                        row: 1, alignment: go.Spot.Center,
+                                        font: "18px Roboto, sans-serif",
+                                        stroke: "rgba(0, 0, 0, .87)"
+                                    },
+                                    new go.Binding("text", "id", function (head) { return "編號: " + head; })
+                                )
+                            )
+                        ),$(go.Panel,  // this is underneath the "BODY"
+                            { height: 17 },  // always this height, even if the TreeExpanderButton is not visible
+                            $("TreeExpanderButton")
+                        )
+                    )
+
+                );
+
+            // create the Model with data for the tree, and assign to the Diagram
+            myDiagram.model =
+                $(go.TreeModel,
+                    {
+                        nodeParentKeyProperty: "boss",  // this property refers to the parent node data
+                        nodeDataArray: nodes
+                    });
+
         })
+        $('#maindiv').jqLoading("destroy");
     }
 </script>

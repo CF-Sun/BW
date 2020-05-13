@@ -410,6 +410,9 @@
                         $("#lab").html('無此推薦人顧問編號');
                         $("#lab").show();
                     } else if (result == "5") {
+                        $("#lab").html('此單位下已有報聘股東');
+                        $("#lab").show();
+                    } else if (result == "6") {
                         $("#txtCon_Phone").val($("#txtPhone").val());
                         loadDetailData()
                         $("#divLogin").hide();
@@ -622,8 +625,8 @@
         obj.FileName2 = FileName2;
         obj.FileName3 = FileName3;
         obj.FileName4 = FileName4;
-        obj.UniNo = $('#txtUniNo').val();
-        obj.LoginACCOUNT = $('#txtConNo').val();
+        obj.UniNo = $.trim($('#txtUniNo').val());
+        obj.LoginACCOUNT = $.trim($('#txtConNo').val());
         $('#maindiv').jqLoading();
         var options = {};
         options.url = "/ConInfo/AddCon";
@@ -781,5 +784,8 @@
     }
     function BackToIndex() {
         window.location.href = "/CH/Index";
+    }
+    function BackToRegi() {
+        window.location.href = "/CH/ConRegi";
     }
 </script>

@@ -493,17 +493,17 @@
         if (userAccount == null || userAccount == '' || userAccount == undefined) {
             Logout()
             //window.location.href = "/BW/ConLogin";
-        } else if (userRole == null || userRole == '' || userRole == undefined) {
-            //alert("您帳號尚未設定權限,請聯絡管理員!")
-            sweetAlert("您帳號尚未設定權限", "請聯絡管理員!", "warning");
-            Logout()
-            //window.location.href = "/BW/ConLogin";
-        } else if (userAccount == 'BW') {
+        }  else if (userAccount == 'BW') {
             $('#accountName').html(userAccount + '您好')
             $('#li_1').show(); $('#li_2').show(); $('#li_3').show(); $('#li_4').show(); $('#li_5').show();
             $('#li_6').show(); $('#li_7').show(); $('#li_8').show(); $('#li_9').show(); $('#li_10').show();
             $('#li_11').show(); $('#li_12').show(); $('#li_13').show(); $('#li_14').show(); $('#li_15').show();
             $('#li_16').show(); $('#li_17').show(); /*$('#div_16').show(); $('#div_17').show();*/
+        } else if (userRole == null || userRole == '' || userRole == undefined) {
+            //alert("您帳號尚未設定權限,請聯絡管理員!")
+            sweetAlert("您帳號尚未設定權限", "請聯絡管理員!", "warning");
+            Logout()
+            //window.location.href = "/BW/ConLogin";
         }
         else {
             $('#accountName').html(userAccount + '您好')
