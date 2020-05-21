@@ -125,6 +125,12 @@
                         <div class="row">
                             <label class="col-2 col-form-label"></label>
                             <div class="col-10">
+                                <input type="checkbox" id="Auth_23" value="Auth_23">查詢功能>變更所屬顧問
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
                                 <input type="checkbox" id="Auth_7" value="Auth_7">新開戶列表-檢視、缺件一覽表-檢視
                             </div>
                         </div>
@@ -188,6 +194,12 @@
                         <div class="row">
                             <label class="col-2 col-form-label"></label>
                             <div class="col-10">
+                                <input type="checkbox" id="Auth_22" value="Auth_22">查詢功能>變更直推顧問
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
                                 <input type="checkbox" id="Auth_17" value="Auth_17">新報聘列表-檢視、缺件一覽表-檢視
                             </div>
                         </div>
@@ -195,6 +207,12 @@
                             <label class="col-2 col-form-label"></label>
                             <div class="col-10">
                                 <input type="checkbox" id="Auth_18" value="Auth_18">組織樹
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="col-2 col-form-label"></label>
+                            <div class="col-10">
+                                <input type="checkbox" id="Auth_21" value="Auth_21">詢問是否計算上月報表的訊息視窗
                             </div>
                         </div>
                         <div class="form-group au-form row">
@@ -326,7 +344,7 @@
             pageSize: 10,
             pageList: [10, 20, 50, 100],
             onLoadSuccess: function (data) {
-                
+
             },
             onLoadError: function (res) {
             },
@@ -343,7 +361,7 @@
     }
 
     //click event
-    function clicktoAdd(){
+    function clicktoAdd() {
         $('#txtRoleName').val('')
         $('#myModalForAdd').modal('show');
     }
@@ -408,8 +426,9 @@
             if (data[0].Auth_18 == "True") { $("#Auth_18").attr("checked", true) } else { $("#Auth_18").attr("checked", false) }
             if (data[0].Auth_19 == "True") { $("#Auth_19").attr("checked", true) } else { $("#Auth_19").attr("checked", false) }
             if (data[0].Auth_20 == "True") { $("#Auth_20").attr("checked", true) } else { $("#Auth_20").attr("checked", false) }
-
-
+            if (data[0].Auth_21 == "True") { $("#Auth_21").attr("checked", true) } else { $("#Auth_21").attr("checked", false) }
+            if (data[0].Auth_22 == "True") { $("#Auth_22").attr("checked", true) } else { $("#Auth_22").attr("checked", false) }
+            if (data[0].Auth_23 == "True") { $("#Auth_23").attr("checked", true) } else { $("#Auth_23").attr("checked", false) }
             $('#maindiv').jqLoading("destroy");
         })
         $('#myModalForEdit').modal('show');
@@ -438,6 +457,9 @@
         obj.Auth_18 = $("#Auth_18").prop('checked') ? true : false;
         obj.Auth_19 = $("#Auth_19").prop('checked') ? true : false;
         obj.Auth_20 = $("#Auth_20").prop('checked') ? true : false;
+        obj.Auth_21 = $("#Auth_21").prop('checked') ? true : false;
+        obj.Auth_22 = $("#Auth_22").prop('checked') ? true : false;
+        obj.Auth_23 = $("#Auth_23").prop('checked') ? true : false;
 
         $('#maindiv').jqLoading();
         var options = {};

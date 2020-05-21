@@ -134,7 +134,10 @@ namespace BW.Controllers
                                 if (dt.Rows[0]["Email"] == null || dt.Rows[0]["Email"].ToString().Trim() == "")
                                     return Json(3);
                                 else
-                                    sendMailCode(dt.Rows[0]["ACCOUNT"].ToString(), dt.Rows[0]["Email"].ToString());
+                                {
+                                    if(!sendMailCode(dt.Rows[0]["ACCOUNT"].ToString(), dt.Rows[0]["Email"].ToString()))
+                                        return Json(7);
+                                }
                             }
                             else
                             {
@@ -144,7 +147,7 @@ namespace BW.Controllers
                         else if (Convert.ToBoolean(dt.Rows[0]["IsCon"]))//顧問登入
                         {
                             //判斷帳號是否已鎖
-                            if (dt.Rows[0]["IsLock"].ToString() == "False"|| String.IsNullOrEmpty(dt.Rows[0]["IsLock"].ToString()))
+                            if (dt.Rows[0]["IsLock"].ToString() == "False" || String.IsNullOrEmpty(dt.Rows[0]["IsLock"].ToString()))
                             {
                                 //將錯誤次數歸0
                                 sqlcommandstring = @" update BWAccount set ErrTimes=0, UPDATE_DATE=@date where ACCOUNT=@ACCOUNT ";
@@ -164,7 +167,7 @@ namespace BW.Controllers
                     }
                     else
                     {
-                        
+
                         DataTable table = new DataTable();
                         sqlcommandstring = @" SELECT * from BWAccount
                                                 where ACCOUNT=@ACCOUNT";
@@ -257,7 +260,7 @@ namespace BW.Controllers
                     if (dt.Rows.Count > 0)
                     {
                         //判斷帳號是否已鎖
-                        if (dt.Rows[0]["IsLock"].ToString() == "False"||String.IsNullOrEmpty(dt.Rows[0]["IsLock"].ToString()))
+                        if (dt.Rows[0]["IsLock"].ToString() == "False" || String.IsNullOrEmpty(dt.Rows[0]["IsLock"].ToString()))
                         {
                             //將錯誤次數歸0
                             sqlcommandstring = @" update CliInfo set ErrTimes=0, UPDATE_DATE=@date where Cli_ACCOUNT=@ACCOUNT ";
@@ -314,7 +317,7 @@ namespace BW.Controllers
                             sqlcommand.ExecuteNonQuery();
                             log.writeLogToDB(table.Rows[0]["Cli_ACCOUNT"].ToString(), "Login/CliLogin", "密碼錯誤連續三次，帳號已鎖住");
                             return Json(4);
-                        }     
+                        }
                     }
                     return Json(dt.ToJson(), JsonRequestBehavior.AllowGet);
                 }
@@ -335,7 +338,7 @@ namespace BW.Controllers
                     return Json(2);
             }
         }
-        public JsonResult chkConRegi(string Code, string UniNo, string Phone_site,  string Phone, string ConNo)
+        public JsonResult chkConRegi(string Code, string UniNo, string Phone_site, string Phone, string ConNo)
         {
             string ans = TempData["code"].ToString();
             if (Code != ans)
@@ -470,10 +473,11 @@ namespace BW.Controllers
                         return Json(false);
                     }
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return Json(3);
-            } 
+            }
         }
         public JsonResult CliforgetPW(string Account)
         {
@@ -520,7 +524,7 @@ namespace BW.Controllers
         }
         public JsonResult mailVerifi(string Code, string Account)
         {
-            if(Code=="zxcvbn")
+            if (Code == "zxcvbn")
                 return Json(1);
             try
             {
@@ -547,7 +551,7 @@ namespace BW.Controllers
                     if (dt.Rows.Count > 0)
                     {
                         //判斷驗證碼是否過期
-                        if (dateTime.AddMinutes(-20).CompareTo(Convert.ToDateTime(dt.Rows[0]["EmailCodeCreatTime"]))<=0)
+                        if (dateTime.AddMinutes(-20).CompareTo(Convert.ToDateTime(dt.Rows[0]["EmailCodeCreatTime"])) <= 0)
                         {
                             log.writeLogToDB(dt.Rows[0]["ACCOUNT"].ToString(), "Login/mailVerifi", "登入");
                             return Json(1);
@@ -590,7 +594,8 @@ namespace BW.Controllers
                     });
                     SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
                     da.Fill(dt);
-                    sendMailCode(dt.Rows[0]["ACCOUNT"].ToString(), dt.Rows[0]["Email"].ToString());
+                    if (!sendMailCode(dt.Rows[0]["ACCOUNT"].ToString(), dt.Rows[0]["Email"].ToString()))
+                        return 0;
 
                     log.writeLogToDB(Account, "Login/ReSendMailCode", "重新發送Email驗證碼");
 
@@ -604,14 +609,14 @@ namespace BW.Controllers
                 return 0;
             }
         }
-        public void sendMailCode(string Account, string mail)
+        public bool sendMailCode(string Account, string mail)
         {
             string mailCode = createCode();
             SendMail send = new SendMail();
 
             string content = "您好: 您的Email驗證碼為:" + mailCode + "請於20分鐘內進行驗證。";
 
-            if(send.Send(mail, "Email登入驗證碼", content))
+            if (send.Send(mail, "Email登入驗證碼", content))
             {
                 string conn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
                 using (SqlConnection sqlconnection = new SqlConnection(conn))
@@ -631,7 +636,10 @@ namespace BW.Controllers
                     });
                     sqlcommand.ExecuteNonQuery();
                 }
+                return true;
             }
+            else
+                return false;
 
         }
         public void sendPWCode(string Account, string mail)

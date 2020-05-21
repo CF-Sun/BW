@@ -66,7 +66,7 @@ namespace BW.Controllers
                 string sqlcommandstring = @" select A.* , B.ROLE_Name
                                                 from BWAccount A
                                                 left join SystemRole B on A.ROLE=B.ROLE_ID 
-                                                where A.ACCOUNT like N'%" + Account.Trim() + "%' and A.IsCon=0 order by ACCOUNT asc ";
+                                                where A.ACCOUNT like N'%" + Account.Trim() + "%' and A.IsCon=0 and ACCOUNT!='BW' order by ACCOUNT asc ";
 
                 SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
                 SqlDataAdapter da = new SqlDataAdapter(sqlcommand);
@@ -234,7 +234,8 @@ namespace BW.Controllers
 
         [HttpPost]
         public int EditRole(string LoginACCOUNT, int ROLEID, bool Auth_1, bool Auth_2, bool Auth_3, bool Auth_4, bool Auth_5, bool Auth_6, bool Auth_7, bool Auth_8, bool Auth_9
-            , bool Auth_10, bool Auth_11, bool Auth_12, bool Auth_13, bool Auth_14, bool Auth_15, bool Auth_16, bool Auth_17, bool Auth_18, bool Auth_19, bool Auth_20)
+            , bool Auth_10, bool Auth_11, bool Auth_12, bool Auth_13, bool Auth_14, bool Auth_15, bool Auth_16, bool Auth_17, bool Auth_18, bool Auth_19, bool Auth_20, bool Auth_21
+            , bool Auth_22, bool Auth_23)
         {
             try
             {
@@ -245,7 +246,8 @@ namespace BW.Controllers
 
                     string sqlcommandstring = @"update SystemRole set Auth_1=@Auth_1, Auth_2=@Auth_2, Auth_3=@Auth_3 , Auth_4=@Auth_4, Auth_5=@Auth_5, Auth_6=@Auth_6,
                                                 Auth_7=@Auth_7, Auth_8=@Auth_8 , Auth_9=@Auth_9 , Auth_10=@Auth_10,Auth_11=@Auth_11,Auth_12=@Auth_12,Auth_13=@Auth_13,
-                                                Auth_14=@Auth_14,Auth_15=@Auth_15,Auth_16=@Auth_16,Auth_17=@Auth_17,Auth_18=@Auth_18,Auth_19=@Auth_19,Auth_20=@Auth_20
+                                                Auth_14=@Auth_14,Auth_15=@Auth_15,Auth_16=@Auth_16,Auth_17=@Auth_17,Auth_18=@Auth_18,Auth_19=@Auth_19,Auth_20=@Auth_20,
+                                                Auth_21=@Auth_21,Auth_22=@Auth_22,Auth_23=@Auth_23
                                                 where ROLE_ID=@ROLEID ";
 
                     SqlCommand sqlcommand = new SqlCommand(sqlcommandstring, sqlconnection);
@@ -256,6 +258,7 @@ namespace BW.Controllers
                         new SqlParameter("@Auth_9", Auth_9),new SqlParameter("@Auth_10", Auth_10),new SqlParameter("@Auth_11", Auth_11),new SqlParameter("@Auth_12", Auth_12),
                         new SqlParameter("@Auth_13", Auth_13),new SqlParameter("@Auth_14", Auth_14),new SqlParameter("@Auth_15", Auth_15),new SqlParameter("@Auth_16", Auth_16),
                         new SqlParameter("@Auth_17", Auth_17),new SqlParameter("@Auth_18", Auth_18),new SqlParameter("@Auth_19", Auth_19),new SqlParameter("@Auth_20", Auth_20),
+                        new SqlParameter("@Auth_21", Auth_21),new SqlParameter("@Auth_22", Auth_22),new SqlParameter("@Auth_23", Auth_23)
                     });
                     sqlcommand.ExecuteNonQuery();
                     log.writeLogToDB(LoginACCOUNT, "Account/EditRole", "更新角色ID:"+ ROLEID + "之權限");

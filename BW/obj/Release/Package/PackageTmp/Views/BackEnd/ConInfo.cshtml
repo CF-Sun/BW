@@ -757,9 +757,10 @@
                 IsAuth_11 = true;
             if (data[0].Auth_12 == "True")
                 IsAuth_12 = true;
+            if (data[0].Auth_21 == "True")
+                chkCalculate();
         });
     }
-
 
     var Con_ID;
     var CredentialID;
@@ -773,29 +774,6 @@
         $('#maindiv').jqLoading("destroy");
         sessionStorage.removeItem('Con_ID')
     }
-
-    //查詢是否已計算當月報表
-    $.getJSON("/Bonus/GetIsCalculate").done(function (data) {
-        if (data == 0) {
-            swal({
-                title: "尚未計算上月報表,是否開始計算？",
-                text: "",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonColor: "#DD6B55",
-                confirmButtonText: "是",
-                cancelButtonText: "否",
-                closeOnConfirm: false
-            },
-                function () {
-                    sweetAlert("計算中...", "", "warning");
-                    CalculateBonus();
-                });
-            //if (confirm("尚未計算上月報表,是否開始計算?")) {
-            //    CalculateBonus();
-            //}
-        }
-    })
 
     $("#sele_Census_Country").change(function () {
         var t = $("option:selected", this).val();
@@ -861,6 +839,32 @@
         return date;
     };
     //--------------------------
+
+    //查詢是否已計算當月報表
+    function chkCalculate() {
+        $.getJSON("/Bonus/GetIsCalculate").done(function (data) {
+            if (data == 0) {
+                swal({
+                    title: "尚未計算上月報表,是否開始計算？",
+                    text: "",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "是",
+                    cancelButtonText: "否",
+                    closeOnConfirm: false
+                },
+                    function () {
+                        sweetAlert("計算中...", "", "warning");
+                        CalculateBonus();
+                    });
+                //if (confirm("尚未計算上月報表,是否開始計算?")) {
+                //    CalculateBonus();
+                //}
+            }
+        })
+    }
+
 
     //查詢
     function clicktoSearch() {
@@ -1106,7 +1110,7 @@
                                 value = '居住證明';
                                 break;
                             case 'Consent':
-                                value = '制度職級表';
+                                value = '報聘表';
                                 break;
                             default:
                                 value = '';

@@ -232,7 +232,7 @@
                                             <li id="li_11" style="display:none">
                                                 <a href="/BackEnd/ConPayedReport">佣金報表</a>
                                             </li>
-                                            <li>
+                                            <li id="li_22" style="display:none">
                                                 <a href="/BackEnd/ConTransfer">變更直推顧問</a>
                                             </li>
                                         </ul>
@@ -269,7 +269,7 @@
                                             <li id="li_3" style="display:none">
                                                 <a href="/BackEnd/CliPayedRecord">發息紀錄</a>
                                             </li>
-                                            <li>
+                                            <li id="li_23" style="display:none">
                                                 <a href="/BackEnd/CliTransfer">變更所屬顧問</a>
                                             </li>
                                         </ul>
@@ -498,7 +498,7 @@
             $('#li_1').show(); $('#li_2').show(); $('#li_3').show(); $('#li_4').show(); $('#li_5').show();
             $('#li_6').show(); $('#li_7').show(); $('#li_8').show(); $('#li_9').show(); $('#li_10').show();
             $('#li_11').show(); $('#li_12').show(); $('#li_13').show(); $('#li_14').show(); $('#li_15').show();
-            $('#li_16').show(); $('#li_17').show(); /*$('#div_16').show(); $('#div_17').show();*/
+            $('#li_16').show(); $('#li_17').show(); $('#li_22').show(); $('#li_23').show();
         } else if (userRole == null || userRole == '' || userRole == undefined) {
             //alert("您帳號尚未設定權限,請聯絡管理員!")
             sweetAlert("您帳號尚未設定權限", "請聯絡管理員!", "warning");
@@ -541,6 +541,10 @@
                 if (data[0].Auth_19 == "True") {
                         /*$('#div_16').show();*/ $('#li_16').show();
                 }
+                if (data[0].Auth_22 == "True")
+                    $('#li_22').show();
+                if (data[0].Auth_23 == "True")
+                    $('#li_23').show();
             });
         }
     });

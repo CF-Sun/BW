@@ -162,6 +162,14 @@
                         $('#maindiv').jqLoading("destroy");
                         return;
                     }
+                    //驗證碼發送失敗
+                    if (result == "7") {
+                        $("#lab").html('驗證碼發送失敗');
+                        $("#lab").show();
+                        refreshCodeImg();//刷新驗證碼
+                        $('#maindiv').jqLoading("destroy");
+                        return;
+                    }
                     if (result.length > 0) {
                         if (result[0].Enable == "False") {
                             $("#lab").html('登入帳號 ' + $('#account').val() + '已停用');

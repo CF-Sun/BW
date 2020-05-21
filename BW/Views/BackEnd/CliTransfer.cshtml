@@ -88,6 +88,21 @@
     //權限設定
     var userRole = readCookie('userRole');
     var userAccount = readCookie('userAccount');
+    if (userAccount == 'BW') {
+
+    } else if (userRole != null && userRole != '' && userRole != undefined) {
+        var obj =
+        {
+            ROLE_ID: userRole
+        }
+        $.getJSON("/Account/GetRoleAuth", obj).done(function (data) {
+            if (data[0].Auth_23 != "True") { //如果沒檢視權限 則頁面全隱藏
+                $('#maindiv').hide();
+                sweetAlert("您沒有檢視權限", "", "warning");
+                return;
+            }
+        });
+    }
 
     var Cli_ID = "";
     var Con_ID = "";

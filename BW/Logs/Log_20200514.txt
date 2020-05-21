@@ -1,0 +1,29 @@
+2020/05/14 09:56:49:456 SendMail/toSend=>System.Net.Mail.SmtpException: SMTP 伺服器需要安全連接，或用戶端未經驗證。 伺服器回應為: 5.7.0 Must issue a STARTTLS command first. u69sm2863105pjb.40 - gsmtp
+   於 System.Net.Mail.MailCommand.CheckResponse(SmtpStatusCode statusCode, String response)
+   於 System.Net.Mail.MailCommand.Send(SmtpConnection conn, Byte[] command, MailAddress from, Boolean allowUnicode)
+   於 System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\git_BW\BW\BW\Helpers\SendMail.cs: 行 57
+2020/05/14 09:57:14:381 SendMail/toSend=>System.Net.Mail.SmtpException: SMTP 伺服器需要安全連接，或用戶端未經驗證。 伺服器回應為: 5.7.0 Must issue a STARTTLS command first. v75sm3214345pjb.35 - gsmtp
+   於 System.Net.Mail.MailCommand.CheckResponse(SmtpStatusCode statusCode, String response)
+   於 System.Net.Mail.MailCommand.Send(SmtpConnection conn, Byte[] command, MailAddress from, Boolean allowUnicode)
+   於 System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\git_BW\BW\BW\Helpers\SendMail.cs: 行 57
+2020/05/14 10:09:57:420 SendMail/toSend=>System.Net.Mail.SmtpException: SMTP 伺服器需要安全連接，或用戶端未經驗證。 伺服器回應為: 5.7.0 Authentication Required. Learn more at
+   於 System.Net.Mail.MailCommand.CheckResponse(SmtpStatusCode statusCode, String response)
+   於 System.Net.Mail.MailCommand.Send(SmtpConnection conn, Byte[] command, MailAddress from, Boolean allowUnicode)
+   於 System.Net.Mail.SmtpTransport.SendMail(MailAddress sender, MailAddressCollection recipients, String deliveryNotify, Boolean allowUnicode, SmtpFailedRecipientException& exception)
+   於 System.Net.Mail.SmtpClient.Send(MailMessage message)
+   於 System.Net.Mail.SmtpClient.Send(String from, String recipients, String subject, String body)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\git_BW\BW\BW\Helpers\SendMail.cs: 行 57
+2020/05/14 10:23:14:278 SendMail/toSend=>EASendMail.SmtpServerException: 535 5.7.3 Authentication unsuccessful [HK0PR03CA0100.apcprd03.prod.outlook.com]
+
+   於 EASendMail.SmtpClient.(String , String )
+   於 EASendMail.SmtpClient.(SmtpServer , Boolean , String )
+   於 EASendMail.SmtpClient.(SmtpServer , Boolean , String& )
+   於 EASendMail.SmtpClient.Connect(SmtpServer server)
+   於 EASendMail.SmtpClient.SendMail(SmtpServer server, SmtpMail mail)
+   於 BW.Helpers.SendMail.toSend(String fromAccount, String pw, String receEmail, String SUBJECT, String mailbody) 於 D:\Syscom\外包\BW\git_BW\BW\BW\Helpers\SendMail.cs: 行 70

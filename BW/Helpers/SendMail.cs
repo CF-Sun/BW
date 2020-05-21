@@ -49,17 +49,20 @@ namespace BW.Helpers
             {
                 //建立 SmtpClient 物件 並設定 Gmail的smtp主機及Port  
                 System.Net.Mail.SmtpClient MySmtp = new System.Net.Mail.SmtpClient("relay-hosting.secureserver.net");
+                //SmtpClient MySmtp = new SmtpClient();
                 //設定你的帳號密碼
                 MySmtp.Credentials = new System.Net.NetworkCredential(fromAccount, pw);
                 //Gmial 的 smtp 必需要使用 SSL
                 MySmtp.EnableSsl = false;
                 //發送Email
+                log.writeLogToDB("", "SendMail/toSend", "start send");
                 MySmtp.Send(fromAccount, receEmail, SUBJECT, mailbody); MySmtp.Dispose();
+                log.writeLogToDB("", "SendMail/toSend", "end send");
                 return true;
             }
             catch (Exception e)
             {
-                log.writeLogToFile("SendMail/toSend=>" + e.ToString());
+                log.writeLogToDB("", "SendMail/toSend", e.ToString());
                 return false;
             }
         }
