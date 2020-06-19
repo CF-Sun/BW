@@ -475,6 +475,7 @@
     <Content Include="Views\BackEnd\excelImport.cshtml" />
     <Content Include="Views\CH\pur_download.cshtml" />
     <Content Include="Views\BackEnd\DepositeType.cshtml" />
+    <Content Include="Views\CH\Maintain.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

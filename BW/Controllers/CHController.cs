@@ -64,5 +64,11 @@ namespace BW.Controllers
         {
             return View();
         }
+        [Route("Maintain")]
+        public ActionResult Maintain()
+        {
+            return View();
+        }
+        
     }
 }
